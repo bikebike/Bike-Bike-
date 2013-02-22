@@ -1,0 +1,1115 @@
+<?php
+/**
+ * @file
+ * Main module file for security_questions.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function security_questions_permission() {
+  return array(
+    'administer security questions' => array(
+      'title' => t('Administer Security Questions'),
+      'description' => t('Administer the Security Question module'),
+    ),
+    'bypass security questions' => array(
+      'title' => t('Bypass Security Questions'),
+      'description' => t('Bypass Security questions challenges.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function security_questions_menu() {
+  $items = array();
+  $items['admin/config/people/security_questions'] = array(
+    'title' => 'Security Questions',
+    'description' => 'Manage security questions.',
+    'access arguments' => array('administer security questions'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('security_questions_list_form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/config/people/security_questions/questions'] = array(
+    'title' => 'Questions',
+    'description' => 'Manage security questions.',
+    'access arguments' => array('administer security questions'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('security_questions_list_form'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'parent' => 'admin/config/people/security_questions',
+  );
+  $items['admin/config/people/security_questions/questions/delete/%'] = array(
+    'title' => 'Delete question',
+    'description' => 'Delete security question.',
+    'access arguments' => array('administer security questions'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('security_questions_delete_question', 6),
+  );
+  $items['admin/config/people/security_questions/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage the Security Questions module.',
+    'access arguments' => array('administer security questions'),
+    'page callback' => 'drupal_get_form',
+    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array('security_questions_settings_form'),
+  );
+  $items['user/%user/security_questions'] = array(
+    'title' => 'Security Questions',
+    'description' => 'Security Questions.',
+    'page callback' => 'security_questions_list_user',
+    'page arguments' => array(1),
+    'access callback' => 'security_questions_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['user/%user/security_questions/edit/%'] = array(
+    'title' => 'Edit Security Questions',
+    'description' => 'Edit Security Questions.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('security_questions_user_edit_form', 1, 4),
+    'access callback' => 'security_questions_access',
+    'access arguments' => array(1),
+  );
+  return $items;
+}
+
+/**
+ * Custom access callback for security questions user pages.
+ */
+function security_questions_access($account){
+  global $user;
+  if ($user->uid == $account->uid){
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Security Questions settings form.
+ */
+function security_questions_settings_form($form, &$form_state) {
+  // Create a form to ask the admin how many questions the user
+  // should have answered.
+  $form = array();
+  $form['security_questions_number_required'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of questions'),
+    '#description' => t('Number of questions users are required to have answered.'),
+    '#default_value' => variable_get('security_questions_number_required'),
+    '#required' => TRUE,
+  );
+  $form['security_questions_user_questions'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable user defined questions.'),
+    '#description' => t('If this is enabled, users will be able to enter their own questions to answer.'),
+    '#default_value' => variable_get('security_questions_user_questions'),
+    '#required' => FALSE,
+  );
+  $form['security_questions_password_reset'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable question challenge on password reset request.'),
+    '#description' => t('If this is enabled, users will be forced to answer a question during the password reset process.'),
+    '#default_value' => variable_get('security_questions_password_reset'),
+    '#required' => FALSE,
+  );
+  $form['security_questions_user_login'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable question challenge on user login.'),
+    '#description' => t('If this is enabled, users will be forced to answer a question when they login.'),
+    '#default_value' => variable_get('security_questions_user_login'),
+    '#required' => FALSE,
+  );
+  $form['security_questions_protection_mode'] = array(
+    '#type' => 'select',
+    '#title' => t('Protection Mode'),
+    '#description' => t("Should questions be asked before or after asking for a user's password. If questions are asked before the password, bad people may be able to guess a user's answers through social engineering, just by knowing the user's username."),
+    '#options' => array(
+    	'before' => t('Before'),
+        'after' => t('After'),
+    ),
+    '#default_value' => variable_get('security_questions_protection_mode'),
+    '#required' => FALSE,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="security_questions_user_login"]' => array('checked' => TRUE),
+       ),
+     ),
+  );
+  $form['security_questions_cookie'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable "remember this computer" cookies'),
+    '#description' => t('If this is enabled, users will not be asked to answer questions everytime they log in.'),
+    '#default_value' => variable_get('security_questions_cookie'),
+    '#required' => FALSE,
+  );
+  $form['security_questions_cookie_expire'] = array(
+    '#type' => 'textfield',
+    '#title' => t('How long should users not be asked questions'),
+    '#required' => FALSE,
+    '#description' => t('This should be a string that can be read by !url such as + 10 days or + 2 weeks', array('!url' => l(t('php\'s strtotime()'), "http://php.net/manual/en/function.strtotime.php"))),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="security_questions_cookie"]' => array('checked' => TRUE),
+       ),
+     ),
+    '#default_value' => variable_get('security_questions_cookie_expire'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Security Questions list page with add form.
+ */
+function security_questions_list_form($form, &$form_state) {
+  // Create a form for the admin to insert questions to be used for
+  // user verification.
+  $form = array();
+  $form['security_question'] = array(
+    '#title' => t('Question'),
+    '#type' => 'textfield',
+    '#description' => t('The security question text.'),
+    '#required' => TRUE,
+  );
+  $form['actions'] = array('#type' => 'actions', '#weight' => 1);
+  $form['actions']['security_question_settings_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add question'),
+  );
+
+  // Get a list of questions already in the system and list in a table.
+  $result = db_query('SELECT * FROM {security_questions}')->fetchAll();
+
+  if ($result) {
+    foreach ($result as $row) {
+      $rows[] = array(check_plain($row->security_question), l(t('delete'), 'admin/config/people/security_questions/questions/delete/' . $row->security_question_id));
+    }
+    $table = array(
+      'header' => array(t('Questions'), t('Delete')),
+      'rows' => $rows,
+    );
+
+    // See if any other modules want to add anything to the table.
+    drupal_alter('security_questions_list', $table);
+    $output = theme('table', $table);
+
+    $form['questions'] = array(
+      '#markup' => $output,
+      '#weight' => 2,
+    );
+  }
+  return $form;
+}
+
+/**
+ * Security Questions Setting Add form submit handler
+ */
+function security_questions_list_form_submit($form, &$form_state) {
+  global $user;
+  // Insert the question into the database.
+  db_insert('security_questions')
+    ->fields(array(
+      'security_question' => $form_state['values']['security_question'],
+      'uid' => $user->uid,
+    ))
+    ->execute();
+}
+
+/**
+ * Security Questions delete question form.
+ */
+function security_questions_delete_question($form, &$form_state, $qid) {
+  $result = db_query('SELECT * FROM {security_questions}
+		                  WHERE security_question_id = :qid', array(':qid' => $qid))->fetchObject();
+  $count = db_query('SELECT COUNT(*) FROM {security_questions_answers}
+                     WHERE security_question_id = :qid', array(':qid' => $qid))->fetchField();
+
+  $form['caption'] = array(
+    '#markup' => t('There are currently :count answer(s) to this question. Are you sure you want to delete this question?', array(':count' => $count)),
+  );
+  $form['security_question'] = array(
+    '#title' => t('Question'),
+    '#type' => 'textfield',
+    '#description' => t('The security question text.'),
+    '#required' => TRUE,
+    '#value' => $result->security_question,
+    '#disabled' => TRUE,
+  );
+  $form['security_question_id'] = array(
+    '#type' => 'hidden',
+    '#value' => $qid,
+  );
+  $form['actions'] = array('#type' => 'actions', '#weight' => 1);
+  $form['actions']['security_question_settings_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete question'),
+  );
+
+  return $form;
+}
+
+/**
+ * Security Questions delete question submit handler.
+ */
+function security_questions_delete_question_submit($form, &$form_state) {
+  db_delete('security_questions')
+    ->condition('security_question_id', $form_state['values']['security_question_id'])
+    ->execute();
+  db_delete('security_questions_answers')
+    ->condition('security_question_id', $form_state['values']['security_question_id'])
+    ->execute();
+
+  $form_state['redirect'] = 'admin/config/people/security_questions/questions';
+  drupal_set_message(t('The security question has been deleted.'));
+}
+
+/**
+ * Security Questions List page for user.
+ */
+function security_questions_list_user($account) {
+  // Get a list of questions that the user has answered.
+  $result = db_query('SELECT sq.security_question, sqa.user_answer, sq.security_question_id
+            FROM security_questions_answers AS sqa
+            JOIN security_questions AS sq
+            ON sqa.security_question_id = sq.security_question_id
+            WHERE sqa.uid = :uid', array(':uid' => $account->uid))->fetchAll();
+
+  // If the user has answered questions, load them into a table.
+  if ($result) {
+    foreach ($result as $row) {
+      $rows[] = array(
+        check_plain($row->security_question),
+        check_plain($row->user_answer),
+        l(t('Change'), 'user/' . $account->uid . '/security_questions/edit/' . $row->security_question_id),
+      );
+    }
+
+    $table = array(
+      'header' => array(t('Questions'), t('Answer'), t('Change')),
+      'rows' => $rows,
+    );
+
+    drupal_alter('security_questions_user_list', $table);
+    $output = theme('table', $table);
+  }
+
+  // Check to see how many questions the user is required to have answered.
+  $required = security_questions_required_for_user($account);
+
+  // If the user has answered all required questions, show the table
+  // previously prepared.
+  if ($required == 0) {
+    return $output;
+  }
+  // Else show the answer form with the ones they have answered and the ability
+  // to answer the remaining questions.
+  else {
+    $form_id = 'list_page';
+    $form = drupal_get_form('security_questions_user_answer_form', $account, $required, $form_id);
+
+    return $form;
+  }
+}
+
+/**
+ * User edit form for changing security question answer
+ */
+function security_questions_user_edit_form($form, &$form_state, $user, $qid) {
+  // Get the question id of the question the user wants to change.
+  $question = $qid;
+
+  // Get the question and user's answer from the database.
+  $results = db_query('SELECT sq.security_question, sqa.user_answer, sq.security_question_id
+            FROM security_questions_answers AS sqa
+            JOIN security_questions AS sq
+            ON sqa.security_question_id = sq.security_question_id
+            WHERE sqa.uid = :uid',
+            array(':uid' => $user->uid));
+  
+  foreach($results as $result){
+    $answered[$result->security_question_id] = $result->security_question_id;
+  }
+  
+  // Get all the possible questions that the user can answer.
+  $questions = db_query('SELECT sq.security_question, sq.security_question_id
+            FROM security_questions AS sq
+            WHERE sq.uid = :uid OR sq.admin = :admin',
+            array(':uid' => $user->uid, ':admin' => 1));
+
+  foreach($questions as $question){
+    $possible[$question->security_question_id] = $question->security_question;
+    $options[$question->security_question_id] = $question->security_question;
+  }
+  
+  // Remove all of the previously answered questions.
+  $options = array_diff_key($options, $answered);
+  // Add back in the question that we were editing.
+  $options[$qid] = $possible[$qid];
+  
+  
+  // Display a form where the user can change their answer to a question.
+  $form = array();
+  $form['security_question_uid'] = array(
+    '#type' => 'hidden',
+    '#value' => $user->uid,
+  );
+
+  $form['security_question_id'] = array(
+    '#type' => 'hidden',
+    '#value' => $qid,
+  );
+
+  $form['security_question'] = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#options' => $options,
+    '#title' => t('Question'),
+    '#default_value' => $qid,
+  );
+  $form['security_question_user_answer'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Answer'),
+    '#description' => t('Your answer to the selected security question'),
+    '#required' => TRUE,
+    '#default_value' => $result->user_answer,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['security_question_user_edit_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t("Change answer"),
+  );
+  return $form;
+}
+
+/**
+ * Submit handler for user question edit form
+ */
+function security_questions_user_edit_form_submit($form, &$form_state) {
+    // Update the user's answer in the database.
+    db_update('security_questions_answers')
+      ->fields(array(
+        'user_answer' => $form_state['values']['security_question_user_answer'],
+        'security_question_id' => $form_state['values']['security_question'],
+      ))
+      ->condition('uid', $form_state['values']['security_question_uid'], '=')
+      ->condition('security_question_id', $form_state['values']['security_question_id'], '=')
+      ->execute();
+
+  // Redirect the user back to the user's question list.
+  $form_state['redirect'] = 'user/' . $form_state['values']['security_question_uid'] . '/security_questions';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_register().
+ */
+function security_questions_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // Get the number of required questions the user needs to answer.
+  $required = variable_get('security_questions_number_required');
+
+  // Build an array of variable we need to construct our form.
+  $form_state['build_info'] = array(
+    'args' => array($account = NULL, $required, $form_id),
+  );
+
+  // Merge in our answer form.
+  $form += drupal_retrieve_form('security_questions_user_answer_form', $form_state);
+
+  // Add out validation handler.
+  $form['#validate'][] = 'security_questions_user_answer_form_validate';
+
+  // We cant add our standard submit handler here, because the user id
+  // has not yet been assigned. Instead, we will get the info during
+  // hook_user_insert().
+  // array_push($form['#submit'], 'security_questions_user_answer_form_submit');
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function security_questions_user_insert(&$edit, $account, $category) {
+  // During registration, the user will have no answers in the database,
+  // so we can loop through all required questions.
+  $number = variable_get('security_questions_number_required');
+  $i = 1;
+
+  // Insert the questions and answers into the database.
+  while ($i <= $number) {
+    if ($edit['security_question_id_' . $i] == 'other') {
+      db_insert('security_questions')
+        ->fields(array(
+          'security_question' => $edit['security_question_user_question_' . $i],
+          'uid' => $account->uid,
+        ))
+        ->execute();
+
+      // Get the question id for the question we just put in, so we can store
+      // the user's answer.
+      $qid = db_query('SELECT security_question_id FROM {security_questions}
+                       WHERE security_question = :question', array(':question' => $edit['security_question_user_question_' . $i]))->fetchField();
+
+      // Reset the question id for input into the answers table.
+      $edit['security_question_id_' . $i] = $qid;
+    }
+
+    db_insert('security_questions_answers')
+      ->fields(array(
+        'uid' => $account->uid,
+        'security_question_id' => $edit['security_question_id_' . $i],
+        'user_answer' => $edit['security_question_user_answer_' . $i],
+        ))
+      ->execute();
+    $i++;
+  }
+}
+
+/**
+ * Main form for answering questions.
+ *
+ * The reason for the variables defaulting to NULL is due to the different
+ * ways we will be using the form. Sometimes it will be a stand alone form,
+ * other times it will be added to an existing form.
+ */
+function security_questions_user_answer_form($form, &$form_state, $account = NULL, $required = NULL, $form_id = NULL) {
+  // If we are using this form in an existing form, get the required number
+  // of questions from the build info.
+  if (!empty($form_state['build_info'])) {
+    $required = $form_state['build_info']['args'][1];
+  }
+
+  // Get a random question for this user.
+  if ($account) {
+    $random_question = security_questions_get_random_question($account);
+
+    // Get a list of the questions that the user has already answered.
+    $answered = db_query('SELECT q.security_question
+	                        FROM {security_questions} q, {security_questions_answers} a
+                          WHERE a.uid = :uid AND q.security_question_id = a.security_question_id',
+                          array(':uid' => $account->uid))->fetchCol();
+  }
+
+  // Store number of required questions for this context in the form state
+  // to pass it to validation and submit handlers.
+  $form['security_questions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Security Questions'),
+    '#collapsed' => FALSE,
+    '#collapsible' => FALSE,
+  );
+
+  // If there is an account available, list the questions they have answered
+  // and provide a form to answer unanswered required questions.
+  if ($account) {
+    if ($answered) {
+      $form['security_questions']['help'] = array(
+        '#type' => 'item',
+        '#markup' => t("You don't have the required number of security questions answered. Please answer the following question(s)."),
+      );
+      // Output questions in a table so that the user can easily see which
+      // questions they have already answered.
+      foreach ($answered as $row) {
+        $rows[] = array(check_plain($row));
+      }
+      $table = array(
+        'header' => array(t('Previously answered questions')),
+        'rows' => $rows,
+      );
+      $output = theme('table', $table);
+
+      $form['security_questions']['answered'] = array(
+        '#type' => 'item',
+        '#markup' => $output,
+      );
+    }
+    // If there are no questions available, change the text, and proceed.
+    else {
+      $form['security_questions']['help'] = array(
+        '#type' => 'item',
+        '#markup' => t('You have not answered any security questions. Please answer the following questions. They will be used to verify your identity in the future.'),
+      );
+    }
+  }
+
+  // Get a list of questions that the user can answer. If we are allowing user
+  // supplied questions, we need to make sure that we include them.
+  if ($account) {
+    $questions = db_query('SELECT security_question AS sc, security_question_id AS qid
+	               FROM security_questions WHERE uid = :uid OR admin = :admin', array(':uid' =>  $account->uid, ':admin' => 1));
+  }
+  // Otherwise just get a list of admin supplied questions.
+  else {
+    $questions = db_query('SELECT security_question AS sc, security_question_id AS qid
+                 FROM security_questions WHERE admin = :admin', array(':admin' => 1));
+  }
+
+  $options = array();
+
+  // No need to check_plain on the options, as they will be checked during
+  // form_select_options.
+  while ($q = $questions->fetchObject()) {
+    $options[$q->qid] = $q->sc;
+  }
+
+  // If we are allowing user defined questions, add an option for "other."
+  if (variable_get('security_questions_user_questions')) {
+    $options['other'] = t('-- Other - Enter your own question');
+  }
+
+  // Set counter to start at the number of questions required.
+  $i = 1;
+
+  while ($i <= $required) {
+    $form['security_questions']['security_question_id_' . $i] = array(
+      '#type' => 'select',
+      '#title' => t('Question @i', array('@i' => $i)),
+      '#description' => t('The security question to which you want to answer'),
+      '#required' => TRUE,
+      '#options' => $options,
+    );
+    // If we are allowing user defined questions allow for user's questions.
+    if (variable_get('security_questions_user_questions')) {
+      $form['security_questions']['security_question_user_question_' . $i] = array(
+        '#type' => 'textfield',
+        '#title' => t('Question @i', array('@i' => $i)),
+        '#description' => t('Enter your own question'),
+        '#required' => FALSE,
+        '#states' => array(
+          'visible' => array(
+            ':input[name="security_question_id_' . $i . '"]' => array('value' => 'other'),
+          ),
+        ),
+      );
+    }
+
+    $form['security_questions']['security_question_user_answer_' . $i] = array(
+      '#type' => 'textfield',
+      '#title' => t('Answer @i', array('@i' => $i)),
+      '#description' => t('Your answer to the selected security question'),
+      '#required' => TRUE,
+    );
+    $i++;
+  }
+
+  // If this form is being used on the list page for the user,
+  // add a submit button.
+  if ($form_id == 'list_page') {
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Submit answers'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Validation handler for answer form.
+ */
+function security_questions_user_answer_form_validate($form, &$form_state) {
+  // If we are in the login form, the account will be available
+  // in the form_state because of our login name validation.
+  if (isset($form_state['security_questions']['account'])) {
+    $account = $form_state['security_questions']['account'];
+  }
+  // Otherwise get the currently logged in user.
+  // Used for questions tab on account page.
+  else {
+    global $user;
+    $account = $user;
+  }
+
+  // Get a list of questions that the user has already answered.
+  $answered = db_query('SELECT security_question_id FROM {security_questions_answers}
+                        WHERE uid = :uid',
+                        array(':uid' => $account->uid))->fetchCol();
+
+  // Get the required number of questions and set counter.
+  $required = security_questions_required_for_user($account);
+  $i = 1;
+
+  while ($i <= $required) {
+    if ($form_state['input']['security_question_id_' . $i] == 'other' &&
+        empty($form_state['input']['security_question_user_question_' . $i])) {
+       form_set_error('security_question_user_question_' . $i, t('Please supply a question.'));
+    }
+    
+    // Add newly answered quesitons to the $answered array if they are not
+    // user supplied questions.
+    if ($form_state['input']['security_question_id_' . $i] != 'other') {
+      $answered[] = $form_state['input']['security_question_id_' . $i];
+    }
+    $i++;
+  }
+
+  // Get an array of questions that have been answered more than once.
+  $dupes = array_diff_key($answered, array_unique($answered));
+  foreach ($dupes as $dupe) {
+    form_set_error('security_question_id_' . $dupe, t('Please select a question that you have not yet picked.'));
+  }
+}
+
+/**
+ * Submit handler for answer form.
+ */
+function security_questions_user_answer_form_submit($form, &$form_state) {
+  // Grab the user id from the form during login.
+  if (isset($form_state['security_questions']['account'])) {
+    $account = $form_state['security_questions']['account'];
+  }
+  // Otherwise get the currently logged in user.
+  else {
+    global $user;
+    $account = $user;
+  }
+
+  // Get required number of questions and set a counter.
+  $required = security_questions_required_for_user($account);
+  $i = 1;
+
+  // Insert each answer into the database.
+  while ($i <= $required) {
+    // If the user entered their own questions, we need to input them into the
+    // security questions table for storage.
+    if ($form_state['input']['security_question_id_' . $i] == 'other') {
+      db_insert('security_questions')
+        -> fields(array(
+          'security_question' => $form_state['input']['security_question_user_question_' . $i],
+          'uid' => $account->uid,
+        ))
+        ->execute();
+
+      // Get the question id for the question we just put in, so we can store
+      // the user's answer.
+      $qid = db_query('SELECT security_question_id FROM {security_questions}
+                       WHERE security_question = :question', array(':question' => $form_state['input']['security_question_user_question_' . $i]))->fetchField();
+
+      // Reset the question id for input into the answers table.
+      $form_state['input']['security_question_id_' . $i] = $qid;
+    }
+
+    db_insert('security_questions_answers')
+      ->fields(array(
+        'uid' => $account->uid,
+        'security_question_id' => $form_state['input']['security_question_id_' . $i],
+        'user_answer' => $form_state['input']['security_question_user_answer_' . $i],
+        ))
+      ->execute();
+    $i++;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_login().
+ */
+function security_questions_form_user_login_alter(&$form, &$form_state, $form_id = 'user_login') {
+  // First, check to see if security_questions_user_login variable is set to TRUE
+  $security_questions_user_login_enabled = variable_get('security_questions_user_login');
+  if ($security_questions_user_login_enabled){
+    // If the form has not yet been submitted, add our validations and check
+    // protection mode.
+    $mode = variable_get('security_questions_protection_mode');
+    if (empty($form_state['security_questions'])) {
+      // If questions are before the password, unset the password field, and
+      // default submit handler.
+      if ($mode == 'before') {
+        $form['#validate'] = array('security_questions_user_login_validate_name');
+        unset($form['pass'], $form['#submit']);
+      }
+      // Else just remove the default submit handler, and add our own.
+      else {
+        $form['#validate'] = array('security_questions_user_login_validate_both');
+        unset($form['#submit']);
+      }
+    }
+    // If the user has the bypass permission we dont need the rest of the form.
+    elseif (user_access('bypass security questions', $form_state['security_questions']['account'])) {
+      // We just want to show the normal user login form here, but since we got
+      // the username from user_login_block, we need to set it here.
+      $form['name']['#value'] = $form_state['security_questions']['account']->name;
+    }
+    // If we already have the username, and the user doesn't have the
+    // bypass permissionshow the rest of the form.
+    else {
+      // Retrieve account from form_state (put there by our validation function).
+      $account = $form_state['security_questions']['account'];
+    
+      // If we are using cookies, check for it.
+      if (variable_get('security_questions_cookie') && isset($_COOKIE['security_questions'])) {
+        $cookie = $_COOKIE['security_questions'];
+        $cookie = explode('-', $cookie);
+        $cookie_uid = $cookie[3];
+        // If the cookie uid matches the current account return.
+        if ($account->uid == $cookie_uid){
+         return; 
+        }
+      }
+      // Hide username.
+      $form['name']['#type'] = 'hidden';
+
+      // Check our protection mode. If questions are after, then we can hide the
+      // password field.
+      if ($mode == 'after') {
+        $form['pass']['#type'] = 'hidden';
+      }
+
+      // Get a random question for this user.
+      $question = security_questions_get_random_question($account);
+      // Get a count of how many questions the user has yet to answer.
+      $required = security_questions_required_for_user($account);
+
+      // If there is no question, hide the security question fields.
+      // Can happen if module is implemented after users are already registered.
+      // We will account for this after login.
+      if ($question) {
+        // Store question id for answer lookup during validation.
+        $_SESSION['security_question'] = $question->security_question_id;
+
+        // Show answer element.
+        $form['security_question'] = array(
+          '#type' => 'fieldset',
+          '#title' => t('Security Question'),
+          '#weight' => -2,
+        );
+        $form['security_question']['question'] = array(
+          '#type' => 'item',
+          '#markup' => '<div>' . t(check_plain($question->security_question)) . '</div>',
+        );
+        $form['security_question']['security_answer'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Answer'),
+          '#required' => TRUE,
+        );
+
+        // If the user has not answered enough questions, force them to answer
+        // the remaining number of questions needed.
+        if ($required > 0) {
+          $form_id = 'user_login';
+          $form_state['build_info'] = array(
+            'args' => array($account, $required, $form_id),
+          );
+          // Merge in our answer form.
+          $form['security_questions'] = drupal_retrieve_form('security_questions_user_answer_form', $form_state);
+          $form['security_questions'] += array('#weight' => -1);
+        }
+
+        // Add anwser validation.
+        $form['#validate'][] = 'security_questions_user_answer_form_validate';
+        $form['#validate'][] = 'security_questions_user_login_validate_answer';
+
+        // Add our submit handler.
+        array_push($form['#submit'], 'security_questions_user_answer_form_submit');
+      }
+      // If the user has not yet answered any questions, present a form with the
+      // requried number of questions, and add the needed validation and
+      // submit handlers.
+      else {
+        $form_state['build_info'] = array(
+          'args' => array($account, $required, $form_id),
+        );
+        // Merge in our answer form.
+        $form['security_questions'] = drupal_retrieve_form('security_questions_user_answer_form', $form_state);
+        $form['security_questions'] += array('#weight' => -1);
+
+        // Add our validation handler.
+        $form['#validate'][] = 'security_questions_user_answer_form_validate';
+
+        // We dont call the login answer validation because the user doesnt
+        // have any answers in the database yet.
+        // $form['#validate'][] = 'security_questions_user_login_validate_answer';
+        // Add our submit handler.
+        array_push($form['#submit'], 'security_questions_user_answer_form_submit');
+      }
+    }
+  }
+}
+
+/**
+ * Validation handler for security_questions_form_user_login_alter().
+ */
+function security_questions_user_login_validate_name($form, &$form_state) {
+  // Grab the username from the form.
+  $username = $form_state['values']['name'];
+
+  // Load the user via their username.
+  $account = user_load_by_name($username);
+
+  if (!$account || !$account->status) {
+    drupal_set_message(t("This user doesn't exist or is disabled. Please register."), 'warning');
+    drupal_goto('user/register');
+  }
+  else {
+    // Check to see if the user has already answered the security questions.
+    $question = security_questions_get_random_question($account);
+
+    // If there are no questions and the user doesnt have the bypass
+    // permission, set message asking them to answer the questions that
+    // will be shown.
+    if (empty($question) && !user_access('bypass security questions', $account)) {
+      drupal_set_message(t("Please select and answer these security questions. They will be used to verify your identity in the future."), 'warning');
+    }
+    // Else just prompt them to answer a random question if they do not have
+    // the bypass permission.
+    elseif (!user_access('bypass security questions', $account) && !isset($_COOKIE['security_questions'])) {
+      drupal_set_message(t("You're almost logged in. Just answer this question."), 'warning');
+    }
+    // Save the account for the next step.
+    $form_state['security_questions']['account'] = $account;
+
+    // Rebuild the form with a question & answer.
+    $form_state['rebuild'] = TRUE;
+  }
+}
+
+/**
+ * Validation handler for security_questions_form_user_login_alter().
+ */
+function security_questions_user_login_validate_answer($form, &$form_state) {
+  $errors = form_get_errors();
+  if (!$errors) {
+    // Get uid from form state.
+    $uid = $form_state['uid'];
+
+    // Get question from session.
+    $sq_id = $_SESSION['security_question'];
+
+    // Get answer from database.
+    $answer = db_query('SELECT user_answer FROM {security_questions_answers}
+                        WHERE uid = :uid AND security_question_id = :sqid',
+                        array(':uid' => $uid, ':sqid' => $sq_id))->fetchObject();
+
+    // Grab the user provided answer from the form, and from the database.
+    $user_answer = _security_questions_clean_answer($form_state['values']['security_answer'], ' .!');
+    $db_answer = _security_questions_clean_answer($answer->user_answer, ' .!');
+
+    // Check to see if the user's answers match.
+    if ($user_answer != $db_answer) {
+      // Instead of showing the same question, randomly pick a new one
+      // when a wrong answer is submitted.
+      drupal_set_message(t("That's not it... Here's a new question:"), 'error');
+      $form_state['rebuild'] = TRUE;
+    }
+    
+    // If cookies are enabled, set them.
+    if (variable_get('security_questions_cookie')) {
+      $expire = strtotime(variable_get('security_questions_cookie_expire'));
+      setcookie('security_questions', 'do-not-challenge-' . $uid, $expire, '/');
+    }
+  }
+}
+
+/**
+ * Validation handler for security_questions_form_user_login_alter().
+ * both username and password
+ */
+function security_questions_user_login_validate_both($form, &$form_state) {
+  // Grab the username and password from the form.
+  $username = $form_state['values']['name'];
+  $password = $form_state['values']['pass'];
+
+  // Get our protection mode.
+  $mode = variable_get('security_questions_protection_mode');
+  // Check to see if the credentials are correct.
+  $uid = user_authenticate($username, $password);
+
+  if ($uid == FALSE) {
+    form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
+    watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+  }
+  else {
+    $form_state['uid'] = $uid;
+    $account = user_load($uid);
+    // If the user has bypass permission and has already entered their
+    // credentials, login.
+    if (user_access('bypass security questions', $account) && $mode == 'after') {
+      user_login_submit(array(), $form_state);
+    }
+    // If we are using cookies, check for it before asking a question.
+    if (isset($_COOKIE['security_questions'])) {
+      $cookie = $_COOKIE['security_questions'];
+      $cookie = explode('-', $cookie);
+      $cookie_uid = $cookie[3];
+      // If the cookie uid matches the current account, login.
+      if ($uid == $cookie_uid){
+        return user_login_submit(array(), $form_state);
+      }
+    }
+    // Check to see if the user has already answered the security questions.
+    $question = security_questions_get_random_question($account);
+
+    // If there are no questions and the user doesnt have the bypass
+    // permission, set message asking them to answer the questions that
+    // will be shown.
+    if (empty($question) && !user_access('bypass security questions', $account)) {
+      drupal_set_message(t("Please select and answer these security questions. They will be used to verify your identity in the future."), 'warning');
+    }
+    // Else just prompt them to answer a random question if they do not have
+    // the bypass permission.
+    elseif (!user_access('bypass security questions', $account)) {
+      drupal_set_message(t("You're almost logged in. Just answer this question."), 'warning');
+    }
+
+    // Save the account for the next step.
+    $form_state['security_questions']['account'] = $account;
+
+    // If cookies are enabled, set them.
+    if (variable_get('security_questions_cookie')) {
+      $expire = strtotime(variable_get('security_questions_cookie_expire'));
+      setcookie('security_suestions', 'do-not-challenge-' . $uid, $expire, '/');
+    }
+
+    // Rebuild the form with a question & answer.
+    $form_state['rebuild'] = TRUE;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_pass().
+ */
+function security_questions_form_user_pass_alter(&$form, &$form_state, $form_id = 'user_pass') {
+  $pass_reset = variable_get('security_questions_password_reset');
+  if($pass_reset){
+    if(empty($form_state['security_questions']['account'])){
+      unset($form['#submit']);
+      $form['#validate'][] = 'security_questions_pass_reset_validate_account';
+    }
+    else{
+      $form['name']['#type'] = 'hidden';
+      $form['name']['#value'] = $form_state['values']['name'];
+
+      // Retrieve account from form_state (put there by our validation function).
+      $account = $form_state['security_questions']['account'];
+
+      // Get a random question for this user.
+      $question = security_questions_get_random_question($account);
+
+      // If there is no question, hide the security question fields.
+      // Can happen if module is implemented after users are already registered.
+      // We will account for this after login.
+      if ($question) {
+        // Store question id for answer lookup during validation.
+        $_SESSION['security_question'] = $question->security_question_id;
+
+        // Show answer element.
+        $form['security_question'] = array(
+          '#type' => 'fieldset',
+          '#title' => t('Security Question'),
+          '#weight' => -2,
+        );
+        $form['security_question']['question'] = array(
+          '#markup' => '<div>' . t(check_plain($question->security_question)) . '</div>',
+        );
+        $form['security_question']['security_answer'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Answer'),
+          '#required' => TRUE,
+        );
+
+        // Add our validation handler.
+        $form['#validate'] = array('security_questions_pass_reset_validate_answer');
+      }  
+    }
+  } 
+}
+ 
+/**
+ * Validation handler for security_questions_form_user_pass_alter().
+ */
+function security_questions_pass_reset_validate_account(&$form, &$form_state){
+  $errors = form_get_errors();
+  if(!$errors){
+    // Taken from user_pass_validate().
+    $name = trim($form_state['values']['name']);
+    $account = user_load_by_mail($name);
+    if (!$account) {
+      // No success, try to load by name.
+      $account = user_load_by_name($name);
+    }
+   
+    $question = security_questions_get_random_question($account);
+
+    // If the user has questions answered, we can rebuild the form and ask it.
+    if ($question && !user_access('bypass security questions', $account)) {
+      // Store account for later, and rebuild the form.
+      $form_state['security_questions']['account'] = $account;
+      $form_state['rebuild'] = TRUE;
+    }
+    // If not, we just send them on to the default handler.
+    elseif($question && user_access('bypass security questions', $account)){ 
+      user_pass_submit($form, $form_state);
+    }
+    else{
+      user_pass_submit($form, $form_state);
+    }
+  }
+}
+
+/**
+ * Validation handler for security_questions_form_user_pass_alter().
+ */
+function security_questions_pass_reset_validate_answer(&$form, &$form_state){
+  $sq_id = $_SESSION['security_question'];
+  $uid = $form_state['security_questions']['account']->uid;
+  // Get answer from database.
+  $answer = db_query('SELECT user_answer FROM {security_questions_answers}
+                      WHERE uid = :uid AND security_question_id = :sqid',
+                      array(':uid' => $uid, ':sqid' => $sq_id))->fetchObject();
+
+  // Grab the user provided answer from the form, and from the database.
+  $user_answer = _security_questions_clean_answer($form_state['values']['security_answer'], ' .!');
+  $db_answer = _security_questions_clean_answer($answer->user_answer, ' .!');
+
+  // Check to see if the user's answers match.
+  if ($user_answer != $db_answer) {
+    // Instead of showing the same question, randomly pick a new one
+    // when a wrong answer is submitted.
+    drupal_set_message(t("That's not it... Here's a new question:"), 'error');
+    $form_state['rebuild'] = TRUE;
+  }
+  else{
+    $form_state['values']['account'] = $form_state['security_questions']['account'];
+    unset($_SESSION['security_questions']);
+  }
+}
+
+/**
+ * Helper function to clean users answers.
+ */
+function _security_questions_clean_answer($answer) {
+  // Clean the users answer so we have nice variables to compare.
+  $answer = drupal_strtolower(trim($answer));
+  return $answer;
+}
+
+/**
+ * Helper function to return a random question from the database.
+ */
+function security_questions_get_random_question($account) {
+  // Get a random question from the database where the user has an answer.
+  $question = db_query('SELECT q.* FROM {security_questions} q, {security_questions_answers} a
+                        WHERE a.uid = :uid AND q.security_question_id = a.security_question_id
+                        ORDER BY RAND() LIMIT 1', array(':uid' => $account->uid))->fetchObject();
+  return $question;
+}
+
+/**
+ * Helper function to determine how many questions a user still needs to answer.
+ */
+function security_questions_required_for_user($account) {
+  // Count how many answers the user has in the database.
+  $count = db_query('SELECT COUNT(security_question_id)  FROM {security_questions_answers} a
+                       WHERE a.uid = :uid', array(':uid' => $account->uid))->fetchField();
+
+  // Get the number of required questions.
+  $number = variable_get('security_questions_number_required');
+
+  // Return the number of questions that the user needs to answer.
+  $required = $number - $count;
+  return $required;
+}

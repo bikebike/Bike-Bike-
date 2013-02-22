@@ -1,0 +1,17 @@
+<?php 
+
+function bikebike_custom_css_preprocess_node(&$vars)
+{
+	$func = 'bikebike_custom_css_preprocess_'.$vars['type'];
+	//drupal_add_css(path_to_theme() . '/css/content-types/' . $vars['node']->type . '.css');
+	if (function_exists($func))
+	{
+		$func($vars);
+	}
+}
+
+function bikebike_custom_css_preprocess_conference(&$vars)
+{
+	$css = isset($vars['field_custom_css'][0]) ? $vars['field_custom_css'][0]['value'] : '';
+	drupal_add_css($css, array('type' => 'inline'));
+}

@@ -1,0 +1,10 @@
+name = References ID Trim
+description = Removes [*id] from autocomplete references fields.
+core = 7.x
+dependencies[] = references
+; Information added by drupal.org packaging script on 2012-06-08
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "references_id_trim"
+datestamp = "1339115534"
+

@@ -1,0 +1,14 @@
+name = Pathauto Alias Fallback
+description = Provides ability to add an alias fallback to be used when the first choice URL already exists
+dependencies[] = path
+package = Other
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-01-13
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "pathauto"
+datestamp = "1344525185"
+
+scripts[] = test.js
+stylesheets[all][] = test.css

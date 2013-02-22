@@ -1,0 +1,11 @@
+name = Bike!Bike! TinyMCE Skin Override
+description = Overrides the ugly tinymce skin with a better one
+dependencies[] = wysiwyg
+package = Bike!Bike! Custom Modules
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-01-13
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "bikebike"
+datestamp = "1344525185"

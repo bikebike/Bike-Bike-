@@ -1,0 +1,17 @@
+name = KeyPic User
+version = 7.x-1.0-dev
+description = Integrate KeyPic to Drupal User.
+
+package = Spam control
+
+dependencies[] = user
+dependencies[] = keypic
+
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-11-14
+version = "7.x-1.0"
+core = "7.x"
+project = "keypic"
+datestamp = "1352935604"
+

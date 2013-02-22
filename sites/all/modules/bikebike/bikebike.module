@@ -1,0 +1,240 @@
+<?php 
+
+function bikebike_menu_alter(&$items)
+{
+	$items['entityreference/autocomplete/single/%/%/%'] = array(
+			'title' => 'Entity Reference Autocomplete',
+			'page callback' => 'bikebike_autocomplete_callback',
+			'page arguments' => array(2, 3, 4, 5),
+			'access callback' => 'entityreference_autocomplete_access_callback',
+			'access arguments' => array(2, 3, 4, 5),
+			'type' => MENU_CALLBACK,
+	);
+	$items['node/%node/edit']['access callback'] = 'bikebike_org_edit_access';
+	//$items['organization/%/edit']['access arguments'] = array(1);//'access arguments' = array(1);
+	//drupal_set_message('<pre>'.print_r($items, true).'</pre>');
+	
+	return $items;
+}
+
+function bikebike_menu()
+{
+	$items = array
+	(
+		'organizations/%/add-admin' => array
+		(
+			'title' => 'Add Organization Administrator',
+			'page callback' => 'drupal_get_form',
+			//'page arguments' => array('bikebike_add_org_admin'),
+			'description' => 'A set of ten tutorials',
+			'page arguments' => array('bikebike_add_org_admin', 1),
+			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
+			//'access arguments' => array(2, 3, 4, 5),
+			'type' => MENU_CALLBACK
+		)
+	);
+	return $items;
+}
+
+function bikebike_org_edit_access($action, $org)
+{
+	global $user;
+	
+	if (!$org || $org->type != 'organization')
+	{
+		return node_access($action, $org);
+	}
+
+	if (in_array('administrator', array_values($user->roles)))
+	{
+		return TRUE;
+	}
+	
+	foreach ((isset($org->field_administrators['und']) ? $org->field_administrators['und'] : array()) as $admin)
+	{
+		if ($admin['target_id'] == $user->uid)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+function bikebike_add_org_admin($form_state, $args)
+{
+	$orgid = $args['build_info']['args'][0];
+	$org = node_load($orgid);
+	if (!$org || $org->type != 'organization')
+	{
+		drupal_set_message('Unknown organization');
+		drupal_goto('organizations');
+		return;
+	}
+	
+	$language = $org->language;
+	$secret_id = $org->field_organization_secret[$language][0]['value'];
+	$secret = field_collection_item_load($secret_id, $reset = FALSE);
+	
+	$form['answer'] = array
+	(
+    	'#type' => 'textfield',
+    	'#title' => t($secret->field_question[$language][0]['value']),
+    	'#size' => 80,
+    	'#required' => TRUE,
+  	);
+  	$form['submit'] = array
+  	(
+    	'#type' => 'submit',
+    	'#value' => t('Submit'),
+  	);
+  	$form['orgid'] = array
+  	(
+  		'#type' => 'value',
+  		'#value' => $orgid
+  	);
+  	$form['#method'] = 'post';
+	return $form;
+}
+
+function bikebike_add_org_admin_submit($form, &$form_state)
+{
+	$orgid = $form['orgid']['#value'];
+	$org = node_load($orgid);
+
+	$language = $org->language;
+	$secret_id = $org->field_organization_secret[$language][0]['value'];
+	$secret = field_collection_item_load($secret_id, $reset = FALSE);
+	$answer = $form['answer']['#value'];
+	$real_answer = $secret->field_answer[$language][0]['value'];
+	if ($real_answer == $answer)
+	{
+		global $user;
+		$already_admin = false;
+		foreach ((isset($org->field_administrators['und']) ? $org->field_administrators['und'] : array()) as $admin)
+		{
+			if ($admin['target_id'] == $user->uid)
+			{
+				$alreadyadmin = true;
+			}
+		}
+		if (!$already_admin)
+		{
+			$org->field_administrators['und'][] = array('target_id' => $user->uid);
+			node_save($org);
+			drupal_set_message('You have been successfully registered as an administrator for '.$org->title);
+			//drupal_set_message(print_r($org->field_administrators['und'], true));
+		}
+	}
+	else
+	{
+		drupal_set_message('Sorry, the answer provided was not correct');
+	}
+	// Redirect the user to http://example.com/test/<Postcode> upon submit
+	$form_state['redirect'] = 'node/'.$orgid;
+}
+
+
+function bikebike_autocomplete_callback($type, $field_name, $entity_type, $bundle_name, $entity_id = '', $string = '')
+{
+	$field = field_info_field($field_name);
+	$instance = field_info_instance($entity_type, $field_name, $bundle_name);
+
+	return bikebike_autocomplete_callback_get_matches($type, $field, $instance, $entity_type, $entity_id, $string);
+}
+
+function bikebike_autocomplete_callback_get_matches($type, $field, $instance, $entity_type, $entity_id = '', $string = '')
+{
+	$matches = array();
+
+	$entity = NULL;
+	if ($entity_id !== 'NULL')
+	{
+		$entity = entity_load_single($entity_type, $entity_id);
+		if (!$entity || !entity_access('view', $entity_type, $entity))
+		{
+			return MENU_ACCESS_DENIED;
+		}
+	}
+	
+	$handler = entityreference_get_selection_handler($field, $instance, $entity_type, $entity);
+	$thumb = '';
+
+	if ($type == 'tags')
+	{
+		// The user enters a comma-separated list of tags. We only autocomplete the last tag.
+		$tags_typed = drupal_explode_tags($string);
+		$tag_last = drupal_strtolower(array_pop($tags_typed));
+		if (!empty($tag_last))
+		{
+			$prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
+		}
+	}
+	else
+	{
+		// The user enters a single tag.
+		$prefix = '';
+		$tag_last = $string;
+	}
+
+	if (isset($tag_last))
+	{
+		// Get an array of matching entities.
+		$entity_labels = $handler->getReferencableEntities($tag_last, $instance['widget']['settings']['match_operator'], 10);
+
+		// Loop through the products and convert them into autocomplete output.
+		foreach ($entity_labels as $values) {
+			foreach ($values as $entity_id => $label) {
+				$target_type = $field['settings']['target_type'];
+				if ($target_type == 'user')
+				{
+					$user = user_load($entity_id);
+					//$thumb = 'XXX: ';
+					$thumb = theme('image_style', array('style_name' => 'icon_small', 'path' => ($user->picture ? $user->picture->uri : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar')));
+				}
+				
+				$key = "$label ($entity_id)";
+				// Strip things like starting/trailing white spaces, line breaks and tags.
+				$key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(decode_entities(strip_tags($key)))));
+				// Names containing commas or quotes must be wrapped in quotes.
+				if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
+					$key = '"' . str_replace('"', '""', $key) . '"';
+				}
+				//$matches[$prefix . $key] = '<div class="reference-autocomplete">'.$thumb.'<script>console.log(\''.print_r(json_encode($field['settings']['target_type']), true).'\');</script>'.$label.'</div>';
+				$matches[$prefix . $key] = '<div class="reference-autocomplete">'.$thumb.$label.'</div>';
+			}
+		}
+	}
+
+	drupal_json_output($matches);
+}
+
+function bikebike_form_alter(&$form, $form_state, $form_id)
+{
+	if ($form_id == 'user_profile_form')
+	{
+		global $user;
+		
+		if (fboauth_fbid_load($user->uid))
+		{
+			// disable the password field and remove no password warning
+			unset($form['account']['mail']);
+			unset($form['account']['pass']);
+			unset($form['account']['current_pass_required_values']);
+			unset($form['account']['current_pass']);
+			drupal_get_messages('warning', TRUE);
+		}
+	}
+	else if ($form_id == 'organization_node_form')
+	{
+		if (!isset($form['nid']['#value']))
+		{
+		}
+		else
+		{
+		}
+	}
+	else if ($form_id == 'bikebike_add_org_admin')
+	{
+  		honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+	}
+}

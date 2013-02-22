@@ -1,0 +1,115 @@
+@CHARSET "ISO-8859-1";
+
+.autocomplete-checkboxes-dropdown {
+	border-radius-bottom-left: 4px;
+	border-radius-bottom-right: 4px;
+	border: 1px solid #CCC;
+
+	/*cursor: pointer;*/
+	/*padding: 4px;*/
+	position: absolute;
+	display: none;
+	width: 100%;
+	box-sizing: border-box;
+	max-height: 400px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 1000;
+}
+
+.autocomplete-checkboxes-dropdown .form-type-checkbox {
+	position: relative;
+	padding: 4px;
+	background-color: #FFF;
+	margin: 0;
+}
+
+.autocomplete-checkboxes-dropdown .form-type-checkbox:nth-child(odd) {
+	background-color: #EEE;
+}
+
+.autocomplete-checkboxes-dropdown .form-type-checkbox:hover {
+	background-color: #CCC;
+}
+
+.autocomplete-checkboxes-dropdown .form-type-checkbox img {
+	vertical-align: middle;
+}
+
+.autocomplete-checkboxes-dropdown .form-type-checkbox .autocomplete-checkboxes-selector {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	cursor: pointer;
+	z-index: 10;
+}
+
+input.autocomplete-checkboxes-search {
+	clear: left;
+	display: block;
+	max-width: 100% !important;
+	width: 100%;
+	box-sizing: border-box;
+	outline: 0;
+	background-image: url('search.png');
+	background-position: right center;
+	background-repeat: no-repeat;
+	border: 1px solid #CCC;
+}
+
+ul.autocomplete-checkboxes-list li a.autocomplete-checkboxes-deselect {
+	width: 13px;
+	height: 13px;
+	display: inline-block;
+	background-position: 157px -132px;
+	vertical-align: text-bottom;
+	margin: 0px 4px;
+	cursor: pointer;
+	background-image: url(../jquery_update/replace/ui/themes/base/images/ui-icons_222222_256x240.png);
+}
+
+ul.autocomplete-checkboxes-list li a.autocomplete-checkboxes-deselect:hover {
+	background-image: url(../jquery_update/replace/ui/themes/base/images/ui-icons_cd0a0a_256x240.png);
+}
+
+ul.autocomplete-checkboxes-list {
+    list-style-type: none;
+    margin: 0px 0px 0px 0px;
+	margin-left: 0px !important;
+}
+
+ul.autocomplete-checkboxes-list li img {
+	vertical-align: middle;
+}
+
+ul.autocomplete-checkboxes-list li {
+	background: #f6f8f9; /* Old browsers */
+background: -moz-linear-gradient(top,  #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(50%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+	border-radius: 4px;
+	border: 1px solid #CCC;
+	padding: 4px;
+	margin: 4px;
+	float: left;
+	clear: left;
+}
+
+.autocomplete-checkboxes-selector {
+	width: 400px;
+	position: relative;
+	box-sizing: border-box;s
+}
+
+.autocomplete-checkboxes-noresults {
+    background-color: #FFF;
+    padding: 8px;
+    text-align: center;
+    color: #888;
+}

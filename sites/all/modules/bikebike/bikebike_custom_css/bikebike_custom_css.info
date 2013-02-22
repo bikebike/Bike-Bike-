@@ -1,0 +1,10 @@
+name = Bike!Bike! Custom CSS
+description = Allows users to add custom CSS 
+package = Bike!Bike! Custom Modules
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-01-13
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "bikebike"
+datestamp = "1344525185"

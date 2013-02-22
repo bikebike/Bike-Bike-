@@ -1,0 +1,120 @@
+<?php 
+
+function bikebike_pathauto_pathauto_alias_alter(&$alias, &$context)
+{
+	if (!isset($context['data']['node']))
+	{
+		return;
+	}
+	$func = 'bikebike_pathauto_uniquify_'.$context['data']['node']->type;
+	if (function_exists($func))
+	{
+		$attempt = 0;
+
+		do
+		{
+			$func($alias, $context, $attempt++);
+		}
+		while (bikebike_pathauto_alias_exists($alias, $context));
+	}
+}
+
+function bikebike_pathauto_alias_exists($alias, $context)
+{
+	$newalias = $alias;
+	pathauto_alias_uniquify($newalias, $context['source'], $context['language']);
+	return $newalias != $alias;
+}
+
+function bikebike_pathauto_uniquify_organization(&$alias, &$context, $attempt = 0)
+{
+	$title = preg_replace_callback('/\s+([a-z|A-Z])/', create_function('$c', 'return strtoupper($c[1]);'), $context['data']['node']->title);
+	$city = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['city']);
+	$state = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['province']);
+	$country = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['country']);
+
+	/*if ($attempt >  && (!isset($state) || $state == ''))
+	{
+		$attempt++;
+	}*/
+	
+	switch ($attempt)
+	{
+		case 0:
+			$alias = $title;
+			break;
+		case 1:
+			$alias = $title.'_('.$city.')';
+			break;
+		case 2:
+			if ($state)
+			{
+				$alias = $title.'_('.$city.','.$state.')';
+			}
+			else
+			{
+				$alias = $title.'_('.$city.','.$country.')';
+			}
+			break;
+		case 3:
+			if ($state)
+			{
+				$alias = $title.'_('.$city.','.$state.','.$country.')';
+				break;
+			}
+		default:
+			$alias = $title.'_('.$city.($state ? ','.$state : '').','.$country.')-'.($attempt - ($state ? 2 : 1));
+	}
+	$alias = 'organizations/'.$alias;
+}
+
+function bikebike_pathauto_uniquify_conference(&$alias, &$context, $attempt = 0)
+{
+	//$attempt++;
+	$node = $context['data']['node'];
+	$lang = $node->language;
+	$tid = $node->field_conference_type[$lang][0]['tid'];
+
+	$pre = '';
+	
+	if ($tid != 4) // if it's not an annual bike!bike!
+	{
+		$pre = 'conferences/';
+	}
+	$date = strtotime($node->field_date[$lang][0]['value']);
+	$year = date('Y', $date);
+	$month = date('M', $date);
+	$host = node_load($node->field_host_organizations[$lang][0]['target_id']);
+	$city = preg_replace('/\s+/', '', $host->field_location[$lang][0]['city']);
+	$state = preg_replace('/\s+/', '', $host->field_location[$lang][0]['province']);
+	$country = preg_replace('/\s+/', '', $host->field_location[$lang][0]['country']);
+	
+	if ($attempt > 0 && !$state)
+	{
+		$attempt += ($attempt > 3 ? 2 : 1);
+	}
+	
+	switch ($attempt)
+	{
+		case 0:
+			$alias = $pre.$city.$year;
+			break;
+		case 1:
+			$alias = $pre.$city.'-'.$state.$year;
+			break;
+		case 2:
+			$alias = $pre.$city.($state ? '-'.$state : '').'-'.$country.$year;
+			break;
+		case 3:
+			$alias = $pre.$city.$month.$year;
+			break;
+		case 4:
+			$alias = $pre.$city.'-'.$state.$month.$year;
+			break;
+		case 5:
+			$alias = $pre.$city.($state ? '-'.$state : '').'-'.$country.$month.$year;
+			break;
+		default:
+			$alias = $pre.$city.($state ? '-'.$state : '').'-'.$country.$month.$year.($attempt - 4);
+	}
+}

@@ -1,0 +1,136 @@
+<?php
+/**
+ * @file
+ * Install file for security_questions.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function security_questions_schema() {
+  $schema = array();
+
+  $schema['security_questions_answers'] = array(
+    'description' => 'Contains users security question answers.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'The user ID.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'security_question_id' => array(
+        'description' => 'The security question ID',
+        'type' => 'int',
+      ),
+      'user_answer' => array(
+        'description' => 'The answer to the users question',
+        'type' => 'varchar',
+        'length' => '100',
+      ),
+    ),
+    'primary key' => array('uid', 'security_question_id'),
+  );
+
+  $schema['security_questions'] = array(
+    'description' => 'Contains possible security questions',
+    'fields' => array(
+      'security_question_id' => array(
+        'description' => 'The security question ID',
+        'type' => 'serial',
+      ),
+      'security_question' => array(
+        'description' => 'The text of the question',
+        'type' => 'varchar',
+        'length' => '500',
+      ),
+      'uid' => array(
+        'description' => 'The user ID who created the question.',
+         'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'admin' => array(
+        'description' => 'Admin created or not?.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('security_question_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function security_questions_install() {
+  // Upon install set default required questions to 3.
+  variable_set('security_questions_number_required', 3);
+
+  $values = array(
+    array(
+      'security_question_id' => 1,
+      'security_question' => "What is your mother's maiden name?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 2,
+      'security_question' => "What was your highschool mascot?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 3,
+      'security_question' => "What is your favorite hobby?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 4,
+      'security_question' => "What was your childhood nickname?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 5,
+      'security_question' => "What is the name of your favorite childhood friend?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 6,
+      'security_question' => "What is your oldest sibling's middle name?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 7,
+      'security_question' => "What is the middle name of your oldest child?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 8,
+      'security_question' => "What was the last name of your third grade teacher?",
+      'admin' => 1,
+    ),
+    array(
+      'security_question_id' => 9,
+      'security_question' => "In what city does your nearest sibling live?",
+      'admin' => 1,
+    ),  
+  );
+  $query = db_insert('security_questions')->fields(array('security_question_id', 'security_question', 'admin'));
+  foreach ($values as $record) {
+    $query->values($record);
+  }
+  $query->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function security_questions_uninstall() {
+  variable_del('security_questions_number_required');
+  variable_del('security_questions_user_questions');
+  variable_del('security_questions_protection_mode');
+  variable_del('security_questions_password_reset');
+  variable_del('security_questions_user_login');
+  variable_del('security_questions_cookie');
+  variable_del('security_questions_cookie_expire');
+}

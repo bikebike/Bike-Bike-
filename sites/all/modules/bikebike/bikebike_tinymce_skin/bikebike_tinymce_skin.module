@@ -1,0 +1,9 @@
+<?php
+function bikebike_tinymce_skin_wysiwyg_editor_settings_alter(&$settings, $context)
+{
+	if ($context['profile']->editor == 'tinymce') {
+		$settings['theme'] = 'ribbon';
+		$settings['skin'] = 'default';
+		/*$settings['skin_variant'] = 'silver';*/
+	}
+}
