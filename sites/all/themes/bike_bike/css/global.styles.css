@@ -4071,7 +4071,7 @@ input.upload-button*/ {
 	transition: all .25s ease;
 }
 .facebook-action-connect:after {
-    content: 'Log In Using Facebook';
+    content: 'Log In Using The Facebook';
     color: #FFF;
 	padding: 0px 8px;
 	font-size: 16px;
