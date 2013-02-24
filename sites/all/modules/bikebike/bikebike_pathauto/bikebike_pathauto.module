@@ -29,9 +29,9 @@ function bikebike_pathauto_alias_exists($alias, $context)
 function bikebike_pathauto_uniquify_organization(&$alias, &$context, $attempt = 0)
 {
 	$title = preg_replace_callback('/\s+([a-z|A-Z])/', create_function('$c', 'return strtoupper($c[1]);'), $context['data']['node']->title);
-	$city = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['city']);
-	$state = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['province']);
-	$country = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['country']);
+	try { $city = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['city']); } catch (Exception $e) {}
+	try { $state = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['province']); } catch (Exception $e) {}
+	try { $country = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['country']); } catch (Exception $e) {}
 
 	/*if ($attempt >  && (!isset($state) || $state == ''))
 	{
@@ -73,7 +73,7 @@ function bikebike_pathauto_uniquify_conference(&$alias, &$context, $attempt = 0)
 	//$attempt++;
 	$node = $context['data']['node'];
 	$lang = $node->language;
-	$tid = $node->field_conference_type[$lang][0]['tid'];
+	try { $tid = $node->field_conference_type[$lang][0]['tid']; } catch (Exception $e) {}
 
 	$pre = '';
 	
@@ -84,10 +84,10 @@ function bikebike_pathauto_uniquify_conference(&$alias, &$context, $attempt = 0)
 	$date = strtotime($node->field_date[$lang][0]['value']);
 	$year = date('Y', $date);
 	$month = date('M', $date);
-	$host = node_load($node->field_host_organizations[$lang][0]['target_id']);
-	$city = preg_replace('/\s+/', '', $host->field_location[$lang][0]['city']);
-	$state = preg_replace('/\s+/', '', $host->field_location[$lang][0]['province']);
-	$country = preg_replace('/\s+/', '', $host->field_location[$lang][0]['country']);
+	try { $host = node_load($node->field_host_organizations[$lang][0]['target_id']); } catch (Exception $e) {}
+	try { $city = preg_replace('/\s+/', '', $host->field_location[$lang][0]['city']); } catch (Exception $e) {}
+	try { $state = preg_replace('/\s+/', '', $host->field_location[$lang][0]['province']); } catch (Exception $e) {}
+	try { $country = preg_replace('/\s+/', '', $host->field_location[$lang][0]['country']); } catch (Exception $e) {}
 	
 	if ($attempt > 0 && !$state)
 	{
