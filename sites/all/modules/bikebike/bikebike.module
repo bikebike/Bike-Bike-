@@ -63,10 +63,30 @@ function bikebike_permission()
 
 function bikebike_git_pull()
 {
-	$output = shell_exec('git pull origin master');
+	drupal_set_message('Git: <pre>'.shell_exec('git pull origin master').'</pre>');
 	
-	drupal_set_message('<pre>'.$output.'</pre>');
-	drupal_set_message('Please run any new migrations immediately.', 'warning');
+	module_load_include('module', 'backup_migrate');
+	module_load_include('inc', 'backup_migrate', 'includes/destinations');
+	module_load_include('inc', 'backup_migrate', 'includes/profiles');
+	$location = drupal_realpath(backup_migrate_create_destination('file_manual', array('destination_id' => 'manual'))->location);
+
+	$settings = _backup_migrate_profile_saved_default_profile(NULL);
+	
+	$files = glob("$location/*.aes");
+	usort($files, function($a, $b) { return filemtime($a) < filemtime($b); });
+	$scripts = 0;
+	foreach ($files as $file)
+	{
+		$basename = basename($file);
+		if (!db_query("SELECT COUNT(filename) FROM {backup_migrate_history} WHERE filename='$basename'")->fetchField())
+		{
+			backup_migrate_perform_restore('manual', $file, $settings);
+			db_query("INSERT INTO {backup_migrate_history} (filename, date) VALUES ('$basename', NOW())");
+			$scripts++;
+		}
+	}
+	drupal_set_message(($scripts ?: 'No').' migration script'.($scripts === 1 ? '' : 's').' were executed');
+	cache_clear_all();
 	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
 }
 

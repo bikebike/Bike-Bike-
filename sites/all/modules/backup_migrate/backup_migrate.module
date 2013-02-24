@@ -720,7 +720,10 @@ function backup_migrate_perform_backup(&$settings) {
  * Restore from a file in the given destination.
  */
 function backup_migrate_perform_restore($destination_id, $file, $settings = array()) {
-  backup_migrate_include('files', 'filters');
+    /*drupal_set_message($destination_id);
+	drupal_set_message('<pre>'.print_r($file, true).'</pre>');
+    drupal_set_message('<pre>'.print_r($settings, true).'</pre>');*/
+	backup_migrate_include('files', 'filters');
   timer_start('backup_migrate_restore');
 
   // If not in 'safe mode', increase the maximum execution time:
