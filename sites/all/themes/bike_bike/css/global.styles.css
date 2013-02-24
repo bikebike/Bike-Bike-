@@ -4099,3 +4099,7 @@ input.upload-button*/ {
 #content .facebook-action-connect:after {
 	content: 'Connect Using Facebook Instead';
 }
+
+#content .user-picture a {
+	border: 0;
+}

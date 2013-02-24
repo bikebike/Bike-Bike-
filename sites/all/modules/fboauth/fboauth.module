@@ -138,7 +138,7 @@ function fboauth_form_user_profile_form_alter(&$form, &$form_state) {
   // See http://drupal.org/node/1398782.
   if ($fbid && $form['#user']->pass == '') {
     if (empty($form_state['input'])) {
-      drupal_set_message(t('Please set a password to secure your account details.'), 'warning', FALSE);
+      //drupal_set_message(t('Please set a password to secure your account details.'), 'warning', FALSE);
     }
     unset($account_form['current_pass']);
     $account_form['current_pass_required_values']['#value'] = array();

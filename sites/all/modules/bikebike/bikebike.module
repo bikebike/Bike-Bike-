@@ -85,7 +85,7 @@ function bikebike_git_pull()
 			$scripts++;
 		}
 	}
-	drupal_set_message(($scripts ?: 'No').' migration script'.($scripts === 1 ? '' : 's').' were executed');
+	drupal_set_message(($scripts ?: 'No').' migration script'.($scripts === 1 ? '' : 's').' executed');
 	variable_set('file_temporary_path', '/tmp');
 	cache_clear_all();
 	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
@@ -271,12 +271,8 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		
 		if (fboauth_fbid_load($user->uid))
 		{
-			// disable the password field and remove no password warning
-			unset($form['account']['mail']);
 			unset($form['account']['pass']);
-			unset($form['account']['current_pass_required_values']);
 			unset($form['account']['current_pass']);
-			drupal_get_messages('warning', TRUE);
 		}
 	}
 	else if ($form_id == 'organization_node_form')
