@@ -86,6 +86,7 @@ function bikebike_git_pull()
 		}
 	}
 	drupal_set_message(($scripts ?: 'No').' migration script'.($scripts === 1 ? '' : 's').' were executed');
+	variable_set('file_temporary_path', '/tmp');
 	cache_clear_all();
 	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
 }
