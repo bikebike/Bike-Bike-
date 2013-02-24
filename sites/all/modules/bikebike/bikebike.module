@@ -31,9 +31,43 @@ function bikebike_menu()
 			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
 			//'access arguments' => array(2, 3, 4, 5),
 			'type' => MENU_CALLBACK
+		),
+		'admin/config/system/gitpull' => array
+		(
+			'title' => 'Pull From Git Repository',
+			'page callback' => 'bikebike_git_pull',
+			'description' => 'Updates the site from the GitHub Repository',
+			'page arguments' => array(),
+			'access callback' => 'bikebike_git_pull_access',//array('access git pull'),
+			'type' => MENU_NORMAL_ITEM
 		)
 	);
 	return $items;
+}
+
+function bikebike_git_pull_access()
+{
+	global $user;
+	return in_array('administrator', array_values($user->roles));
+}
+
+function bikebike_permission()
+{
+	return array(
+			'access git pull' => array(
+					'title' => t('Access Pull From Git'),
+					'description' => t('Access Pull From Git Repository.'),
+			)
+		);
+}
+
+function bikebike_git_pull()
+{
+	$output = shell_exec('git pull origin master');
+	
+	drupal_set_message('<pre>'.$output.'</pre>');
+	drupal_set_message('Please run any new migrations immediately.', 'warning');
+	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
 }
 
 function bikebike_org_edit_access($action, $org)
