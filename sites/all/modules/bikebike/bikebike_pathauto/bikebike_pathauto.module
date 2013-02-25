@@ -29,9 +29,10 @@ function bikebike_pathauto_alias_exists($alias, $context)
 function bikebike_pathauto_uniquify_organization(&$alias, &$context, $attempt = 0)
 {
 	$title = preg_replace_callback('/\s+([a-z|A-Z])/', create_function('$c', 'return strtoupper($c[1]);'), $context['data']['node']->title);
-	try { $city = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['city']); } catch (Exception $e) {}
-	try { $state = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['province']); } catch (Exception $e) {}
-	try { $country = preg_replace('/\s+/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['country']); } catch (Exception $e) {}
+	$title = preg_replace('/[\s|\']/', '', $title);
+	try { $city = preg_replace('/[\s|\']/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['city']); } catch (Exception $e) {}
+	try { $state = preg_replace('/[\s|\']/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['province']); } catch (Exception $e) {}
+	try { $country = preg_replace('/[\s|\']/', '', $context['data']['node']->field_location[$context['data']['node']->language][0]['country']); } catch (Exception $e) {}
 
 	/*if ($attempt >  && (!isset($state) || $state == ''))
 	{
@@ -85,9 +86,9 @@ function bikebike_pathauto_uniquify_conference(&$alias, &$context, $attempt = 0)
 	$year = date('Y', $date);
 	$month = date('M', $date);
 	try { $host = node_load($node->field_host_organizations[$lang][0]['target_id']); } catch (Exception $e) {}
-	try { $city = preg_replace('/\s+/', '', $host->field_location[$lang][0]['city']); } catch (Exception $e) {}
-	try { $state = preg_replace('/\s+/', '', $host->field_location[$lang][0]['province']); } catch (Exception $e) {}
-	try { $country = preg_replace('/\s+/', '', $host->field_location[$lang][0]['country']); } catch (Exception $e) {}
+	try { $city = preg_replace('/[\s|\']/', '', $host->field_location[$lang][0]['city']); } catch (Exception $e) {}
+	try { $state = preg_replace('/[\s|\']/', '', $host->field_location[$lang][0]['province']); } catch (Exception $e) {}
+	try { $country = preg_replace('/[\s|\']/', '', $host->field_location[$lang][0]['country']); } catch (Exception $e) {}
 	
 	if ($attempt > 0 && !$state)
 	{
@@ -117,4 +118,5 @@ function bikebike_pathauto_uniquify_conference(&$alias, &$context, $attempt = 0)
 		default:
 			$alias = $pre.$city.($state ? '-'.$state : '').'-'.$country.$month.$year.($attempt - 4);
 	}
+	//$alias = preg_replace('/\'/', '', $alias);
 }

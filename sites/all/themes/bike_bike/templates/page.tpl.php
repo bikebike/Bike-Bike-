@@ -176,6 +176,11 @@ if (arg(1) == 'add')
 					</script>
 				</div>
 				<?php print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo'))); ?>
+				<?php elseif (isset($node) && $node->type == 'conference'): ?>
+				<div id="conference-banner">
+					<?php print theme('image', array('style_name' => 0, 'path' => $node->field_banner[$node->language][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
+				</div>
+				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php endif; ?>
               <?php if ($title): ?>
                 <h1 id="page-title">
