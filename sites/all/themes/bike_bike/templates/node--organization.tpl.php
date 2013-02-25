@@ -106,12 +106,15 @@ hide($content['links']);
 
 ?>
 
-<script>
-	initializeOrgMap(<?php print $node->field_location[$node->language][0]['latitude'];?>, <?php print $node->field_location[$node->language][0]['longitude'];?>)
-</script>
+<?php if ($teaser): ?>
+<div class="org-profile"<?php print $attributes; ?>>
+	<?php print theme('image_style', array('style_name' => 'icon_small', 'path' => ($con->field_icon ? $con->field_icon['und'][0]['uri'] : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar'))); ?>
+	<h3><?php print $node->title; ?></h3>
+</div>
+<?php else: ?>
 
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-	<!-- node: <?php /*print_r($node);*/ ?> -->
+	<!-- node: <?php print_r($node); ?> -->
 <?php print render($title_prefix); ?>
 
   <?php /*<?php if ($title): ?>
@@ -157,3 +160,4 @@ hide($content['links']);
 	
 </div>
 */ ?>
+<?php endif; ?>

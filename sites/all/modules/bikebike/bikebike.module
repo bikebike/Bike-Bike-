@@ -63,7 +63,7 @@ function bikebike_permission()
 
 function bikebike_git_pull()
 {
-	drupal_set_message('Git: <pre>'.shell_exec('git pull origin master').'</pre>');
+	drupal_set_message('> git pull origin master <pre style="margin-left: 15px;">'.shell_exec('git pull origin master').'</pre>');
 	
 	module_load_include('module', 'backup_migrate');
 	module_load_include('inc', 'backup_migrate', 'includes/destinations');
@@ -243,8 +243,15 @@ function bikebike_autocomplete_callback_get_matches($type, $field, $instance, $e
 				if ($target_type == 'user')
 				{
 					$user = user_load($entity_id);
-					//$thumb = 'XXX: ';
 					$thumb = theme('image_style', array('style_name' => 'icon_small', 'path' => ($user->picture ? $user->picture->uri : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar')));
+				}
+				else// ($target_type == 'organization')
+				{
+					$node = node_load($entity_id);
+					if ($node->type == 'organization')
+					{
+						$thumb = theme('image_style', array('style_name' => 'icon_small', 'path' => ($node->field_icon ? $node->field_icon['und'][0]['uri'] : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar')));
+					}
 				}
 				
 				$key = "$label ($entity_id)";
@@ -288,4 +295,35 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	{
   		honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
 	}
+}
+
+function bikebike_field_attach_view_alter(&$output, $context)
+{
+	if ($context['entity_type'] == 'node' && $context['display'] == 'teaser')
+	{
+		if ($context['entity']->field_host_organizations)
+		{
+			$out = '';
+			foreach ($context['entity']->field_host_organizations['und'] as $org_info)
+			{
+				  $org = node_load($org_info['target_id']);
+				  $output['field_host_organizations'][] = array(
+				    '#type' => 'link',
+				    '#href' => 'node/'.$org->nid,
+				    '#title' => theme('image_style', array('style_name' => 'icon_meduim', 'path' => ($org->field_icon ? $org->field_icon['und'][0]['uri'] : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar'))).'<h3>'.$org->title.'</h3>',
+				    '#attributes' => array('class' => 'org-profile', 'title' => $org->title),
+				    '#options' => array(
+				      'html' => TRUE,
+				    ),
+				  	//'#field_type' => 'entityreference'
+				  );
+				  $output['field_host_organizations']['#field_type'] = 'entityreference';
+			}
+		}
+	}
+}
+
+function bikebike_host_organizations_field_attach_view_alter(&$output, $context)
+{
+	
 }

@@ -60,6 +60,7 @@
 
 	scripts[] = scripts/bike_bike.js
 	scripts[] = scripts/jquery.easing.1.3.js
+	scripts[] = scripts/jquery.ba-resize.min.js
 	;scripts[] = scripts/markerlight.js
 	;scripts[] = scripts/markermanager_packed.js
 

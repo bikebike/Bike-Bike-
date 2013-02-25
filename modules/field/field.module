@@ -801,7 +801,8 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
     $clone = clone $entity;
     $clone->{$field_name}[$langcode] = array($item);
     $elements = field_view_field($entity_type, $clone, $field_name, $display, $langcode);
-
+    //drupal_set_message('<pre>'.print_r($clone, true).'</pre>');
+    
     // Extract the part of the render array we need.
     $output = isset($elements[0]) ? $elements[0] : array();
     if (isset($elements['#access'])) {
@@ -871,6 +872,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
   $output = array();
 
   if ($field = field_info_field($field_name)) {
+  	//drupal_set_message('<pre>'.print_r($field, true).'</pre>');
     if (is_array($display)) {
       // When using custom display settings, fill in default values.
       $display = _field_info_prepare_instance_display($field, $display);
@@ -906,7 +908,8 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
       'display' => $display,
     );
     drupal_alter('field_attach_view', $result, $context);
-
+    //drupal_set_message('<pre>'.print_r($result, true).'</pre>');
+    //drupal_set_message('<pre>'.print_r($field_name, true).'</pre>');
     if (isset($result[$field_name])) {
       $output = $result[$field_name];
     }

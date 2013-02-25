@@ -11,7 +11,9 @@ jQuery.extend(jQuery.expr[':'],{
 
 	  Drupal.behaviors.bike_bike = {
 	    attach: function (context, settings) {
-	    	completeAutocomplete('.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]');
+	    	//$('.field-widget-entityreference-autocomplete input.autocomplete-processed')
+	    	//completeAutocomplete('.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]');
+	    	completeAutocomplete();
 	    }
 	  };
 
@@ -56,17 +58,70 @@ jQuery.fn.hasParent =
 
 function completeAutocomplete(element)
 {
-	if (jQuery(element).hasParent('.field-multiple-table'))//parent().parent().parent().parent().parent().parent().hasClass('field-multiple-table'))
+	return;
+	jQuery('.field-multiple-table').each
+	(
+		function ()
+		{
+			var table = jQuery(this);
+			jQuery(this).find('.entityreference-live-preview').each
+			(
+				function ()
+				{
+					var input = jQuery(this).next().find('input.form-autocomplete');
+					if (input.val() && input.val().match(/^.+ \(\d+\)$/))
+					{
+						input.hide();
+						if (jQuery(this).find('a.autocomplete-remove').length < 1)
+						{
+							jQuery(this).after('<a href="javascript:void(0)" class="autocomplete-remove" title="Remove this one">Remove</a>');
+							jQuery(this).next().click
+							(
+								function ()
+								{
+									jQuery(this).next().find('input.form-autocomplete').val('').show().trigger('change');
+									jQuery(this).closest('tr').nextAll('tr').toggleClass('even');
+									jQuery(this).closest('tr').nextAll('tr').toggleClass('odd');
+									if (table.find('.entityreference-live-preview').length > 1)
+									{
+										jQuery(this).closest('tr').hide();
+									}
+									else
+									{
+										jQuery(this).parent().find('input.form-autocomplete').val('').show();
+										jQuery(this).remove();
+									}
+								}
+							);
+						}
+					}
+				}
+			);
+			if (table.find('input.form-autocomplete:visible').length < 1)
+			{
+				table.next().find('input.field-add-more-submit').show();
+			}
+			else
+			{
+				table.next().find('input.field-add-more-submit').hide();
+			}
+		}
+	);
+	//jQuery('input.field-add-more-submit').mousedown(function() { completeAutocomplete(); });
+
+	//console.log(jQuery(element).closest('.entityreference-live-preview-container').find('.entityreference-live-preview').html());
+	/*if (jQuery(element).hasParent('.field-multiple-table'))// && jQuery(element).closest('.entityreference-live-preview-container').find('.entityreference-live-preview').html())//parent().parent().parent().parent().parent().parent().hasClass('field-multiple-table'))
 	{
 		jQuery(element).hide();
 		if (jQuery(element).parent().find('a.autocomplete-remove').length < 1)
 		{
 			jQuery(element).before('<a href="javascript:void(0)" class="autocomplete-remove" title="Remove this one">Remove</a>');
-			jQuery(element).parent().find('a.autocomplete-remove').click(
+			jQuery(element).parent().find('a.autocomplete-remove').click
+			(
 				function ()
 				{
 					jQuery(this).parent().find('input.form-autocomplete').val('').show().trigger('change');
-					/*if (jQuery(this).closest('tbody').find('tr').length < 1) { console.log('poo'); }*/
+					/*if (jQuery(this).closest('tbody').find('tr').length < 1) { console.log('poo'); }* /
 					jQuery(this).closest('tr').nextAll('tr').toggleClass('even');
 					jQuery(this).closest('tr').nextAll('tr').toggleClass('odd');
 					if (jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete[value=""]').length > 1)
@@ -93,6 +148,7 @@ function completeAutocomplete(element)
 		}
 		//console.log(formItem.html());//find('input.field-add-more-submit'));
 	}
+	//console.log('XXX');*/
 }
 
 function killWebkitAutofill()
@@ -122,6 +178,9 @@ jQuery(document).ready
 (
 	function ()
 	{
+		jQuery('input.field-add-more-submit').mousedown(function() { completeAutocomplete(); });//'.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]'));
+		jQuery('input.field-add-more-submit').keydown(function() { completeAutocomplete(); });
+		//jQuery('.entityreference-live-preview').resize(function() { console.log('completeAutocomplete('); });
 		jQuery('body.front #primary-menu-bar ul.menu li a').each(
 			function ()
 			{
@@ -456,7 +515,7 @@ function showNextMarker(map, places, delay, selector, infoWindow)
 						function()
 						{
 							//console.log(place);
-							var content = '<div class="infoWindow"><h3>' + place.link + '</h3>' + place.logo + '<p><ul class="address"><li class="street">' + place.address + '</li><li class="city">' + place.city + (place.province && place.province.length > 0 ? ', ' + place.province : '') + '</li><li class="country">' + place.country + '</li></ul></p></div>';
+							var content = '<div class="infoWindow"><h3><a href="' + place.link + '" title="' + place.title + '">' + place.title + '</a></h3>' + place.logo + '<p><ul class="address"><li class="street">' + place.address + '</li><li class="city">' + place.city + (place.province && place.province.length > 0 ? ', ' + place.province : '') + '</li><li class="country">' + place.country + '</li></ul></p></div>';
 							infoWindow.setContent(content);//place.title);
 							infoWindow.open(map, marker);
 							/*if (map.getZoom() < 3)

@@ -171,6 +171,9 @@ if (arg(1) == 'add')
             <header<?php print $content_header_attributes; ?>>
 				<?php if (isset($node) && $node->type == 'organization'): ?>
 				<div id="org-map">
+					<script>
+						initializeOrgMap(<?php print $node->field_location[$node->language][0]['latitude'];?>, <?php print $node->field_location[$node->language][0]['longitude'];?>)
+					</script>
 				</div>
 				<?php print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo'))); ?>
 				<?php endif; ?>

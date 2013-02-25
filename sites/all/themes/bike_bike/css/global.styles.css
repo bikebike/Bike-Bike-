@@ -340,6 +340,10 @@ var {
 	margin: 0px auto;
 }
 
+img {
+	line-height: 0;
+}
+
 /*
  * Logo
  */
@@ -395,7 +399,7 @@ var {
 /*
  * Main content header wraps the page title, tabs and actions links
  */
-body.page-node-add-organization #main-content:before,
+body.page-node-add #main-content:before,
 body.page-user #main-content:before,
 body.node-type-page #main-content:before {
 	content: '';
@@ -425,8 +429,12 @@ body.page-user.page-user-password #main-content:before {
     background-image: url(../images/user-password-photo-header.png);
 }
 
+body.page-node-add-conference #main-content:before,
 body.node-type-page.page--conferences #main-content:before {
     background-image: url(../images/conference-photo-header.png);
+}
+body.page-node-add-conference #main-content:before,
+body.node-type-page.page--conferences #main-content:before {
 	border-color: #8A9BAB;
 }
 
@@ -454,7 +462,7 @@ body.page-user.page-user-  #main-content:before {
 	background-image: none;
 }
 
-body.page-node-add-organization #main-content-header,
+body.page-node-add #main-content-header,
 body.page-user #main-content-header,
 body.node-type-page #main-content-header {
 	position: relative;
@@ -468,7 +476,7 @@ body.page-user.page-user- #main-content-header {
 /*
  * The main page title (h1)
  */
-body.page-node-add-organization #main-content-header #page-title,
+body.page-node-add #main-content-header #page-title,
 body.page-user #main-content-header #page-title,
 body.node-type-organization #main-content-header #page-title,
 body.node-type-page #page-title {
@@ -486,7 +494,7 @@ body.page-user.page-user- #main-content-header #page-title {
 	padding-left: 164px;
 }
 
-body.page-node-add-organization #page-title:before,
+body.page-node-add #page-title:before,
 body.page-user #page-title:before,
 body.node-type-page #page-title:before {
 	content: '';
@@ -520,6 +528,7 @@ body.page-user.page-user-password #page-title:before {
 	background-image: url(../images/user-password.png);
 }
 
+body.page-node-add-conference #main-content-header #page-title:before,
 body.node-type-page.page--conferences #page-title:before {
 	background-color: #8A9BAB;
 	background-image: url(../images/conf.png);
@@ -549,7 +558,7 @@ body.page-user.page-user- #page-title:before {
 	top: -18px;
 }
 
-body.page-node-add-organization #main-content-header:before,
+body.page-node-add #main-content-header:before,
 body.page-user #main-content-header:before,
 body.node-type-organization #main-content-header:before,
 body.node-type-page #main-content-header:before {
@@ -569,6 +578,7 @@ body.page-user #main-content-header:before {
 	background-color: #AAA;
 }
 
+body.page-node-add-conference #main-content-header:before,
 body.node-type-page.page--conferences #main-content-header:before {
 	background-color: #8A9BAB;
 }
@@ -2837,6 +2847,7 @@ body.page-user- #block-system-main > .profile {
 	border: 5px solid #E6EAE2;*/
 }
 
+.org-profile h3,
 .profile h3 {
 	border: 0;
 	/*position: absolute;*/
@@ -3159,6 +3170,18 @@ fieldset.location .chzn-container .chzn-single {
 input#edit-name,
 input.username.form-text {
 	background-image: url(../images/input-edit-name.png) !important;
+}
+
+.form-type-date-popup .form-type-textfield input.date-clear {
+	background-image: url(../images/input-edit-date.png);
+}
+
+.form-type-date-popup .form-type-textfield + .form-type-textfield input.date-clear {
+	background-image: url(../images/input-edit-time.png);
+}
+
+input#edit-title {
+	background-image: url(../images/input-edit-title.png);
 }
 
 input#edit-pass,
@@ -3527,6 +3550,12 @@ html.js #field-administrators-values input.form-autocomplete {
 	background-position: -40px -3px, right -3px;
 	background-origin: content-box;
 }
+html.js #field-host-organizations-values input.form-autocomplete {
+	background-image: url(../images/input-edit-org-name.png), url(../images/autocomplete.png);
+	background-position: -40px -3px, right -3px;
+	background-origin: content-box;
+}
+
 html.js #field-administrators-values input.throbbing {
 	background-image: url(../images/input-edit-name.png), url(../images/loading.gif);
 }
@@ -4102,4 +4131,135 @@ input.upload-button*/ {
 
 #content .user-picture a {
 	border: 0;
+}
+
+#block-views-conferences-block .view-content {
+	width: 100%;
+	max-width: 1400px;
+	margin: 0 auto;
+	border-top: 1px dashed #DDD;
+	border-bottom: 1px dashed #DDD;
+	margin-bottom: 30px;
+}
+
+#block-views-conferences-block .view-content .item-list {
+	width: 100%;
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+.view-content > .item-list > ul {
+	list-style: none;
+}
+
+#content h3 > a,
+#content h3 > a:link,
+#content h3 > a:visited {
+	border: 0;
+}
+
+#block-views-conferences-block .views-field-field-banner a {
+	display: block;
+	line-height: 0;
+}
+
+#block-views-conferences-block .views-field-field-date {
+	margin-top: 4px;
+	float: right;
+}
+
+#block-views-conferences-block .views-field-field-banner a {
+	border: 0;
+}
+
+#block-views-conferences-block .views-field-title {
+	background-color: #EEE;
+	padding-top: 4px;
+}
+
+#block-views-conferences-block .views-field-title .field-content {
+	margin: 0px 0px 10px 0px;
+}
+
+#block-views-conferences-block .views-field-title,
+#block-views-conferences-block .views-field-body {
+	padding-left: 10px;
+}
+
+#block-views-conferences-block .views-field-field-date,
+#block-views-conferences-block .views-field-field-host-organizations {
+	margin-right: 10px;
+}
+
+#block-views-conferences-block .views-field-field-host-organizations {
+	float: right;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	border-left: 1px solid #DDD;
+	/*border-left: 1px solid #DDD;*/
+}
+
+#block-views-conferences-block .views-field-field-host-organizations h4 {
+	padding: 5px;
+	/*background-color: #EEE;*/
+	margin: 0;
+	font-size: 14px;
+	border-bottom: 1px solid #DDD;
+	margin-left: 5px;
+}
+
+#block-views-conferences-block .views-field-field-host-organizations .item-list ul {
+	list-style: none;
+	margin: 0;
+}
+
+#block-views-conferences-block .views-field-field-host-organizations .item-list ul li {
+	margin: 5px;
+	display: inline-block;
+}
+
+#block-views-conferences-block li.views-row {
+	overflow: auto;
+	border: 1px solid #DDD;
+	border-bottom: 0;
+}
+
+#block-views-conferences-block li.views-row.views-row-last {
+	border-bottom: 1px solid #DDD;
+}
+
+.org-profile h3 { display: none; }
+.entityreference-live-preview .org-profile h3 { display: block; }
+#content a.org-profile {
+	border: 0;
+	margin: 0 4px 4px 4px;
+	padding: 0;
+	position: relative;
+	line-height: 0;
+	border: 5px solid #FFF;
+	box-shadow: 0px 2px 2px #DDD;
+	background-color: #FFF;
+	display: block;
+	/*border-radius: 128px;*/
+}
+
+#content a.org-profile img {
+	/*border-radius: 128px;*/
+}
+
+.jcrop-holder img,
+img.jcrop-preview,
+img.preview-existing,
+img.cropbox {
+	max-width: none;
+}
+
+#block-views-conferences-block .view-header {
+	background-color: #F7F7F7;
+	padding: 0 0 30px 0;
+	text-align: center;
+}
+
+.container-inline-date label {
+	float: left;
 }
