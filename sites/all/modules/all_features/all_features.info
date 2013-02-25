@@ -251,7 +251,6 @@ features[menu_links][] = user-menu:user
 features[menu_links][] = user-menu:user/login
 features[menu_links][] = user-menu:user/logout
 features[node][] = article
-features[node][] = conference
 features[node][] = organization
 features[node][] = page
 features[rules_config][] = rules_redirect_to_edit_page

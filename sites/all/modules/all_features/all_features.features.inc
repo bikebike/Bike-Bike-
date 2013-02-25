@@ -91,14 +91,6 @@ function all_features_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'conference' => array(
-      'name' => t('Conference'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
     'organization' => array(
       'name' => t('Organization'),
       'base' => 'node_content',
