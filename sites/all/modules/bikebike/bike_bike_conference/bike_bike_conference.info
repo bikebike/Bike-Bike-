@@ -1,0 +1,8 @@
+name = Bike!Bike! Conference
+core = 7.x
+package = Bike!Bike!
+dependencies[] = features
+features[features_api][] = api:1
+features[node][] = conference
+features_exclude[dependencies][all_features] = all_features
+project path = sites/all/modules/bikebike
