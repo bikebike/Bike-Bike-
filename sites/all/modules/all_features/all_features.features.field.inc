@@ -760,7 +760,7 @@ function all_features_field_default_fields() {
             'field_formatter_class' => '',
           ),
           'type' => 'text_default',
-          'weight' => 0,
+          'weight' => '4',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -868,14 +868,9 @@ function all_features_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'image',
-          'settings' => array(
-            'field_formatter_class' => '',
-            'image_link' => '',
-            'image_style' => '',
-          ),
-          'type' => 'image',
-          'weight' => 5,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '6',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -979,12 +974,9 @@ function all_features_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'taxonomy',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 4,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '5',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1053,11 +1045,11 @@ function all_features_field_default_fields() {
       'description' => '',
       'display' => array(
         'default' => array(
-          'label' => 'above',
+          'label' => 'inline',
           'module' => 'date',
           'settings' => array(
             'field_formatter_class' => '',
-            'format_type' => 'long',
+            'format_type' => 'long_date_only_',
             'fromto' => 'both',
             'multiple_from' => '',
             'multiple_number' => '',
@@ -1065,7 +1057,7 @@ function all_features_field_default_fields() {
             'show_repeat_rule' => 'show',
           ),
           'type' => 'date_default',
-          'weight' => 3,
+          'weight' => '3',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1161,13 +1153,12 @@ function all_features_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'entityreference',
+          'module' => 'custom_formatters',
           'settings' => array(
             'field_formatter_class' => '',
-            'link' => FALSE,
           ),
-          'type' => 'entityreference_label',
-          'weight' => 2,
+          'type' => 'custom_formatters_link_with_icon',
+          'weight' => '4',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1212,6 +1203,110 @@ function all_features_field_default_fields() {
         ),
         'type' => 'entityreference_autocomplete',
         'weight' => '5',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-conference-field_poster'.
+  $fields['node-conference-field_poster'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_poster',
+      'foreign keys' => array(
+        'fid' => array(
+          'columns' => array(
+            'fid' => 'fid',
+          ),
+          'table' => 'file_managed',
+        ),
+      ),
+      'indexes' => array(
+        'fid' => array(
+          0 => 'fid',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'image',
+      'settings' => array(
+        'default_image' => 0,
+        'uri_scheme' => 'public',
+      ),
+      'translatable' => '0',
+      'type' => 'image',
+    ),
+    'field_instance' => array(
+      'bundle' => 'conference',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'image',
+          'settings' => array(
+            'field_formatter_class' => '',
+            'image_link' => '',
+            'image_style' => '',
+          ),
+          'type' => 'image',
+          'weight' => '1',
+        ),
+        'entityreference_view_widget' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_poster',
+      'label' => 'Poster',
+      'required' => 0,
+      'settings' => array(
+        'alt_field' => 0,
+        'default_image' => 0,
+        'file_directory' => '',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'title_field' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'image',
+        'settings' => array(
+          'insert' => 0,
+          'insert_absolute' => 0,
+          'insert_class' => '',
+          'insert_default' => 'auto',
+          'insert_styles' => array(
+            'auto' => 'auto',
+            'icon_link' => 0,
+            'image' => 0,
+            'image_icon_meduim' => 0,
+            'image_icon_small' => 0,
+            'image_large' => 0,
+            'image_medium' => 0,
+            'image_square_thumbnail' => 0,
+            'image_thumbnail' => 0,
+            'link' => 0,
+          ),
+          'insert_width' => '',
+          'preview_image_style' => 'medium',
+          'progress_indicator' => 'throbber',
+        ),
+        'type' => 'image_image',
+        'weight' => '7',
       ),
     ),
   );
@@ -1650,7 +1745,7 @@ function all_features_field_default_fields() {
                 'weight' => '30',
               ),
               'locpick' => array(
-                'collect' => '0',
+                'collect' => '1',
                 'weight' => '20',
               ),
               'name' => array(
@@ -2077,6 +2172,7 @@ function all_features_field_default_fields() {
   t('Location');
   t('Logo');
   t('Organization Secret');
+  t('Poster');
   t('Question');
   t('Shop Status');
   t('Tags');

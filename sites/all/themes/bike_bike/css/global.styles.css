@@ -410,7 +410,7 @@ body.node-type-page #main-content:before {
     border-bottom: 5px solid #FFF !important;
     border-top: 5px solid;
     position: relative;
-	box-shadow: 0px 1px 1px #DDD;
+	box-shadow: 0px 4px 2px -2px #DDD;
 }
 
 body.page-user #main-content:before {
