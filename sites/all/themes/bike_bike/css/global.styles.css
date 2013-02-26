@@ -413,6 +413,11 @@ body.node-type-page #main-content:before {
 	box-shadow: 0px 4px 2px -2px #DDD;
 }
 
+body.page-node-add.page-node-add-conference-registration #main-content:before,
+body.node-type-conference-registration #main-content:before {
+	display: none;
+}
+
 body.page-user #main-content:before {
 	border-color: #DDD;
 }
@@ -480,6 +485,8 @@ body.page-node-add #main-content-header #page-title,
 body.page-user #main-content-header #page-title,
 body.node-type-organization #main-content-header #page-title,
 body.node-type-conference #main-content-header #page-title,
+body.page-node-add-conference-registration #main-content-header #page-title,
+body.node-type-conference-registration #main-content-header #page-title,
 body.node-type-page #page-title {
 	margin: 0 auto;
 	max-width: 980px;
@@ -517,6 +524,11 @@ body.node-type-page #page-title:before {
 	background-image: url(../images/default-icon.png);
 }
 
+body.page-node-add.page-node-add-conference-registration #page-title:before,
+body.node-type-conference-registration #page-title:before {
+	display: none;
+}
+
 body.page-user #page-title:before {
 	background-image: url(../images/user.png);
 }
@@ -529,14 +541,18 @@ body.page-user.page-user-password #page-title:before {
 	background-image: url(../images/user-password.png);
 }
 
-body.page-node-add-conference #main-content-header #page-title:before,
+/*body.page-node-add-conference #main-content-header #page-title:before,
+body.node-type-conference-registration #main-content-header #page-title:before,*/
 body.node-type-conference #main-content-header #page-title:before,
+body.page-node-add-conference-registration #main-content-header #page-title:before,
+body.node-type-conference-registration #main-content-header #page-title:before,
 body.node-type-page.page--conferences #page-title:before {
 	background-color: #8A9BAB;
 	background-image: url(../images/conf.png);
 }
 
 body.page-node-add-organization #main-content-header #page-title:before,
+body.node-type-conference-registration #main-content-header #page-title:before,
 body.node-type-organization #main-content-header #page-title:before,
 body.node-type-page.page--organizations #page-title:before {
 	background-color: #AB8A9B;
@@ -564,6 +580,8 @@ body.page-node-add #main-content-header:before,
 body.page-user #main-content-header:before,
 body.node-type-organization #main-content-header:before,
 body.node-type-conference #main-content-header:before,
+body.page-node-add-conference-registration #main-content-header:before,
+body.node-type-conference-registration #main-content-header:before,
 body.node-type-page #main-content-header:before {
 	content: '';
 	display: block;
@@ -583,6 +601,8 @@ body.page-user #main-content-header:before {
 
 body.page-node-add-conference #main-content-header:before,
 body.node-type-conference #main-content-header:before,
+body.page-node-add-conference-registration #main-content-header:before,
+body.node-type-conference-registration #main-content-header:before,
 body.node-type-page.page--conferences #main-content-header:before {
 	background-color: #8A9BAB;
 }
@@ -1928,8 +1948,11 @@ article.node {
 article.node .field-name-field-logo,
 article.node .field-name-field-poster {
 	float: left;
-	width: 48%;
+	width: 51%;
 	text-align: center;
+	border-right: 1px solid #CCC;
+	padding-right: 30px;
+	box-sizing: border-box;
 }
 
 #content section p,
@@ -2742,6 +2765,8 @@ body.front #branding {
 }
 
 body.node-type-conference #main-content-header,
+body.page-node-add-conference-registration #main-content-header,
+body.node-type-conference-registration #main-content-header,
 body.node-type-organization #main-content-header {
 	position: relative;
 	box-shadow: 0px 4px 2px -2px #DDD;
@@ -2766,10 +2791,12 @@ body.node-type-organization article.node .field-name-field-logo img {
 	border: 5px solid #FFF;
 	box-shadow: 0px 2px 2px #DDD;
 	background-color: #EEE;
-	margin-right: 30px;
+	/*margin-right: 30px;*/
+	box-sizing: border-box;
 }
 
-body.node-type-organization article.node .field-name-body {
+body.node-type-organization article.node .field-name-body,
+body.node-type-conference article.node .field-name-body {
 	font-size: 16px;
 	/*overflow: auto;*/
 	clear: both;
@@ -2778,12 +2805,12 @@ body.node-type-organization article.node .field-name-body {
 }
 
 .group-details {
-	width: 48%;
-	float: right;
+	/*width: 48%;
+	float: right;*/
 }
 
 .group-details .fieldset-wrapper {
-	border-left: 1px solid #CCC;
+	/*border-left: 1px solid #CCC;*/
 	padding-left: 10px;
 	overflow: auto;
 }
@@ -2807,7 +2834,8 @@ fieldset.field-group-fieldset {
 	border: 0;
 }
 
-body.node-type-organization article.node .field-name-body .field-items {
+body.node-type-organization article.node .field-name-body .field-items,
+body.node-type-conference article.node .field-name-body .field-items {
 	border-top: 1px dashed #CCC;
 	border-bottom: 1px dashed #CCC;
 	max-width: 1400px;
@@ -2815,7 +2843,8 @@ body.node-type-organization article.node .field-name-body .field-items {
 	padding: 20px 0;
 }
 
-body.node-type-organization article.node .field-name-body .field-item {
+body.node-type-organization article.node .field-name-body .field-item,
+body.node-type-conference article.node .field-name-body .field-item {
 	max-width: 980px;
 	margin: 0px auto;
 }
@@ -2826,7 +2855,8 @@ article.node nav:last-child {
 	margin: 0px auto;
 }
 
-body.node-type-organization article.node {
+body.node-type-organization article.node,
+body.node-type-conference article.node {
 	max-width: none;
 	margin: 0;
 }
@@ -3464,7 +3494,8 @@ body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.
 	padding-bottom: 50px;
 }
 
-#content a.important-button {
+#content a.important-button,
+#content .important-button > a{
 	background-color: #FFF19A;
 	border: 2px #333 solid;
 	color: #666;
@@ -3472,7 +3503,8 @@ body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.
 	font-size: 21px;
 }
 
-#content a.important-button:hover {
+#content a.important-button:hover,
+#content .important-button > a:hover {
 	text-decoration: none;
 	color: #333;
 }
@@ -4191,6 +4223,10 @@ input.upload-button*/ {
 	border: 0;
 }
 
+#block-views-conferences-block .views-field-field-banner a img {
+	width: 100%;
+}
+
 #block-views-conferences-block .views-field-title {
 	background-color: #EEE;
 	padding-top: 4px;
@@ -4241,6 +4277,7 @@ input.upload-button*/ {
 	overflow: auto;
 	border: 1px solid #DDD;
 	border-bottom: 0;
+	margin-bottom: 0;
 }
 
 #block-views-conferences-block li.views-row.views-row-last {
@@ -4328,4 +4365,44 @@ textarea.text-full.form-textarea {
 	top: 2px;
 	border-top: 2px dashed #DDD;
 	height: 2px;
+}
+
+.view.view-conference-registration-button {
+	padding: 20px 0 30px 0;
+	text-align: center;
+}
+
+body.page-node-add.page-node-add-confeence-registration .field-name-field-confrerence-form,
+body.node-type-conference-registration .field-name-field-conference-form {
+	display: none;
+}
+
+#edit-field-attending-und {
+	width: 130px !important;
+}
+
+#edit_field_attending_und_chzn .chzn-search {
+	display: none;
+}
+
+#edit_field_attending_und_chzn .chzn-drop {
+	padding-top: 5px;
+}
+
+#edit_field_attending_und_chzn:after {
+	content: '';
+	clear: both;
+	display: block;
+	visibility: hidden;
+}
+
+label[for="edit-field-attending-und"] {
+	float: left;
+	padding-left: 30px;
+	padding-right: 10px;
+}
+
+label[for="edit-field-attending-und"] .form-required {
+	position: absolute;
+	left: 0px;
 }

@@ -91,28 +91,42 @@ function bikebike_git_pull()
 	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
 }
 
-function bikebike_org_edit_access($action, $org)
+function bikebike_org_edit_access($action, $node)
 {
 	global $user;
 	
-	if (!$org || $org->type != 'organization')
-	{
-		return node_access($action, $org);
-	}
-
 	if (in_array('administrator', array_values($user->roles)))
 	{
 		return TRUE;
 	}
 	
-	foreach ((isset($org->field_administrators['und']) ? $org->field_administrators['und'] : array()) as $admin)
+	if (!$node)// || $org->type != 'organization')
 	{
-		if ($admin['target_id'] == $user->uid)
-		{
-			return TRUE;
-		}
+		return node_access($action, $node);
 	}
-	return FALSE;
+	
+	switch ($node->type)
+	{
+		case 'organization':
+			foreach ((isset($node->field_administrators[$node->language]) ? $node->field_administrators[$node->language] : array()) as $admin)
+			{
+				if ($admin['target_id'] == $user->uid)
+				{
+					return TRUE;
+				}
+			}
+			return FALSE;
+		case 'conference':
+			foreach ((isset($node->field_host_organizations[$node->language]) ? $node->field_host_organizations[$node->language] : array()) as $org)
+			{
+				if (bikebike_org_edit_access($action, $org))
+				{
+					return TRUE;
+				}
+			}
+			return FALSE;
+	}
+	return node_access($action, $node);
 }
 
 function bikebike_add_org_admin($form_state, $args)
@@ -293,7 +307,7 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	}
 	else if ($form_id == 'bikebike_add_org_admin')
 	{
-  		honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
 	}
 }
 

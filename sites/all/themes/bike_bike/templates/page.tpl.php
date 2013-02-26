@@ -89,19 +89,44 @@
  */
 if (arg(2) == 'edit')
 {
-	if (isset($node) && $node->type == 'organization')
+	if (isset($node))
 	{
-		$title = 'Update '.$node->title;
-		print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location[$node->language][0]['latitude'].", ".$node->field_location[$node->language][0]['longitude']."); } );</script>";
+		if($node->type == 'organization')
+		{
+			$title = 'Update '.$node->title;
+			print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location[$node->language][0]['latitude'].", ".$node->field_location[$node->language][0]['longitude']."); } );</script>";
+		}
+		else if($node->type == 'conference_registration')
+		{
+			$conference = node_load($node->field_conference[$node->language][0]['nid']);
+			$title = $conference->title.' Registration';
+		}
 	}
 }
-if (arg(1) == 'add')
+else if (arg(1) == 'add')
 {
 	if (arg(2) == 'organization')
 	{
 		global $user;
 		$title = 'Register an Organization';
 		print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
+	}
+	else if (arg(2) == 'conference-registration')
+	{
+		$conference = node_load(arg(3));//(arg(1) == 'add' ? node_load(arg(3)) : $node->field_conference[$node->language][0]);
+		$title = 'Modify '.$conference->title.' Registration';
+	}
+}
+else if (isset($node))
+{
+	if ($node->type == 'conference_registration')
+	{
+		$conference = node_load($node->field_conference[$node->language][0]['nid']);
+		$title = $conference->title.' Registration';
+	}
+	else if ($node->type == 'conference')
+	{
+		$conference = $node;
 	}
 }
 ?>
@@ -176,13 +201,13 @@ if (arg(1) == 'add')
 					</script>
 				</div>
 				<?php print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo'))); ?>
-				<?php elseif (isset($node) && $node->type == 'conference'): ?>
+				<?php elseif (isset($conference)): ?>
 				<div id="conference-banner">
-					<?php print theme('image', array('style_name' => 0, 'path' => $node->field_banner[$node->language][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
+					<?php print theme('image', array('style_name' => 0, 'path' => $conference->field_banner[$conference->language][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
 				</div>
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php endif; ?>
-              <?php if ($title): ?>
+			  <?php if ($title): ?>
                 <h1 id="page-title">
                   <?php print $title; ?>
                 </h1>
