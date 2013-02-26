@@ -100,9 +100,15 @@ function bikebike_org_edit_access($action, $node)
 		return TRUE;
 	}
 	
-	if (!$node)// || $org->type != 'organization')
+	if ($node && is_array($node) && isset($node['target_id']))
 	{
-		return node_access($action, $node);
+		$node = node_load($node['target_id']);
+	}
+	
+	if (!$node || !is_object($node))
+	{
+		drupal_set_message('<pre>'.print_r($node, true).'</pre>');
+		return FALSE;
 	}
 	
 	switch ($node->type)
