@@ -26,10 +26,26 @@ function bikebike_menu()
 			'title' => 'Add Organization Administrator',
 			'page callback' => 'drupal_get_form',
 			//'page arguments' => array('bikebike_add_org_admin'),
-			'description' => 'A set of ten tutorials',
+			'description' => 'Add yourself as an organization administrator',
 			'page arguments' => array('bikebike_add_org_admin', 1),
 			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
 			//'access arguments' => array(2, 3, 4, 5),
+			'type' => MENU_CALLBACK
+		),
+		'conference-registration/%/cancel' => array
+		(
+			'title' => 'Add Organization Administrator',
+			'page callback' => 'bikebike_change_registration',
+			'page arguments' => array(1, false),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'conference-registration/%/confirm' => array
+		(
+			'title' => 'Add Organization Administrator',
+			'page callback' => 'bikebike_change_registration',
+			'page arguments' => array(1, true),
+			'access callback' => TRUE,
 			'type' => MENU_CALLBACK
 		),
 		'admin/config/system/gitpull' => array
@@ -43,6 +59,24 @@ function bikebike_menu()
 		)
 	);
 	return $items;
+}
+
+function bikebike_change_registration($crid, $confirm)
+{
+	$reg = node_load($crid);
+	global $user;
+	if (!$reg || $user->uid != $reg->uid)
+	{
+		drupal_set_message('The provided registration does not belong to you.', 'warning');
+		drupal_goto('conferences');
+	}
+	else
+	{
+		$reg->field_attending[$reg->language][0]['tid'] = ($confirm ? 9 : 11);
+		node_save($reg);
+		drupal_set_message('Your registration has been '.($confirm ? 'confirmed.' : 'cancelled.'));
+		drupal_goto('node/'.$reg->nid);
+	}
 }
 
 function bikebike_git_pull_access()
@@ -180,7 +214,7 @@ function bikebike_add_org_admin_submit($form, &$form_state)
 	$secret_id = $org->field_organization_secret[$language][0]['value'];
 	$secret = field_collection_item_load($secret_id, $reset = FALSE);
 	$answer = $form['answer']['#value'];
-	$real_answer = $secret->field_answer[$language][0]['value'];
+	$real_answer = password_field_decrypt($secret->field_reply[$language][0]['password_field']);
 	if ($real_answer == $answer)
 	{
 		global $user;

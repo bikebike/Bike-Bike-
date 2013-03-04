@@ -2378,7 +2378,7 @@ tr.error*/ {
 
 #messages {
     position: relative;
-    top: 30px;
+    top: 20px;
     width: 100%;
     max-width: 980px;
     margin: 0 auto 30px auto;
@@ -4405,4 +4405,59 @@ label[for="edit-field-attending-und"] {
 label[for="edit-field-attending-und"] .form-required {
 	position: absolute;
 	left: 0px;
+}
+
+#content > a.important-button {
+	margin: 0 0 30px 0;
+	display: inline-block;
+}
+
+body #content > .block:nth-child(2n) > article.node {
+	max-width: none;
+	background-color: #F7F7F7;
+}
+
+body #content > .block:nth-child(2n) > article.node .node-content {
+	/*max-width: 1400px;*/
+	/*border-top: 1px dashed #DDD;
+	border-bottom: 1px dashed #DDD;*/
+	background-color: #FFF;
+	margin: 0 auto;
+	width: 100%;
+}
+
+body #content > .block:nth-child(2n) > article.node .node-content:before {
+	content: '';
+	display: block;
+	width: 100%;
+	max-width: 1400px;
+	margin: 0 auto;
+	background-color: #FFF;
+	border-top: 1px dashed #DDD;
+	height: 20px;
+}
+
+body #content > .block:nth-child(2n) > article.node .node-content:after {
+	content: '';
+	display: block;
+	width: 100%;
+	max-width: 1400px;
+	margin: 0 auto;
+	background-color: #FFF;
+	border-bottom: 1px dashed #DDD;
+	height: 20px;
+}
+
+body #content > .block:nth-child(2n) > article.node .node-content > * {
+	max-width: 980px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+#content {
+	text-align: center;
+}
+
+#content > * {
+	text-align: left;
 }

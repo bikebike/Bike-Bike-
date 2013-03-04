@@ -130,6 +130,7 @@ else if (isset($node))
 	}
 }
 ?>
+<!-- <?php /*print_r($node);*/ ?> -->
 <div id="page" class="container <?php print $classes; ?>">
 
   <!-- region: Leaderboard -->
@@ -241,6 +242,15 @@ else if (isset($node))
           <!-- region: Main Content -->
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
+            	<?php if (arg(2) != 'edit' && isset($node) && $node->type == 'conference_registration'): ?>
+            		<?php if ($node->field_attending[$node->language][0]['tid'] == 9): ?>
+            		<a href="/conference-registration/<?php print $node->nid; ?>/cancel" class="important-button" title="Mark this registration as Attending: No (you can undo this)">Cancel my registration</a>
+            		<?php elseif ($node->field_attending[$node->language][0]['tid'] == 10): ?>
+            		<a href="/conference-registration/<?php print $node->nid; ?>/confirm" class="important-button" title="Mark this registration as Attending: Yes (you can undo this)">Confirm my registration</a>
+            		<?php else: ?>
+            		<a href="/conference-registration/<?php print $node->nid; ?>/confirm" class="important-button" title="Mark this registration as Attending: Yes (you can undo this)">Reverse my Cancellation</a>
+            		<?php endif; ?>
+            	<?php endif; ?>
               <?php print $content; ?>
             </div>
           <?php endif; ?>
