@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Conference Registration Button feature.
+ */
+
+include_once 'conference_registration_button.features.inc';
