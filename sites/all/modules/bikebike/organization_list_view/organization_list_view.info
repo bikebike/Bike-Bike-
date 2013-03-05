@@ -1,0 +1,11 @@
+name = Organization List View
+core = 7.x
+package = Bike!Bike!
+dependencies[] = entity
+dependencies[] = entityreference_view_widget
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = organization_list
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/bikebike

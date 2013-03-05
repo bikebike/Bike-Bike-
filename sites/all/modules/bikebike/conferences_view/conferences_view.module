@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Conferences View feature.
+ */
+
+include_once 'conferences_view.features.inc';
