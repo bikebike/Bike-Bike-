@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Conference Registration feature.
+ */
+
+include_once 'conference_registration.features.inc';
