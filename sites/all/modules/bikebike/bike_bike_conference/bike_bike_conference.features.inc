@@ -5,6 +5,16 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function bike_bike_conference_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "custom_formatters" && $api == "custom_formatters") {
+    return array("version" => "2");
+  }
+}
+
+/**
  * Implements hook_node_info().
  */
 function bike_bike_conference_node_info() {
