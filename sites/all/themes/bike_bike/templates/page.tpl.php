@@ -254,7 +254,7 @@ else if (isset($node))
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
             	<?php if (arg(2) != 'edit' && isset($node) && $node->type == 'conference_registration'): ?>
-            		<?php if ($node->field_attending_conference[$node->language][0]['tid'] == 1): ?>
+            		<?php if ($node->field_attending_conference[$node->language][0]['value'] == 1): ?>
             		<a href="/conference-registration/<?php print $node->nid; ?>/cancel" class="important-button" title="Mark this registration as Attending: No (you can undo this)">Cancel my registration</a>
             		<?php elseif ($node->field_attending_conference[$node->language][0]['value'] == 0): ?>
             		<a href="/conference-registration/<?php print $node->nid; ?>/confirm" class="important-button" title="Mark this registration as Attending: Yes (you can undo this)">Confirm my registration</a>
