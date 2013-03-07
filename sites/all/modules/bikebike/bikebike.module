@@ -203,7 +203,7 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 				AND
 				field_conference_nid = :nid
 				AND
-				attending.field_attending_tid <> 0
+				attending.field_attending_conference_value <> 0
 			LIMIT
 				1",
 			array('uid' => $user->uid, 'nid' => $conference_id));
