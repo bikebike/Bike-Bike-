@@ -121,50 +121,43 @@ function conference_registration_field_default_fields() {
           'summary_rows' => 5,
         ),
         'type' => 'text_textarea_with_summary',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
 
-  // Exported field: 'node-conference_registration-field_attending'.
-  $fields['node-conference_registration-field_attending'] = array(
+  // Exported field: 'node-conference_registration-field_attending_conference'.
+  $fields['node-conference_registration-field_attending_conference'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_attending',
-      'foreign keys' => array(
-        'tid' => array(
-          'columns' => array(
-            'tid' => 'tid',
-          ),
-          'table' => 'taxonomy_term_data',
-        ),
-      ),
+      'field_name' => 'field_attending_conference',
+      'foreign keys' => array(),
       'indexes' => array(
-        'tid' => array(
-          0 => 'tid',
+        'value' => array(
+          0 => 'value',
         ),
       ),
       'locked' => '0',
-      'module' => 'taxonomy',
+      'module' => 'list',
       'settings' => array(
         'allowed_values' => array(
-          0 => array(
-            'vocabulary' => 'yes_no_maybe',
-            'parent' => '0',
-          ),
+          0 => 'No',
+          1 => 'Yes',
+          2 => 'Maybe',
         ),
+        'allowed_values_function' => '',
       ),
       'translatable' => '0',
-      'type' => 'taxonomy_term_reference',
+      'type' => 'list_integer',
     ),
     'field_instance' => array(
       'bundle' => 'conference_registration',
       'default_value' => array(
         0 => array(
-          'tid' => '9',
+          'value' => '1',
         ),
       ),
       'deleted' => '0',
@@ -172,12 +165,12 @@ function conference_registration_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'inline',
-          'module' => 'custom_formatters',
+          'module' => 'list',
           'settings' => array(
             'field_formatter_class' => '',
           ),
-          'type' => 'custom_formatters_term_with_class',
-          'weight' => '0',
+          'type' => 'list_default',
+          'weight' => '3',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -193,7 +186,7 @@ function conference_registration_field_default_fields() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_attending',
+      'field_name' => 'field_attending_conference',
       'label' => 'Attending',
       'required' => 1,
       'settings' => array(
@@ -204,7 +197,7 @@ function conference_registration_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );

@@ -119,7 +119,7 @@ function bikebike_change_registration($crid, $confirm)
 	}
 	else
 	{
-		$reg->field_attending[$reg->language][0]['tid'] = ($confirm ? 9 : 11);
+		$reg->field_attending_conference[$reg->language][0]['value'] = ($confirm ? 1 : 0);
 		node_save($reg);
 		drupal_set_message('Your registration has been '.($confirm ? 'confirmed.' : 'cancelled.'));
 		drupal_goto('node/'.$reg->nid);
@@ -193,7 +193,7 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 				ON
 					conference.entity_id = nid
 			JOIN
-				{field_data_field_attending} AS attending
+				{field_data_field_attending_conference} AS attending
 				ON
 					attending.entity_id = nid
 			WHERE
@@ -203,7 +203,7 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 				AND
 				field_conference_nid = :nid
 				AND
-				attending.field_attending_tid <> 11
+				attending.field_attending_tid <> 0
 			LIMIT
 				1",
 			array('uid' => $user->uid, 'nid' => $conference_id));
