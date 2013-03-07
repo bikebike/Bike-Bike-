@@ -12,6 +12,10 @@ function bike_bike_conference_ctools_plugin_api() {
   if ($module == "custom_formatters" && $api == "custom_formatters") {
     return array("version" => "2");
   }
+  list($module, $api) = func_get_args();
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
 }
 
 /**

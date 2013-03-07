@@ -1,8 +1,3 @@
-<?php
-$args = array();//ARGUMENTS);
-$view = views_get_view('conference_registration_button');
-print $view->preview('block', $args);
-?>
 <<?php print $tag; ?> class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
   <?php if (!$label_hidden) : ?>

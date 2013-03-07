@@ -96,6 +96,10 @@ if (arg(2) == 'edit')
 			$title = 'Update '.$node->title;
 			print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location[$node->language][0]['latitude'].", ".$node->field_location[$node->language][0]['longitude']."); } );</script>";
 		}
+		else if($node->type == 'conference')
+		{
+			$conference = $node;
+		}
 		else if($node->type == 'conference_registration')
 		{
 			$conference = node_load($node->field_conference[$node->language][0]['nid']);
@@ -113,8 +117,15 @@ else if (arg(1) == 'add')
 	}
 	else if (arg(2) == 'conference-registration')
 	{
-		$conference = node_load(arg(3));//(arg(1) == 'add' ? node_load(arg(3)) : $node->field_conference[$node->language][0]);
-		$title = 'Modify '.$conference->title.' Registration';
+		$conference = node_load(arg(3));
+		$title = 'Register for '.$conference->title;
+	}
+	else if (arg(2) == 'workshop')
+	{
+		global $user;
+		$conference = node_load(arg(3));
+		$title = 'Propose a Workshop';
+		print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
 	}
 }
 else if (isset($node))

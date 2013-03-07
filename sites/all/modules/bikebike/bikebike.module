@@ -11,6 +11,8 @@ function bikebike_menu_alter(&$items)
 			'type' => MENU_CALLBACK,
 	);
 	$items['node/%node/edit']['access callback'] = 'bikebike_org_edit_access';
+	$items['node/add/workshop/%']['access callback'] = 'bikebike_add_workshop_access';
+	$items['node/add/workshop/%']['access arguments'] = array('create', 'workshop', 3);
 	//$items['organization/%/edit']['access arguments'] = array(1);//'access arguments' = array(1);
 	//drupal_set_message('<pre>'.print_r($items, true).'</pre>');
 	
@@ -56,16 +58,61 @@ function bikebike_menu()
 			'page arguments' => array(),
 			'access callback' => 'bikebike_git_pull_access',//array('access git pull'),
 			'type' => MENU_NORMAL_ITEM
-		)
+		),
+		'conference-registration/%/open' => array
+		(
+				'title' => 'Open Registraion',
+				'page callback' => 'bikebike_conference_registration_open',
+				'description' => 'Open Registration',
+				'page arguments' => array(1, true),
+				'access callback' => TRUE,
+				'type' => MENU_CALLBACK
+		),
+		'conference-registration/%/close' => array
+		(
+				'title' => 'Close Registration',
+				'page callback' => 'bikebike_conference_registration_open',
+				'description' => 'Open Registration',
+				'page arguments' => array(1, false),
+				'access callback' => TRUE,
+				'type' => MENU_CALLBACK
+		)/*,
+		'node/%/workshops' => array
+		(
+				'title' => 'Workshops',
+				'page callback' => 'bikebike_conference_workshops',
+				'description' => 'Workshops information',
+				'page arguments' => array(),
+				'access callback' => 'bikebike_git_pull_access',//array('access git pull'),
+				'type' => MENU_NORMAL_ITEM
+		)*/
 	);
 	return $items;
+}
+
+function bikebike_conference_registration_open($nid, $do_open)
+{
+	$reg = node_load($nid);
+	global $user;
+	if (!$reg || $reg->type != 'conference' || !bikebike_org_edit_access('edit', $reg))
+	{
+		drupal_set_message('You do not have sufficient privledges to edit this conference.', 'warning');
+		drupal_goto('conferences');
+	}
+	else
+	{
+		$reg->field_registration_open[$reg->language][0]['value'] = ($do_open ? 1 : 0);
+		node_save($reg);
+		drupal_set_message('Registration is now '.($do_open ? 'open.' : 'closed.'));
+		drupal_goto('node/'.$reg->nid);
+	}
 }
 
 function bikebike_change_registration($crid, $confirm)
 {
 	$reg = node_load($crid);
 	global $user;
-	if (!$reg || $user->uid != $reg->uid)
+	if (!$reg || $user->uid != $reg->uid || $reg->type != 'conference-registration')
 	{
 		drupal_set_message('The provided registration does not belong to you.', 'warning');
 		drupal_goto('conferences');
@@ -125,10 +172,47 @@ function bikebike_git_pull()
 	drupal_goto('admin/config/system/backup_migrate/destination/list/files/manual');
 }
 
+function bikebike_add_workshop_access($action, $type, $conference_id)
+{
+	//drupal_set_message('YUP');
+	//drupal_set_message('<pre>'.print_r($node, true).'</pre>');
+	global $user;
+	
+	if (in_array('administrator', array_values($user->roles)))
+	{
+		return TRUE;
+	}
+	
+	$r = db_query("
+			SELECT
+				nid
+			FROM
+				{node}
+			JOIN
+				{field_data_field_conference} AS conference
+				ON
+					conference.entity_id = nid
+			JOIN
+				{field_data_field_attending} AS attending
+				ON
+					attending.entity_id = nid
+			WHERE
+				type = 'conference_registration'
+				AND
+				uid = :uid
+				AND
+				field_conference_nid = :nid
+				AND
+				attending.field_attending_tid <> 11
+			LIMIT
+				1",
+			array('uid' => $user->uid, 'nid' => $conference_id));
+	return $r->rowCount() > 0;
+}
+
 function bikebike_org_edit_access($action, $node)
 {
 	global $user;
-	
 	if (in_array('administrator', array_values($user->roles)))
 	{
 		return TRUE;
@@ -141,7 +225,6 @@ function bikebike_org_edit_access($action, $node)
 	
 	if (!$node || !is_object($node))
 	{
-		drupal_set_message('<pre>'.print_r($node, true).'</pre>');
 		return FALSE;
 	}
 	
@@ -345,10 +428,27 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		{
 		}
 	}
+	else if ($form_id == 'conference_node_form')
+	{
+		global $user;
+		if (!in_array('administrator', array_values($user->roles)))
+		{
+			$form['field_workshops_published']['#access'] = FALSE;
+		}
+	}
+	else if ($form_id == 'workshop_node_form')
+	{
+		global $user;
+		if (!in_array('administrator', array_values($user->roles)))
+		{
+			$form['field_scheduled_time']['#access'] = FALSE;
+			$form['field_conference_location']['#access'] = FALSE;
+		}
+	}
 	else if ($form_id == 'bikebike_add_org_admin')
 	{
   		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
-	}
+	}// else { drupal_set_message($form_id); }
 }
 
 function bikebike_field_attach_view_alter(&$output, $context)

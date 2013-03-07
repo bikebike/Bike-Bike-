@@ -1,0 +1,15 @@
+name = Conference Location
+core = 7.x
+package = Bike!Bike!
+dependencies[] = features
+dependencies[] = node
+dependencies[] = text
+features[features_api][] = api:1
+features[field][] = node-conference_location-body
+features[node][] = conference_location
+features[user_permission][] = create conference_location content
+features[user_permission][] = delete any conference_location content
+features[user_permission][] = delete own conference_location content
+features[user_permission][] = edit any conference_location content
+features[user_permission][] = edit own conference_location content
+project path = sites/all/modules/bikebike

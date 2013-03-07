@@ -147,8 +147,7 @@ function completeAutocomplete(element)
 			formItem.find('input.field-add-more-submit').hide();
 		}
 		//console.log(formItem.html());//find('input.field-add-more-submit'));
-	}
-	//console.log('XXX');*/
+	}*/
 }
 
 function killWebkitAutofill()

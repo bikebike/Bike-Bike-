@@ -20,6 +20,9 @@ function conference_registration_field_default_fields() {
         0 => 'node',
       ),
       'field_name' => 'body',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
       'foreign keys' => array(
         'format' => array(
           'columns' => array(
@@ -233,9 +236,11 @@ function conference_registration_field_default_fields() {
         'referenceable_types' => array(
           'article' => 0,
           'conference' => 'conference',
+          'conference_location' => 0,
           'conference_registration' => 0,
           'organization' => 0,
           'page' => 0,
+          'workshop' => 0,
         ),
         'view' => array(
           'args' => array(),

@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * bike_bike_conference.features.field.inc
+ * workshop.features.field.inc
  */
 
 /**
  * Implements hook_field_default_fields().
  */
-function bike_bike_conference_field_default_fields() {
+function workshop_field_default_fields() {
   $fields = array();
 
-  // Exported field: 'node-conference-body'.
-  $fields['node-conference-body'] = array(
+  // Exported field: 'node-workshop-body'.
+  $fields['node-workshop-body'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
@@ -43,10 +43,10 @@ function bike_bike_conference_field_default_fields() {
       'type' => 'text_with_summary',
     ),
     'field_instance' => array(
-      'bundle' => 'conference',
+      'bundle' => 'workshop',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Describe your workshop',
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -55,7 +55,7 @@ function bike_bike_conference_field_default_fields() {
             'field_formatter_class' => '',
           ),
           'type' => 'text_default',
-          'weight' => '2',
+          'weight' => 0,
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -76,7 +76,7 @@ function bike_bike_conference_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'body',
-      'label' => 'Info',
+      'label' => 'Description',
       'required' => 1,
       'settings' => array(
         'better_formats' => array(
@@ -121,157 +121,67 @@ function bike_bike_conference_field_default_fields() {
           'summary_rows' => 5,
         ),
         'type' => 'text_textarea_with_summary',
-        'weight' => '6',
+        'weight' => '31',
       ),
     ),
   );
 
-  // Exported field: 'node-conference-field_banner'.
-  $fields['node-conference-field_banner'] = array(
+  // Exported field: 'node-workshop-field_conference'.
+  $fields['node-workshop-field_conference'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_banner',
+      'field_name' => 'field_conference',
       'foreign keys' => array(
-        'fid' => array(
+        'nid' => array(
           'columns' => array(
-            'fid' => 'fid',
+            'nid' => 'nid',
           ),
-          'table' => 'file_managed',
+          'table' => 'node',
         ),
       ),
       'indexes' => array(
-        'fid' => array(
-          0 => 'fid',
+        'nid' => array(
+          0 => 'nid',
         ),
       ),
       'locked' => '0',
-      'module' => 'image',
+      'module' => 'node_reference',
       'settings' => array(
-        'default_image' => 0,
-        'uri_scheme' => 'public',
-      ),
-      'translatable' => '0',
-      'type' => 'image',
-    ),
-    'field_instance' => array(
-      'bundle' => 'conference',
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '5',
+        'referenceable_types' => array(
+          'article' => 0,
+          'conference' => 'conference',
+          'conference_location' => 0,
+          'conference_registration' => 0,
+          'organization' => 0,
+          'page' => 0,
+          'workshop' => 0,
         ),
-        'entityreference_view_widget' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_banner',
-      'label' => 'Banner',
-      'required' => 0,
-      'settings' => array(
-        'alt_field' => 0,
-        'default_image' => 0,
-        'file_directory' => '',
-        'file_extensions' => 'png gif jpg jpeg',
-        'max_filesize' => '',
-        'max_resolution' => '',
-        'min_resolution' => '',
-        'title_field' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'image',
-        'settings' => array(
-          'allowed_schemes' => array(
-            'public' => 'public',
-          ),
-          'allowed_types' => array(
-            'audio' => 0,
-            'default' => 0,
-            'image' => 'image',
-            'video' => 0,
-          ),
-          'insert' => 0,
-          'insert_absolute' => FALSE,
-          'insert_class' => '',
-          'insert_default' => array(
-            0 => 'auto',
-          ),
-          'insert_styles' => array(
-            0 => 'auto',
-          ),
-          'insert_width' => '',
-          'preview_image_style' => 'thumbnail',
-          'progress_indicator' => 'throbber',
-        ),
-        'type' => 'image_image',
-        'weight' => '8',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-conference-field_conference_type'.
-  $fields['node-conference-field_conference_type'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_conference_type',
-      'foreign keys' => array(
-        'tid' => array(
-          'columns' => array(
-            'tid' => 'tid',
-          ),
-          'table' => 'taxonomy_term_data',
-        ),
-      ),
-      'indexes' => array(
-        'tid' => array(
-          0 => 'tid',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'taxonomy',
-      'settings' => array(
-        'allowed_values' => array(
-          0 => array(
-            'vocabulary' => 'conference_type',
-            'parent' => '0',
-          ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
         ),
       ),
       'translatable' => '0',
-      'type' => 'taxonomy_term_reference',
+      'type' => 'node_reference',
     ),
     'field_instance' => array(
-      'bundle' => 'conference',
+      'bundle' => 'workshop',
       'default_value' => NULL,
       'deleted' => '0',
       'description' => '',
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '4',
+          'module' => 'node_reference',
+          'settings' => array(
+            'field_formatter_class' => '',
+          ),
+          'type' => 'node_reference_default',
+          'weight' => 7,
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -287,124 +197,44 @@ function bike_bike_conference_field_default_fields() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_conference_type',
-      'label' => 'Conference Type',
+      'field_name' => 'field_conference',
+      'label' => 'Conference',
       'required' => 1,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'options',
-        'settings' => array(),
-        'type' => 'options_select',
-        'weight' => '4',
+        'module' => 'nodereference_url',
+        'settings' => array(
+          'autocomplete_match' => 'contains',
+          'edit_fallback' => 0,
+          'fallback' => 'page_not_found',
+          'node_link' => array(
+            'destination' => 'default',
+            'full' => 0,
+            'hover_title' => '',
+            'teaser' => 0,
+            'title' => '',
+          ),
+        ),
+        'type' => 'nodereference_url',
+        'weight' => '39',
       ),
     ),
   );
 
-  // Exported field: 'node-conference-field_date'.
-  $fields['node-conference-field_date'] = array(
+  // Exported field: 'node-workshop-field_conference_location'.
+  $fields['node-workshop-field_conference_location'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_date',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'locked' => '0',
-      'module' => 'date',
-      'settings' => array(
-        'cache_count' => '4',
-        'cache_enabled' => 0,
-        'granularity' => array(
-          'day' => 'day',
-          'hour' => 'hour',
-          'minute' => 'minute',
-          'month' => 'month',
-          'second' => 0,
-          'year' => 'year',
-        ),
-        'repeat' => '0',
-        'timezone_db' => '',
-        'todate' => 'required',
-        'tz_handling' => 'none',
+      'field_name' => 'field_conference_location',
+      'field_permissions' => array(
+        'type' => '2',
       ),
-      'translatable' => '0',
-      'type' => 'datetime',
-    ),
-    'field_instance' => array(
-      'bundle' => 'conference',
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'inline',
-          'module' => 'date',
-          'settings' => array(
-            'field_formatter_class' => '',
-            'format_type' => 'long_date_only_',
-            'fromto' => 'both',
-            'multiple_from' => '',
-            'multiple_number' => '',
-            'multiple_to' => '',
-            'show_repeat_rule' => 'show',
-          ),
-          'type' => 'date_default',
-          'weight' => '3',
-        ),
-        'entityreference_view_widget' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_date',
-      'label' => 'Date',
-      'required' => 1,
-      'settings' => array(
-        'default_value' => 'now',
-        'default_value2' => 'same',
-        'default_value_code' => '',
-        'default_value_code2' => '',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'date',
-        'settings' => array(
-          'display_all_day' => 0,
-          'increment' => '15',
-          'input_format' => 'm/d/Y - H:i:s',
-          'input_format_custom' => '',
-          'label_position' => 'above',
-          'repeat_collapsed' => 0,
-          'text_parts' => array(),
-          'year_range' => '-3:+3',
-        ),
-        'type' => 'date_popup',
-        'weight' => '3',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-conference-field_host_organizations'.
-  $fields['node-conference-field_host_organizations'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '-1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_host_organizations',
       'foreign keys' => array(
         'node' => array(
           'columns' => array(
@@ -432,7 +262,7 @@ function bike_bike_conference_field_default_fields() {
             'type' => 'none',
           ),
           'target_bundles' => array(
-            'organization' => 'organization',
+            'conference_location' => 'conference_location',
           ),
         ),
         'target_type' => 'node',
@@ -441,19 +271,20 @@ function bike_bike_conference_field_default_fields() {
       'type' => 'entityreference',
     ),
     'field_instance' => array(
-      'bundle' => 'conference',
+      'bundle' => 'workshop',
       'default_value' => NULL,
       'deleted' => '0',
       'description' => '',
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'custom_formatters',
+          'module' => 'entityreference',
           'settings' => array(
             'field_formatter_class' => '',
+            'link' => FALSE,
           ),
-          'type' => 'custom_formatters_link_with_icon',
-          'weight' => '4',
+          'type' => 'entityreference_label',
+          'weight' => 5,
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -469,15 +300,98 @@ function bike_bike_conference_field_default_fields() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_host_organizations',
-      'label' => 'Host Organizations',
-      'required' => 1,
+      'field_name' => 'field_conference_location',
+      'label' => 'Location',
+      'required' => 0,
       'settings' => array(
-        'behaviors' => array(
-          'test_instance_behavior' => array(
-            'status' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
+        'weight' => '36',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-workshop-field_coordinators'.
+  $fields['node-workshop-field_coordinators'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '-1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_coordinators',
+      'foreign keys' => array(
+        'node' => array(
+          'columns' => array(
+            'target_id' => 'nid',
+          ),
+          'table' => 'node',
+        ),
+      ),
+      'indexes' => array(
+        'target_id' => array(
+          0 => 'target_id',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'entityreference',
+      'settings' => array(
+        'handler' => 'views',
+        'handler_settings' => array(
+          'behaviors' => array(
+            'views-select-list' => array(
+              'status' => 0,
+            ),
+          ),
+          'view' => array(
+            'args' => array(),
+            'display_name' => 'entityreference_1',
+            'view_name' => 'registered_attendees',
           ),
         ),
+        'target_type' => 'user',
+      ),
+      'translatable' => '0',
+      'type' => 'entityreference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'workshop',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => 'Any individuals who will be helping to organize or facilitate the workshop. Other users can request to be coordinators and may be approved or rejected by any current coordinator. Coordinators also have rights to edit the workshop details here.',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'entityreference',
+          'settings' => array(
+            'field_formatter_class' => '',
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 2,
+        ),
+        'entityreference_view_widget' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_coordinators',
+      'label' => 'Coordinators',
+      'required' => 1,
+      'settings' => array(
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -486,134 +400,30 @@ function bike_bike_conference_field_default_fields() {
         'settings' => array(
           'entityreference_live_preview' => array(
             'enabled' => 1,
-            'mode' => 'teaser',
+            'mode' => 'default',
           ),
           'match_operator' => 'CONTAINS',
           'path' => '',
           'references_dialog_add' => 0,
           'references_dialog_edit' => 0,
-          'references_dialog_search' => 1,
+          'references_dialog_search' => 0,
           'references_dialog_search_view' => '',
           'size' => '60',
         ),
         'type' => 'entityreference_autocomplete',
-        'weight' => '5',
+        'weight' => '33',
       ),
     ),
   );
 
-  // Exported field: 'node-conference-field_poster'.
-  $fields['node-conference-field_poster'] = array(
+  // Exported field: 'node-workshop-field_looking_for_coordinators'.
+  $fields['node-workshop-field_looking_for_coordinators'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_poster',
-      'foreign keys' => array(
-        'fid' => array(
-          'columns' => array(
-            'fid' => 'fid',
-          ),
-          'table' => 'file_managed',
-        ),
-      ),
-      'indexes' => array(
-        'fid' => array(
-          0 => 'fid',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'image',
-      'settings' => array(
-        'default_image' => 0,
-        'uri_scheme' => 'public',
-      ),
-      'translatable' => '0',
-      'type' => 'image',
-    ),
-    'field_instance' => array(
-      'bundle' => 'conference',
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'image',
-          'settings' => array(
-            'field_formatter_class' => '',
-            'image_link' => '',
-            'image_style' => '',
-          ),
-          'type' => 'image',
-          'weight' => '1',
-        ),
-        'entityreference_view_widget' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_poster',
-      'label' => 'Poster',
-      'required' => 0,
-      'settings' => array(
-        'alt_field' => 0,
-        'default_image' => 0,
-        'file_directory' => '',
-        'file_extensions' => 'png gif jpg jpeg',
-        'max_filesize' => '',
-        'max_resolution' => '',
-        'min_resolution' => '',
-        'title_field' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'image',
-        'settings' => array(
-          'insert' => 0,
-          'insert_absolute' => 0,
-          'insert_class' => '',
-          'insert_default' => 'auto',
-          'insert_styles' => array(
-            'auto' => 'auto',
-            'icon_link' => 0,
-            'image' => 0,
-            'image_icon_meduim' => 0,
-            'image_icon_small' => 0,
-            'image_large' => 0,
-            'image_medium' => 0,
-            'image_square_thumbnail' => 0,
-            'image_thumbnail' => 0,
-            'link' => 0,
-          ),
-          'insert_width' => '',
-          'preview_image_style' => 'medium',
-          'progress_indicator' => 'throbber',
-        ),
-        'type' => 'image_image',
-        'weight' => '7',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-conference-field_registration_open'.
-  $fields['node-conference-field_registration_open'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_registration_open',
+      'field_name' => 'field_looking_for_coordinators',
       'foreign keys' => array(),
       'indexes' => array(
         'value' => array(
@@ -633,14 +443,14 @@ function bike_bike_conference_field_default_fields() {
       'type' => 'list_boolean',
     ),
     'field_instance' => array(
-      'bundle' => 'conference',
+      'bundle' => 'workshop',
       'default_value' => array(
         0 => array(
-          'value' => 0,
+          'value' => 1,
         ),
       ),
       'deleted' => '0',
-      'description' => 'If the conference is open for attendees to register.',
+      'description' => '',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -649,7 +459,7 @@ function bike_bike_conference_field_default_fields() {
             'field_formatter_class' => '',
           ),
           'type' => 'list_default',
-          'weight' => '5',
+          'weight' => 6,
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -665,8 +475,8 @@ function bike_bike_conference_field_default_fields() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_registration_open',
-      'label' => 'Registration Open',
+      'field_name' => 'field_looking_for_coordinators',
+      'label' => 'Looking for Coordinators',
       'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
@@ -678,58 +488,147 @@ function bike_bike_conference_field_default_fields() {
           'display_label' => 1,
         ),
         'type' => 'options_onoff',
-        'weight' => '11',
+        'weight' => '37',
       ),
     ),
   );
 
-  // Exported field: 'node-conference-field_workshops_published'.
-  $fields['node-conference-field_workshops_published'] = array(
+  // Exported field: 'node-workshop-field_presentation_style'.
+  $fields['node-workshop-field_presentation_style'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_workshops_published',
+      'field_name' => 'field_presentation_style',
+      'foreign keys' => array(
+        'tid' => array(
+          'columns' => array(
+            'tid' => 'tid',
+          ),
+          'table' => 'taxonomy_term_data',
+        ),
+      ),
+      'indexes' => array(
+        'tid' => array(
+          0 => 'tid',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'taxonomy',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => array(
+            'vocabulary' => 'workshop_types',
+            'parent' => '0',
+          ),
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'taxonomy_term_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'workshop',
+      'default_value' => array(
+        0 => array(
+          'tid' => '13',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'taxonomy',
+          'settings' => array(
+            'field_formatter_class' => '',
+          ),
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 1,
+        ),
+        'entityreference_view_widget' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_presentation_style',
+      'label' => 'Presentation Style',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
+        'weight' => '32',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-workshop-field_scheduled_time'.
+  $fields['node-workshop-field_scheduled_time'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_scheduled_time',
       'field_permissions' => array(
         'type' => '2',
       ),
       'foreign keys' => array(),
-      'indexes' => array(
-        'value' => array(
-          0 => 'value',
-        ),
-      ),
+      'indexes' => array(),
       'locked' => '0',
-      'module' => 'list',
+      'module' => 'date',
       'settings' => array(
-        'allowed_values' => array(
-          0 => '',
-          1 => '',
+        'cache_count' => '4',
+        'cache_enabled' => 0,
+        'granularity' => array(
+          'day' => 'day',
+          'hour' => 'hour',
+          'minute' => 'minute',
+          'month' => 'month',
+          'second' => 0,
+          'year' => 'year',
         ),
-        'allowed_values_function' => '',
+        'repeat' => '0',
+        'timezone_db' => '',
+        'todate' => 'required',
+        'tz_handling' => 'none',
       ),
       'translatable' => '0',
-      'type' => 'list_boolean',
+      'type' => 'datetime',
     ),
     'field_instance' => array(
-      'bundle' => 'conference',
-      'default_value' => array(
-        0 => array(
-          'value' => 0,
-        ),
-      ),
+      'bundle' => 'workshop',
       'deleted' => '0',
       'description' => '',
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
+          'module' => 'date',
           'settings' => array(
             'field_formatter_class' => '',
+            'format_type' => 'long',
+            'fromto' => 'both',
+            'multiple_from' => '',
+            'multiple_number' => '',
+            'multiple_to' => '',
+            'show_repeat_rule' => 'show',
           ),
-          'type' => 'list_default',
-          'weight' => '3',
+          'type' => 'date_default',
+          'weight' => 4,
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -745,35 +644,46 @@ function bike_bike_conference_field_default_fields() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_workshops_published',
-      'label' => 'Workshops Schedule Published',
+      'field_name' => 'field_scheduled_time',
+      'label' => 'Scheduled Time',
       'required' => 0,
       'settings' => array(
+        'default_value' => 'now',
+        'default_value2' => 'same',
+        'default_value_code' => '',
+        'default_value_code2' => '',
         'user_register_form' => FALSE,
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'options',
+        'module' => 'date',
         'settings' => array(
-          'display_label' => 1,
+          'display_all_day' => 0,
+          'increment' => '15',
+          'input_format' => 'Y-m-d H:i:s',
+          'input_format_custom' => '',
+          'label_position' => 'above',
+          'repeat_collapsed' => 0,
+          'text_parts' => array(),
+          'year_range' => '-3:+3',
         ),
-        'type' => 'options_onoff',
-        'weight' => '10',
+        'type' => 'date_popup',
+        'weight' => '35',
       ),
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Banner');
-  t('Conference Type');
-  t('Date');
-  t('Host Organizations');
-  t('If the conference is open for attendees to register.');
-  t('Info');
-  t('Poster');
-  t('Registration Open');
-  t('Workshops Schedule Published');
+  t('Any individuals who will be helping to organize or facilitate the workshop. Other users can request to be coordinators and may be approved or rejected by any current coordinator. Coordinators also have rights to edit the workshop details here.');
+  t('Conference');
+  t('Coordinators');
+  t('Describe your workshop');
+  t('Description');
+  t('Location');
+  t('Looking for Coordinators');
+  t('Presentation Style');
+  t('Scheduled Time');
 
   return $fields;
 }

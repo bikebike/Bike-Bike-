@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Fieldgroups feature.
+ */
+
+include_once 'fieldgroups.features.inc';

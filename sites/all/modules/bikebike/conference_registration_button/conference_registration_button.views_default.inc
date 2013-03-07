@@ -88,6 +88,27 @@ function conference_registration_button_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+
+  /* Display: Workshop Registration */
+  $handler = $view->new_display('block', 'Workshop Registration', 'workshop_register');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = '<p class="message">Once registered, you may propose a workshop of your own or volunteer to help others with theirs.</p>';
+  $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="node/add/workshop/!2" class="important-button">Propose a Workshop...</a>';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   $export['conference_registration_button'] = $view;
 
   return $export;
