@@ -38,3 +38,13 @@
 	</div>
 	<?php endif; ?>
 </<?php print $tag; ?>>
+
+<?php if ($is_org_admin): ?>
+<section class="field field-name-field-requests field-type-entityreference field-label-above view-mode-full">
+	       	<?php
+			$args = array();
+			$view = views_get_view('requests');
+			print $view->preview('block', $args);
+			?>
+</section>
+<?php endif; ?>

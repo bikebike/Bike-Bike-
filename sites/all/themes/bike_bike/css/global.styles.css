@@ -2191,9 +2191,9 @@ fieldset {
  * Buttons used by contrib modules like Media
  */
 a.button {
-  -webkit-appearance: button;
+  /*-webkit-appearance: button;
   -moz-appearance: button;
-  appearance: button;
+  appearance: button;*/
 }
 
 /*
@@ -2833,6 +2833,16 @@ body.node-type-conference article.node .field-name-body {
 	border-top: 1px solid #CCC;
 	padding: 10px 0px;
 	margin-left: 10px;
+	clear: left;
+}
+
+.group-details .fieldset-wrapper > .field.field-name-field-requests .view-content ul li {
+	display: inline-block;
+}
+
+.group-details .fieldset-wrapper > .field.field-name-field-requests .view-header .button {
+	float: right;
+	padding: 0px 10px;
 }
 
 .group-details .fieldset-wrapper > .field:first-child {
@@ -2883,9 +2893,10 @@ body.node-type-conference article.node {
 }
 
 /*body.node-type-organization*/
-#content article.node fieldset.group-details section > h2 {
+#content article.node fieldset.group-details section h2 {
 	font-size: 16px;
 	font-weight: normal;
+	margin: 0;
 }
 #content section.field-label-inline > h2 {
 	float: left;
@@ -2902,7 +2913,7 @@ body.node-type-conference article.node {
 	border: 5px solid #FFF;
 	box-shadow: 0px 2px 2px #DDD;
 	background-color: #FFF;
-	display: block;
+	display: inline-block;
 }
 
 body.page-user- #block-system-main > .profile {
@@ -3190,20 +3201,23 @@ input[type="submit"]:hover {
 #main-content a.autocomplete-remove,
 #main-content input[type="button"],
 #main-content input[type="submit"],
-.login-forgot a {
+#content .login-forgot a,
+#content a.button {
 	background-color: #8A9BAB;
 	box-shadow: 0px 1px 2px #BBB;
 	color: #FFF;
 }
 
-.login-forgot a {
+#content .login-forgot a,
+#content input.negative {
 	background-color: #AB8A9B;
 }
 
 #main-content a.autocomplete-remove:hover,
 #main-content input[type="button"]:hover,
 #main-content input[type="submit"]:hover,
-.login-forgot a:hover {
+.login-forgot a:hover,
+#content a.button:hover {
 	background-color: #9BAB8A;
 	text-decoration: none;
 }
@@ -4506,4 +4520,92 @@ body #content > .block:nth-child(2n) > article.node .node-content > * {
 
 .field-type-custom ul li {
 	display: inline-block;
+}
+
+body.page-organizations-add-admin #content {
+	/*width: 100%;
+	max-width: 1400px;
+	margin: 0 auto;*/
+}
+
+body.page-organizations-add-admin #content #block-system-main {
+	/*width: 100%;
+	max-width: 980px;
+	margin: 0 auto;*/
+}
+
+body #main-content #content form > div fieldset.form-wrapper > legend {
+	width: 100%;
+	font-family: 'SansSerif';
+	font-size: 18px;
+	position: relative;
+	top: 5px;
+	height: 0;
+	/*border-top: 1px dashed #CCC;*/
+}
+
+body #main-content #content form > div > fieldset.form-wrapper:before {
+	content: '';
+	display: block;
+	height: 40px;
+	width: 100%;
+	margin: 0 auto;
+	max-width: 1400px;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper:first-child:before {
+	border-top: 1px dashed #CCC;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper:first-child:after {
+	content: '';
+	width: 100%;
+	max-width: 1400px;
+	border-top: 1px dashed #CCC;
+	display: block;
+	margin: 0 auto;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper:first-child {
+	background-color: #FFF;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper {
+	border: 0;
+	/*width: 100%;*/
+	padding: 0;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper > legend,
+body #main-content #content form > div > fieldset.form-wrapper > div.fieldset-wrapper {
+	width: 100%;
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper > div.fieldset-wrapper {
+	padding-bottom: 20px;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper > legend {
+}
+
+body #main-content #content form > div > input[type="submit"] {
+	display: block;
+	margin: 20px auto 0px auto;
+}
+
+body.page-organizations-requests .fieldset-wrapper > .profile {
+	float: left;
+	margin-right: 20px;
+}
+
+body.page-organizations-requests .fieldset-wrapper > input[type="submit"] {
+	margin-right: 10px;
+}
+
+body.page-organizations-requests .fieldset-wrapper > p {
+	overflow: auto;
+	border: 1px dashed #DDD;
+	padding: 5px 10px;
 }

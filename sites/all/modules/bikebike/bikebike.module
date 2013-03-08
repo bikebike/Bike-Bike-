@@ -68,21 +68,21 @@ function bikebike_menu()
 		),
 		'conference-registration/%/open' => array
 		(
-				'title' => 'Open Registraion',
-				'page callback' => 'bikebike_conference_registration_open',
-				'description' => 'Open Registration',
-				'page arguments' => array(1, true),
-				'access callback' => TRUE,
-				'type' => MENU_CALLBACK
+			'title' => 'Open Registraion',
+			'page callback' => 'bikebike_conference_registration_open',
+			'description' => 'Open Registration',
+			'page arguments' => array(1, true),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
 		),
 		'conference-registration/%/close' => array
 		(
-				'title' => 'Close Registration',
-				'page callback' => 'bikebike_conference_registration_open',
-				'description' => 'Open Registration',
-				'page arguments' => array(1, false),
-				'access callback' => TRUE,
-				'type' => MENU_CALLBACK
+			'title' => 'Close Registration',
+			'page callback' => 'bikebike_conference_registration_open',
+			'description' => 'Open Registration',
+			'page arguments' => array(1, false),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
 		),
 		'organizations/%/cancel-request' => array
 		(
@@ -92,7 +92,34 @@ function bikebike_menu()
 			'page arguments' => array(1),
 			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
 			'type' => MENU_CALLBACK
-		)
+		),
+		'organizations/%/requests' => array
+		(
+			'title' => 'Users Requesting Membership',
+			'page callback' => 'drupal_get_form',
+			'description' => 'Approve or Deny Membership to This Organization',
+			'page arguments' => array('bikebike_requests_page', 'organization', 1),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		)/*,
+		'organizations/%/requests/%/approve' => array
+		(
+			'title' => 'Users Requesting Membership',
+			'page callback' => 'bikebike_requests_approvedeny',
+			'description' => 'Approve Membership to This Organization',
+			'page arguments' => array('organization', 1, 3, true),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'organizations/%/requests/%/deny' => array
+		(
+			'title' => 'Deny Request',
+			'page callback' => 'bikebike_requests_approvedeny',
+			'description' => 'Deny Membership to This Organization',
+			'page arguments' => array('organization', 1, 3, false),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		)*/
 		/*,
 		'node/%/workshops' => array
 		(
@@ -191,8 +218,6 @@ function bikebike_git_pull()
 
 function bikebike_add_workshop_access($action, $type, $conference_id)
 {
-	//drupal_set_message('YUP');
-	//drupal_set_message('<pre>'.print_r($node, true).'</pre>');
 	global $user;
 	
 	if (in_array('administrator', array_values($user->roles)))
@@ -229,20 +254,6 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 
 function bikebike_node_access($node, $op, $user)
 {
-	/*if (is_string($node))
-	{
-		return NODE_ACCESS_IGNORE;
-	}*/
-	//drupal_set_message('<pre>'.print_r($node, true).'</pre>');
-	//drupal_set_message('<pre>'.print_r($op, true).' : '.(is_object($node) ? $node->type : $node).'</pre>');
-	//drupal_set_message('<pre>'.print_r($account, true).'</pre>');
-	//drupal_set_message(arg(2));
-	/*return NODE_ACCESS_IGNORE;
-}
-
-function bikebike_org_edit_access($action, $node)
-{
-	global $user;*/
 	if (in_array('administrator', array_values($user->roles)))
 	{
 		return NODE_ACCESS_ALLOW;
@@ -313,6 +324,148 @@ function bikebike_org_edit_access($action, $node)
 	return NODE_ACCESS_IGNORE;//node_access($action, $node);
 }
 
+function _bikebike_show_object($object)
+{
+	drupal_set_message('<pre>'.print_r($object, true).'</pre>');
+}
+
+function bikebike_requests_page_submit(&$form, &$form_state)
+{
+	//_bikebike_show_object($form_state['clicked_button']);
+	$nid = $form['nid']['#value'];
+	$node = node_load($nid);
+	$request = node_load($form_state['clicked_button']['#array_parents'][1]);
+	$accepted = ($form_state['clicked_button']['#parents'][0] == 'accept');
+	
+	$user = user_load($request->uid);
+	switch ($node->type)
+	{
+		case 'organization':
+			$already_admin = false;
+			foreach ((isset($node->field_administrators['und']) ? $node->field_administrators['und'] : array()) as $admin)
+			{
+				if ($admin['target_id'] == $user->uid)
+				{
+					$alreadyadmin = true;
+				}
+			}
+			if (!$already_admin)
+			{
+				$node->field_administrators['und'][] = array('target_id' => $user->uid);
+				node_save($node);
+			}
+			break;
+	}
+	$request->field_state['und'][0]['value'] = ($accepted ? 1 : -1);
+	node_save($request);
+	drupal_set_message($user->name.'\'s Request to join '.$node->title.' has been '.($accepted ? 'accepted.' : 'denied.'));
+	
+	$form_state['redirect'] = $form['request_count']['#value'] > 1 ? null : 'node/'.$nid;
+}
+
+function bikebike_requests_page($form_state, $args)
+{
+	$nid = $args['build_info']['args'][1];
+	$node = node_load($nid);
+	if (!$node || $node->type != $args['build_info']['args'][0])
+	{
+		//drupal_set_message('Unknown ');
+		return;
+	}
+	
+	$language = $node->language;
+	
+	$r = db_query("
+			SELECT
+				node.nid
+			FROM
+				{node}
+			JOIN
+				{field_data_field_node} AS n
+				ON
+					n.entity_id = node.nid
+			JOIN
+				{field_data_field_invitation} AS invite
+				ON
+					invite.entity_id = node.nid
+			JOIN
+				{field_data_field_state} AS state
+				ON
+					state.entity_id = node.nid
+			WHERE
+				type = 'request'
+				AND
+				n.field_node_nid = :nid
+				AND
+				invite.field_invitation_value = 0
+				AND
+				state.field_state_value = 0
+			",
+			array('nid' => $nid));
+	
+	$form['requests'] = array
+	(
+		'#type' => 'fieldset',
+		'#title' => t('Requests:'),
+		'#tree' => TRUE
+	);
+	
+	foreach ($r as $result)
+	{
+		//drupal_set_message('<pre>'.print_r($result))
+		$request = node_load($result->nid);
+		$form['requests'][$request->nid] = array
+		(
+			'#type' => 'fieldset',
+			//'#title' => t('Requests:'),
+			'#tree' => FALSE
+		);
+		$form['requests'][$request->nid]['nid'] = array
+		(
+			'#type' => 'value',
+			'#value' => $request->nid
+		);
+		$form['requests'][$request->nid]['user'] = array
+		(
+			'#type' => 'markup',
+	    	'#markup' => drupal_render(user_view(user_load($request->uid), 'entityreference_view_widget'))
+		);
+		$form['requests'][$request->nid]['message'] = array
+		(
+			'#type' => 'markup',
+			//'#title' => t('Message:'),
+			'#markup' => '<label>Message:</label><p>'.$request->body['und'][0]['value'].'</p>'
+		);
+		$form['requests'][$request->nid]['accept'] = array(
+			'#type' => 'submit',
+			'#value' => t('Accept')//,
+			//'#submit' => array('bikebike_add_org_admin_request'),
+			//'#limit_validation_errors' => array()
+		);
+		$form['requests'][$request->nid]['deny'] = array(
+			'#type' => 'submit',
+			'#value' => t('Deny'),
+			'#attributes' => array('class' => array('negative'))//,
+			//'#submit' => array('bikebike_add_org_admin_cancel'),
+			//'#limit_validation_errors' => array()
+		);	
+	}
+	
+	$form['nid'] = array
+	(
+		'#type' => 'value',
+		'#value' => $nid
+	);
+	$form['request_count'] = array
+	(
+		'#type' => 'value',
+		'#value' => $r->rowCount()
+	);
+	$form['#method'] = 'post';
+  	$form['#redirect'] = 'node/'.$nid;
+	return $form;
+}
+
 function bikebike_add_org_admin($form_state, $args)
 {
 	$orgid = $args['build_info']['args'][0];
@@ -325,74 +478,103 @@ function bikebike_add_org_admin($form_state, $args)
 	}
 	
 	$language = $org->language;
-	$secret_id = (isset($org->field_organization_secret[$language]) && $org->field_organization_secret[$language][0]['value'] ? $org->field_organization_secret[$language][0]['value'] : null);
-	$secret = $secret_id ? field_collection_item_load($secret_id, $reset = FALSE) : null;
 	
-	if ($secret && isset($secret->field_question[$language]) && $secret->field_question[$language][0]['value'] && isset($secret->field_reply[$language]) && $secret->field_reply[$language][0]['password_field'])
+	if ($args['build_info']['args'][1] === true)
 	{
-	  	$form['secret_p'] = array
-	  	(
-	    	'#type' => 'markup',
-	    	'#markup' => '<p>You may automatically add yourself as a member of this organization by completing the following secret.</p>',
-	  	);
-		$form['secret'] = array
+		$form['remove'] = array
 		(
 			'#type' => 'fieldset',
-			'#title' => t('Complete This Organization\'s Secret'),
+			'#title' => t('Are you sure you want to be removed as a member of '.$org->title.'?'),
 			'#tree' => TRUE
 		);
-		$form['secret']['answer'] = array
-		(
-	    	'#type' => 'textfield',
-	    	'#title' => t($secret->field_question[$language][0]['value']),
-	    	'#size' => 80,
-	    	'#required' => TRUE,
-	  	);
-	  	$form['secret']['submit'] = array
-	  	(
-	    	'#type' => 'submit',
-	    	'#value' => t('Submit'),
-	  	);
-	  	$form['request_p'] = array
-	  	(
-	    	'#type' => 'markup',
-	    	'#markup' => '<p>Alternatively, you may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
-	  	);
+		$form['remove']['remove'] = array(
+			'#type' => 'submit',
+			'#value' => t('Yes'),
+			'#submit' => array('bikebike_add_org_admin_remove'),
+			'#limit_validation_errors' => array()
+		);
+		$form['actions']['cancel'] = array(
+			'#type' => 'submit',
+			'#value' => t('Cancel'),
+			'#submit' => array('bikebike_add_org_admin_cancel'),
+			'#limit_validation_errors' => array()
+		);
 	}
 	else
 	{
-		$form['request_p'] = array
+		$secret_id = (isset($org->field_organization_secret[$language]) && $org->field_organization_secret[$language][0]['value'] ? $org->field_organization_secret[$language][0]['value'] : null);
+		$secret = $secret_id ? field_collection_item_load($secret_id, $reset = FALSE) : null;
+		
+		$show_secret = ($secret && isset($secret->field_question[$language]) && $secret->field_question[$language][0]['value'] && isset($secret->field_reply[$language]) && $secret->field_reply[$language][0]['password_field']);
+		
+		if ($show_secret)
+		{
+			$form['secret'] = array
+			(
+				'#type' => 'fieldset',
+				'#title' => t('Complete This Organization\'s Secret'),
+				'#tree' => TRUE
+			);
+		  	$form['secret']['secret_p'] = array
+		  	(
+		    	'#type' => 'markup',
+		    	'#markup' => '<p>You may automatically add yourself as a member of this organization by completing the following secret.</p>',
+		  	);
+			$form['secret']['answer'] = array
+			(
+		    	'#type' => 'textfield',
+		    	'#title' => t($secret->field_question[$language][0]['value']),
+		    	'#size' => 80,
+		    	'#required' => TRUE,
+		  	);
+		  	$form['secret']['submit'] = array
+		  	(
+		    	'#type' => 'submit',
+		    	'#value' => t('Submit'),
+		  	);
+		  	/*$form['request']['request_p'] = array
+		  	(
+		    	'#type' => 'markup',
+		    	'#markup' => '<p>Alternatively, you may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
+		  	);*/
+		}
+		$form['request'] = array
+		(
+			'#type' => 'fieldset',
+			'#title' => t('Request Current Members to Add You'),
+			'#tree' => TRUE
+		);
+		$form['request']['request_p'] = array
 		(
 			'#type' => 'markup',
-			'#markup' => '<p>You may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
+			'#markup' => '<p>'.($show_secret ? 'Alternatively, y' : 'Y').'ou may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
 		);
+		$form['request']['message'] = array(
+			'#title' => t('Message'),
+			'#type' => 'textarea',
+			'#description' => t('Adding a message is optional but may help to confirm who you are.'),
+			'#default_value' => '',
+		);
+		$form['request']['request'] = array(
+			'#type' => 'submit',
+			'#value' => t('Make a Request'),
+			'#submit' => array('bikebike_add_org_admin_request'),
+			'#limit_validation_errors' => array()
+		);
+		$form['actions']['cancel'] = array(
+			'#type' => 'submit',
+			'#value' => t('Cancel'),
+			'#submit' => array('bikebike_add_org_admin_cancel'),
+			'#limit_validation_errors' => array()
+		);	
 	}
-	$form['message'] = array(
-		'#title' => t('Message'),
-		'#type' => 'textarea',
-		'#description' => t('Adding a message is optional but may help to confirm who you are.'),
-		'#default_value' => '',
-	);
-	$form['actions']['request'] = array(
-		'#type' => 'submit',
-		'#value' => t('Make a Request'),
-		'#submit' => array('bikebike_add_org_admin_request'),
-		'#limit_validation_errors' => array()
-	);
-	$form['actions']['cancel'] = array(
-		'#type' => 'submit',
-		'#value' => t('Cancel'),
-		'#submit' => array('bikebike_add_org_admin_cancel'),
-		'#limit_validation_errors' => array()
-	);
 	
-  	$form['orgid'] = array
-  	(
-  		'#type' => 'value',
-  		'#value' => $orgid
-  	);
-  	$form['#method'] = 'post';
-  	$form['#validate'] = array();//[] = 'bikebike_add_org_admin_validate';
+	$form['orgid'] = array
+	(
+		'#type' => 'value',
+		'#value' => $orgid
+	);
+	$form['#method'] = 'post';
   	$form['#redirect'] = 'node/'.$orgid;
 	return $form;
 }
@@ -410,7 +592,7 @@ function bikebike_add_org_admin_submit($form, &$form_state)
 	$language = $org->language;
 	$secret_id = $org->field_organization_secret[$language][0]['value'];
 	$secret = field_collection_item_load($secret_id, $reset = FALSE);
-	$answer = $form['answer']['#value'];
+	$answer = $form['secret']['answer']['#value'];
 	$real_answer = password_field_decrypt($secret->field_reply[$language][0]['password_field']);
 	if (strcasecmp($real_answer, $answer) === 0)
 	{
@@ -439,13 +621,37 @@ function bikebike_add_org_admin_submit($form, &$form_state)
 	$form_state['redirect'] = 'node/'.$orgid;
 }
 
+function bikebike_add_org_admin_remove($form, &$form_state)
+{
+	$orgid = $form['orgid']['#value'];
+	$org = node_load($orgid);
+
+	$language = $org->language;
+	global $user;
+	$key = null;
+	foreach ((isset($org->field_administrators['und']) ? $org->field_administrators['und'] : array()) as $k => $admin)
+	{
+		if ($admin['target_id'] == $user->uid)
+		{
+			$key = $k;
+		}
+	}
+	if ($key)
+	{
+		unset($org->field_administrators['und'][$key]);
+		node_save($org);
+		drupal_set_message('You have been successfully removed as a member of '.$org->title);
+	}
+	$form_state['redirect'] = 'node/'.$orgid;
+}
+
 function bikebike_create_request($node, $message, $email = null, $is_invite = false)
 {
 	global $user;
 	$request = new stdClass();
 	$request->type = 'request';
 	$request->uid = $user->uid;
-	$request->body ['und'][0]['value'] = $message;
+	$request->body['und'][0]['value'] = $message;
 	//drupal_set_message($user->language);
 	$request->language = 'und';
 	$request->field_node['und'][0]['nid'] = is_object($node) ? $node->nid : $node;
@@ -518,7 +724,7 @@ function bikebike_add_org_admin_request($form, &$form_state)
 {
 	drupal_set_message('Your request has been sent.');
 	$orgid = $form['orgid']['#value'];
-	bikebike_create_request($orgid, $form['message']['#value']);
+	bikebike_create_request($orgid, $form['request']['message']['#value']);
 	$form_state['redirect'] = 'node/'.$orgid;
 }
 
@@ -630,7 +836,10 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		}
 		$markup .= '</ul></div>';
 		$form['field_administrators_view'] = array($form['field_administrators']['#language'] => array('#markup' => $markup), '#weight' => $form['field_administrators']['#weight']);//*/
-		$form['field_administrators']['#access'] = FALSE;
+		if (!in_array('administrator', array_values($user->roles)))
+		{
+			$form['field_administrators']['#access'] = FALSE;
+		}
 	}
 	else if ($form_id == 'conference_node_form')
 	{
