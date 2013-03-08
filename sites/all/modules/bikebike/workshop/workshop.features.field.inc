@@ -340,18 +340,17 @@ function workshop_field_default_fields() {
       'locked' => '0',
       'module' => 'entityreference',
       'settings' => array(
-        'handler' => 'views',
+        'handler' => 'base',
         'handler_settings' => array(
           'behaviors' => array(
             'views-select-list' => array(
               'status' => 0,
             ),
           ),
-          'view' => array(
-            'args' => array(),
-            'display_name' => 'entityreference_1',
-            'view_name' => 'registered_attendees',
+          'sort' => array(
+            'type' => 'none',
           ),
+          'target_bundles' => array(),
         ),
         'target_type' => 'user',
       ),
@@ -396,21 +395,12 @@ function workshop_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'entityreference',
+        'module' => 'options',
         'settings' => array(
-          'entityreference_live_preview' => array(
-            'enabled' => 1,
-            'mode' => 'default',
-          ),
-          'match_operator' => 'CONTAINS',
-          'path' => '',
-          'references_dialog_add' => 0,
-          'references_dialog_edit' => 0,
-          'references_dialog_search' => 0,
-          'references_dialog_search_view' => '',
-          'size' => '60',
+          'pass_argument' => 0,
+          'view' => 'user_list|entityreference_view_widget_1',
         ),
-        'type' => 'entityreference_autocomplete',
+        'type' => 'options_select',
         'weight' => '33',
       ),
     ),

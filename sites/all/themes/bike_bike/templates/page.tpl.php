@@ -113,7 +113,7 @@ else if (arg(1) == 'add')
 	{
 		global $user;
 		$title = 'Register an Organization';
-		print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
+		//print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
 	}
 	else if (arg(2) == 'conference-registration')
 	{
@@ -125,7 +125,7 @@ else if (arg(1) == 'add')
 		global $user;
 		$conference = node_load(arg(3));
 		$title = 'Propose a Workshop';
-		print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
+		//print "<script>jQuery(document).ready(function() { jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').first().val('$user->name ($user->uid)').trigger('change'); } );</script>";
 	}
 }
 else if (isset($node))

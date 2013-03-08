@@ -4404,8 +4404,14 @@ textarea.text-full.form-textarea {
 .group-content .fieldset-wrapper > .field.field-name-field-workshops-published {
     text-align: center;
 }
-.group-details .fieldset-wrapper > .field.field-name-field-registration-open h2 {
+.group-details .fieldset-wrapper > .field.field-name-field-registration-open h2,
+.group-content .fieldset-wrapper > .field.field-name-field-workshops-published > .view-id-workshops {
     text-align: left;
+}
+
+.group-content .fieldset-wrapper > .field.field-name-field-workshops-published > .view-id-workshops ul li {
+	display: inline-block;
+	list-style: none;
 }
 
 body.page-node-add.page-node-add-conference-registration .field-name-field-conference-form,
@@ -4496,4 +4502,8 @@ body #content > .block:nth-child(2n) > article.node .node-content > * {
 
 #content > * {
 	text-align: left;
+}
+
+.field-type-custom ul li {
+	display: inline-block;
 }

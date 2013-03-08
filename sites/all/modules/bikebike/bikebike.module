@@ -10,7 +10,7 @@ function bikebike_menu_alter(&$items)
 			'access arguments' => array(2, 3, 4, 5),
 			'type' => MENU_CALLBACK,
 	);
-	$items['node/%node/edit']['access callback'] = 'bikebike_org_edit_access';
+	//$items['node/%node/edit']['access callback'] = 'bikebike_org_edit_access';
 	$items['node/add/workshop/%']['access callback'] = 'bikebike_add_workshop_access';
 	$items['node/add/workshop/%']['access arguments'] = array('create', 'workshop', 3);
 	//$items['organization/%/edit']['access arguments'] = array(1);//'access arguments' = array(1);
@@ -27,11 +27,18 @@ function bikebike_menu()
 		(
 			'title' => 'Add Organization Administrator',
 			'page callback' => 'drupal_get_form',
-			//'page arguments' => array('bikebike_add_org_admin'),
 			'description' => 'Add yourself as an organization administrator',
-			'page arguments' => array('bikebike_add_org_admin', 1),
+			'page arguments' => array('bikebike_add_org_admin', 1, false),
 			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
-			//'access arguments' => array(2, 3, 4, 5),
+			'type' => MENU_CALLBACK
+		),
+		'organizations/%/remove-admin' => array
+		(
+			'title' => 'Remove Organization Administrator',
+			'page callback' => 'drupal_get_form',
+			'description' => 'Remove yourself as an organization administrator',
+			'page arguments' => array('bikebike_add_org_admin', 1, true),
+			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
 			'type' => MENU_CALLBACK
 		),
 		'conference-registration/%/cancel' => array
@@ -76,7 +83,17 @@ function bikebike_menu()
 				'page arguments' => array(1, false),
 				'access callback' => TRUE,
 				'type' => MENU_CALLBACK
-		)/*,
+		),
+		'organizations/%/cancel-request' => array
+		(
+			'title' => 'Cancel Organization Administrator Request',
+			'page callback' => 'bikebike_cancel_request',
+			'description' => 'Cancel your request to be an organization administrator',
+			'page arguments' => array(1),
+			'access callback' => TRUE,//'entityreference_autocomplete_access_callback',
+			'type' => MENU_CALLBACK
+		)
+		/*,
 		'node/%/workshops' => array
 		(
 				'title' => 'Workshops',
@@ -94,7 +111,7 @@ function bikebike_conference_registration_open($nid, $do_open)
 {
 	$reg = node_load($nid);
 	global $user;
-	if (!$reg || $reg->type != 'conference' || !bikebike_org_edit_access('edit', $reg))
+	if (!$reg || $reg->type != 'conference' || !node_access('update', $reg))
 	{
 		drupal_set_message('You do not have sufficient privledges to edit this conference.', 'warning');
 		drupal_goto('conferences');
@@ -210,12 +227,25 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 	return $r->rowCount() > 0;
 }
 
+function bikebike_node_access($node, $op, $user)
+{
+	/*if (is_string($node))
+	{
+		return NODE_ACCESS_IGNORE;
+	}*/
+	//drupal_set_message('<pre>'.print_r($node, true).'</pre>');
+	//drupal_set_message('<pre>'.print_r($op, true).' : '.(is_object($node) ? $node->type : $node).'</pre>');
+	//drupal_set_message('<pre>'.print_r($account, true).'</pre>');
+	//drupal_set_message(arg(2));
+	/*return NODE_ACCESS_IGNORE;
+}
+
 function bikebike_org_edit_access($action, $node)
 {
-	global $user;
+	global $user;*/
 	if (in_array('administrator', array_values($user->roles)))
 	{
-		return TRUE;
+		return NODE_ACCESS_ALLOW;
 	}
 	
 	if ($node && is_array($node) && isset($node['target_id']))
@@ -223,33 +253,64 @@ function bikebike_org_edit_access($action, $node)
 		$node = node_load($node['target_id']);
 	}
 	
-	if (!$node || !is_object($node))
+	if ($op == 'update')
 	{
-		return FALSE;
+		if (is_string($node))
+		{
+			// check to see if the user is allowed to create a node
+			return NODE_ACCESS_IGNORE;
+		}
+		
+		if (!$node || !is_object($node))
+		{
+			return NODE_ACCESS_DENY;
+		}
+		
+		switch ($node->type)
+		{
+			case 'organization':
+				foreach ((isset($node->field_administrators[$node->language]) ? $node->field_administrators[$node->language] : array()) as $admin)
+				{
+					if ($admin['target_id'] == $user->uid)
+					{
+						return NODE_ACCESS_ALLOW;
+					}
+				}
+				return NODE_ACCESS_DENY;
+			case 'workshop':
+				foreach ((isset($node->field_coordinators[$node->language]) ? $node->field_coordinators[$node->language] : array()) as $admin)
+				{
+					if ($admin['target_id'] == $user->uid)
+					{
+						return NODE_ACCESS_ALLOW;
+					}
+				}
+				return NODE_ACCESS_DENY;
+			case 'conference':
+				foreach ((isset($node->field_host_organizations[$node->language]) ? $node->field_host_organizations[$node->language] : array()) as $org)
+				{
+					if (node_access($op, $org) == NODE_ACCESS_ALLOW)
+					{
+						return NODE_ACCESS_ALLOW;
+					}
+				}
+				return NODE_ACCESS_DENY;
+		}
 	}
-	
-	switch ($node->type)
+	else if ($op == 'view')
 	{
-		case 'organization':
-			foreach ((isset($node->field_administrators[$node->language]) ? $node->field_administrators[$node->language] : array()) as $admin)
-			{
-				if ($admin['target_id'] == $user->uid)
+		switch ($node->type)
+		{
+			case 'conference_registration':
+				if ($node->uid == $user->uid)
 				{
-					return TRUE;
+					return NODE_ACCESS_ALLOW;
+					
 				}
-			}
-			return FALSE;
-		case 'conference':
-			foreach ((isset($node->field_host_organizations[$node->language]) ? $node->field_host_organizations[$node->language] : array()) as $org)
-			{
-				if (bikebike_org_edit_access($action, $org))
-				{
-					return TRUE;
-				}
-			}
-			return FALSE;
+				return node_access($op, node_load($node->field_conference[$node->language][0]['nid']));
+		}
 	}
-	return node_access($action, $node);
+	return NODE_ACCESS_IGNORE;//node_access($action, $node);
 }
 
 function bikebike_add_org_admin($form_state, $args)
@@ -264,28 +325,81 @@ function bikebike_add_org_admin($form_state, $args)
 	}
 	
 	$language = $org->language;
-	$secret_id = $org->field_organization_secret[$language][0]['value'];
-	$secret = field_collection_item_load($secret_id, $reset = FALSE);
+	$secret_id = (isset($org->field_organization_secret[$language]) && $org->field_organization_secret[$language][0]['value'] ? $org->field_organization_secret[$language][0]['value'] : null);
+	$secret = $secret_id ? field_collection_item_load($secret_id, $reset = FALSE) : null;
 	
-	$form['answer'] = array
-	(
-    	'#type' => 'textfield',
-    	'#title' => t($secret->field_question[$language][0]['value']),
-    	'#size' => 80,
-    	'#required' => TRUE,
-  	);
-  	$form['submit'] = array
-  	(
-    	'#type' => 'submit',
-    	'#value' => t('Submit'),
-  	);
+	if ($secret && isset($secret->field_question[$language]) && $secret->field_question[$language][0]['value'] && isset($secret->field_reply[$language]) && $secret->field_reply[$language][0]['password_field'])
+	{
+	  	$form['secret_p'] = array
+	  	(
+	    	'#type' => 'markup',
+	    	'#markup' => '<p>You may automatically add yourself as a member of this organization by completing the following secret.</p>',
+	  	);
+		$form['secret'] = array
+		(
+			'#type' => 'fieldset',
+			'#title' => t('Complete This Organization\'s Secret'),
+			'#tree' => TRUE
+		);
+		$form['secret']['answer'] = array
+		(
+	    	'#type' => 'textfield',
+	    	'#title' => t($secret->field_question[$language][0]['value']),
+	    	'#size' => 80,
+	    	'#required' => TRUE,
+	  	);
+	  	$form['secret']['submit'] = array
+	  	(
+	    	'#type' => 'submit',
+	    	'#value' => t('Submit'),
+	  	);
+	  	$form['request_p'] = array
+	  	(
+	    	'#type' => 'markup',
+	    	'#markup' => '<p>Alternatively, you may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
+	  	);
+	}
+	else
+	{
+		$form['request_p'] = array
+		(
+			'#type' => 'markup',
+			'#markup' => '<p>You may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>',
+		);
+	}
+	$form['message'] = array(
+		'#title' => t('Message'),
+		'#type' => 'textarea',
+		'#description' => t('Adding a message is optional but may help to confirm who you are.'),
+		'#default_value' => '',
+	);
+	$form['actions']['request'] = array(
+		'#type' => 'submit',
+		'#value' => t('Make a Request'),
+		'#submit' => array('bikebike_add_org_admin_request'),
+		'#limit_validation_errors' => array()
+	);
+	$form['actions']['cancel'] = array(
+		'#type' => 'submit',
+		'#value' => t('Cancel'),
+		'#submit' => array('bikebike_add_org_admin_cancel'),
+		'#limit_validation_errors' => array()
+	);
+	
   	$form['orgid'] = array
   	(
   		'#type' => 'value',
   		'#value' => $orgid
   	);
   	$form['#method'] = 'post';
+  	$form['#validate'] = array();//[] = 'bikebike_add_org_admin_validate';
+  	$form['#redirect'] = 'node/'.$orgid;
 	return $form;
+}
+
+function bikebike_add_org_admin_validate(&$form, &$form_state)
+{
+	//return true;
 }
 
 function bikebike_add_org_admin_submit($form, &$form_state)
@@ -298,7 +412,7 @@ function bikebike_add_org_admin_submit($form, &$form_state)
 	$secret = field_collection_item_load($secret_id, $reset = FALSE);
 	$answer = $form['answer']['#value'];
 	$real_answer = password_field_decrypt($secret->field_reply[$language][0]['password_field']);
-	if ($real_answer == $answer)
+	if (strcasecmp($real_answer, $answer) === 0)
 	{
 		global $user;
 		$already_admin = false;
@@ -325,6 +439,88 @@ function bikebike_add_org_admin_submit($form, &$form_state)
 	$form_state['redirect'] = 'node/'.$orgid;
 }
 
+function bikebike_create_request($node, $message, $email = null, $is_invite = false)
+{
+	global $user;
+	$request = new stdClass();
+	$request->type = 'request';
+	$request->uid = $user->uid;
+	$request->body ['und'][0]['value'] = $message;
+	//drupal_set_message($user->language);
+	$request->language = 'und';
+	$request->field_node['und'][0]['nid'] = is_object($node) ? $node->nid : $node;
+	$request->field_email_address['und'][0]['email'] = $email ?: $user->mail;
+	$request->field_invitation['und'][0]['value'] = $is_invite ? 1 : 0;
+	$request->field_state['und'][0]['value'] = 0;
+	node_object_prepare($request);
+	node_save($request);
+}
+
+function bikebike_request_query($node, $user)
+{
+	$nid = is_object($node) ? $node->nid : $node;
+	$email = is_object($user) ? $user->mail : $user;
+	$r = db_query("
+			SELECT
+				node.nid
+			FROM
+				{node}
+			JOIN
+				{field_data_field_node} AS n
+				ON
+					n.entity_id = nid
+			JOIN
+				{field_data_field_email_address} AS email
+				ON
+					email.entity_id = nid
+			JOIN
+				{field_data_field_state} AS state
+				ON
+					state.entity_id = nid
+			WHERE
+				type = 'request'
+				AND
+				n.field_node_nid = :nid
+				AND
+				email.field_email_address_email = :email
+				AND
+				state.field_state_value = 0
+			LIMIT
+				1",
+			array('nid' => $nid, 'email' => $email));
+	return $r;
+}
+
+function bikebike_create_request_exists($node, $user)
+{
+	return bikebike_request_query($node, $user)->rowCount() > 0;
+}
+
+function bikebike_cancel_request($node)
+{
+	global $user;
+	$r = bikebike_request_query($node, $user);
+	if ($r->rowCount() > 0)
+	{
+		node_delete($r->fetchField());
+		drupal_set_message('Your request has been cancelled.');
+	}
+	drupal_goto('node/'.(is_object($node) ? $node->nid : $node));
+}
+
+function bikebike_add_org_admin_cancel($form, &$form_state)
+{
+	$orgid = $form['orgid']['#value'];
+	$form_state['redirect'] = 'node/'.$orgid;
+}
+
+function bikebike_add_org_admin_request($form, &$form_state)
+{
+	drupal_set_message('Your request has been sent.');
+	$orgid = $form['orgid']['#value'];
+	bikebike_create_request($orgid, $form['message']['#value']);
+	$form_state['redirect'] = 'node/'.$orgid;
+}
 
 function bikebike_autocomplete_callback($type, $field_name, $entity_type, $bundle_name, $entity_id = '', $string = '')
 {
@@ -421,12 +617,20 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	}
 	else if ($form_id == 'organization_node_form')
 	{
-		if (!isset($form['nid']['#value']))
+		global $user;
+		if (empty($form['field_administrators'][$form['field_administrators']['#language']]['#default_value']))
 		{
+			$form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] = array($user->uid);
 		}
-		else
+		$markup = '<div class="field-type-custom field-name-field-administrators-form form-wrapper" id="edit-field-administrators"><label>Members:</label><ul>';
+		foreach ($form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] as $uid)
 		{
+			$u = user_load($uid);
+			$markup .= '<li>'.drupal_render(user_view($u, 'entityreference_view_widget')).'</li>';
 		}
+		$markup .= '</ul></div>';
+		$form['field_administrators_view'] = array($form['field_administrators']['#language'] => array('#markup' => $markup), '#weight' => $form['field_administrators']['#weight']);//*/
+		$form['field_administrators']['#access'] = FALSE;
 	}
 	else if ($form_id == 'conference_node_form')
 	{
@@ -443,12 +647,26 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		{
 			$form['field_scheduled_time']['#access'] = FALSE;
 			$form['field_conference_location']['#access'] = FALSE;
+			if (empty($form['field_coordinators'][$form['field_coordinators']['#language']]['#default_value']))
+			{
+				$form['field_coordinators'][$form['field_coordinators']['#language']]['#default_value'] = array($user->uid);
+			}
+			$markup = '<div class="field-type-custom field-name-field-coordinators-form form-wrapper" id="edit-field-coordinators"><label>Coordinators:</label><ul>';
+			foreach ($form['field_coordinators'][$form['field_coordinators']['#language']]['#default_value'] as $uid)
+			{
+				$u = user_load($uid);
+				$markup .= '<li>'.drupal_render(user_view($u, 'entityreference_view_widget')).'</li>';
+			}
+			$markup .= '</ul></div>';
+			$form['field_coordinators_view'] = array($form['field_coordinators']['#language'] => array('#markup' => $markup), '#weight' => $form['field_coordinators']['#weight']);
+			$form['field_coordinators']['#access'] = FALSE;
 		}
 	}
 	else if ($form_id == 'bikebike_add_org_admin')
 	{
   		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
 	}// else { drupal_set_message($form_id); }
+	//drupal_set_message('<pre>'.print_r($form['field_email_address'], true).'</pre>');
 }
 
 function bikebike_field_attach_view_alter(&$output, $context)

@@ -26,9 +26,15 @@
       </div>
     <?php endforeach; ?>
   </div>
-  <?php if (!$is_org_admin && user_is_logged_in()): ?>
+  <?php if (user_is_logged_in()): ?>
   	<div class="button-container">
+  	<?php if ($is_org_admin): ?>
+		<a href="<?php print $element['#object']->nid.'/remove-admin/'; ?>" class="important-button" id="remove-me-as-admin">Remove Me</a>
+	<?php elseif (bikebike_create_request_exists($element['#object'], $user)): ?>
+		<a href="<?php print $element['#object']->nid.'/cancel-request/'; ?>" class="important-button" id="cancel-add-me-as-admin">Cancel Your Request</a>
+	<?php else: ?>
 		<a href="<?php print $element['#object']->nid.'/add-admin/'; ?>" class="important-button" id="add-me-as-admin">Add Me</a>
+  	<?php endif; ?>
 	</div>
-  <?php endif; ?>
+	<?php endif; ?>
 </<?php print $tag; ?>>
