@@ -5,15 +5,15 @@
   <?php endif; ?>
   
   <?php
-  	$is_org_admin = false;
+  	$is_coordinator = false;
   	global $user;
   	if (user_is_logged_in())
   	{
-  		foreach ($element['#object']->field_administrators['und'] as $admin)
+  		foreach ($element['#object']->field_coordinators['und'] as $admin)
 	  	{
   			if ($admin['target_id'] == $user->uid)
   			{
-	  			$is_org_admin = true;
+	  			$is_coordinator = true;
   			}
   		}
   	}
@@ -28,18 +28,18 @@
   </div>
   <?php if (user_is_logged_in()): ?>
   	<div class="button-container">
-  	<?php if ($is_org_admin): ?>
-		<?php if (count($element['#object']->field_administrators['und']) > 1): ?><a href="<?php print $element['#object']->nid.'/remove-admin/'; ?>" class="important-button" id="remove-me-as-admin">Remove Me</a><?php endif; ?>
+  	<?php if ($is_coordinator): ?>
+		<a href="<?php print $element['#object']->nid.'/remove-coordinator/'; ?>" class="important-button" id="remove-me-as-coordinator">Remove Me</a>
 	<?php elseif (bikebike_create_request_exists($element['#object'], $user)): ?>
-		<a href="<?php print $element['#object']->nid.'/cancel-request/'; ?>" class="important-button" id="cancel-add-me-as-admin">Cancel Your Request</a>
+		<a href="<?php print $element['#object']->nid.'/cancel-request/'; ?>" class="important-button" id="cancel-add-me-as-coordinator">Cancel Your Request</a>
 	<?php else: ?>
-		<a href="<?php print $element['#object']->nid.'/add-admin/'; ?>" class="important-button" id="add-me-as-admin">Add Me</a>
+		<a href="<?php print $element['#object']->nid.'/add-coordinator/'; ?>" class="important-button" id="add-me-as-coordinator">Add Me</a>
   	<?php endif; ?>
 	</div>
 	<?php endif; ?>
 </<?php print $tag; ?>>
 
-<?php if ($is_org_admin): ?>
+<?php if ($is_coordinator): ?>
 <section class="field field-name-field-requests field-type-entityreference field-label-above view-mode-full">
 	       	<?php
 			$args = array();

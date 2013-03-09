@@ -2865,6 +2865,31 @@ body.node-type-conference article.node .group-content {
 	padding: 0;
 }
 
+.group-attachments {
+	color: #FFF;
+	background-color: #8A9BAB;
+	padding: 20px 0;
+	margin: 0;
+}
+
+.group-attachments > legend,
+.group-attachments > .fieldset-wrapper {
+	width: 100%;
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+.group-attachments > legend {
+	position: relative;
+	margin: 40px auto;
+	font-size: 20px;
+	font-family: 'SansSerif', sans-serif;
+	font-weight: normal;
+	height: 0;
+	background-color: transparent;
+	top: 20px;
+}
+
 body.node-type-organization article.node .field-name-body .field-items,
 body.node-type-conference article.node .group-content .fieldset-wrapper {
 	border-top: 1px dashed #CCC;
@@ -4419,7 +4444,8 @@ textarea.text-full.form-textarea {
     text-align: center;
 }
 .group-details .fieldset-wrapper > .field.field-name-field-registration-open h2,
-.group-content .fieldset-wrapper > .field.field-name-field-workshops-published > .view-id-workshops {
+.group-content .fieldset-wrapper > .field.field-name-field-workshops-published > .view-id-workshops,
+.group-content .fieldset-wrapper > .field.field-name-field-workshops-published > h2 {
     text-align: left;
 }
 
@@ -4608,4 +4634,8 @@ body.page-organizations-requests .fieldset-wrapper > p {
 	overflow: auto;
 	border: 1px dashed #DDD;
 	padding: 5px 10px;
+}
+
+.views-field-field-coordinators ul {
+	list-style: none;
 }

@@ -2893,6 +2893,10 @@ function node_access($op, $node, $account = NULL) {
   // an integer, use either nid or type as the static cache id.
   
   $cid = is_object($node) ? $node->nid : $node;
+  
+  /*$s = debug_backtrace();
+  $s = $s[3];
+  _bikebike_show_object($s);*/
 
   // If we've already checked access for this node, user and op, return from
   // cache.

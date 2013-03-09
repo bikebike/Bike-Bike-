@@ -36,7 +36,7 @@ function request_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
-  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="/organizations/!1/requests" class="button">Approve/Deny Requests...</a>';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="/[type]s/!1/requests" class="button">Approve/Deny Requests...</a>';
   $handler->display->display_options['header']['area_text_custom']['tokenize'] = TRUE;
   /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
@@ -49,6 +49,12 @@ function request_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
+  /* Relationship: Content: Node (field_node) */
+  $handler->display->display_options['relationships']['field_node_nid']['id'] = 'field_node_nid';
+  $handler->display->display_options['relationships']['field_node_nid']['table'] = 'field_data_field_node';
+  $handler->display->display_options['relationships']['field_node_nid']['field'] = 'field_node_nid';
+  $handler->display->display_options['relationships']['field_node_nid']['required'] = TRUE;
+  $handler->display->display_options['relationships']['field_node_nid']['delta'] = '-1';
   /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'users';
@@ -70,6 +76,16 @@ function request_views_default_views() {
   $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['rendered_entity']['display'] = 'view';
   $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'entityreference_view_widget';
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['type']['relationship'] = 'field_node_nid';
+  $handler->display->display_options['fields']['type']['label'] = '';
+  $handler->display->display_options['fields']['type']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['type']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['type']['machine_name'] = TRUE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
