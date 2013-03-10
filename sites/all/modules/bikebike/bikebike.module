@@ -10,12 +10,8 @@ function bikebike_menu_alter(&$items)
 			'access arguments' => array(2, 3, 4, 5),
 			'type' => MENU_CALLBACK,
 	);
-	//$items['node/%node/edit']['access callback'] = 'bikebike_org_edit_access';
 	$items['node/add/workshop/%']['access callback'] = 'bikebike_add_workshop_access';
 	$items['node/add/workshop/%']['access arguments'] = array('create', 'workshop', 3);
-	//$items['organization/%/edit']['access arguments'] = array(1);//'access arguments' = array(1);
-	//drupal_set_message('<pre>'.print_r($items, true).'</pre>');
-	
 	return $items;
 }
 
@@ -1405,3 +1401,8 @@ function bikebike_host_organizations_field_attach_view_alter(&$output, $context)
 {
 	
 }
+
+/*function bikebike_menu_get_item_alter(&$item)
+{
+	_bikebike_show_object($item);
+}*/

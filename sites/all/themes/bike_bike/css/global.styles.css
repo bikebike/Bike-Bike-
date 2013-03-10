@@ -4681,3 +4681,70 @@ body.page-organizations-requests .fieldset-wrapper > p {
 #content section .invitation p {
 	padding: 0;
 }
+
+#block-menu-menu-log-out ul li {
+	list-style-image: none;
+	list-style-type: none;
+}
+
+#block-menu-menu-log-out ul li a {
+	padding: 0;
+	/*outline: 1px solid #AAA;*/
+	display: block;
+	/*outline-offset: 0px;
+	border: 2px solid #DDD;*/
+}
+#block-menu-menu-log-out ul li a img {
+	display: block;
+	box-shadow: 0 1px 2px 1px #CCC;
+}
+
+#block-menu-menu-log-out ul li ul {
+	/*display: none;*/
+	visibility: hidden;
+	position: absolute;
+	right: 20px;
+	top: 62px;
+	padding: 5px;
+	margin: 0;
+	width: auto;
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	box-shadow: 0 1px 2px 0px #CCC;
+	max-height: 0;
+	-webkit-transition: all .5s ease;
+	-moz-transition: all .5s ease;
+	-o-transition: all .5s ease;
+	transition: all .5s ease;
+	overflow: hidden;
+}
+
+#block-menu-menu-log-out:hover ul li ul {
+	/*display: block;*/
+	max-height: 1000px;
+	visibility: visible;
+	height: auto;
+}
+
+#block-menu-menu-log-out .block-inner .block-content {
+	margin-top: 0px;
+}
+
+#block-menu-menu-log-out ul li ul li {
+	overflow: hidden;
+}
+
+#block-menu-menu-log-out ul li ul li a {
+    white-space: nowrap;
+    padding: 5px 15px 5px 40px;
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+#block-menu-menu-log-out ul li ul li a#user-account-menu-item {
+	background-image: url(../images/input-edit-name.png);
+}
+#block-menu-menu-log-out ul li ul li a#user-logout-menu-item {
+	background-image: url(../images/log-out.png);
+}
+

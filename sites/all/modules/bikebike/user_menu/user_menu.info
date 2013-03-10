@@ -1,0 +1,16 @@
+name = User Menu
+core = 7.x
+package = Bike!Bike!
+dependencies[] = fboauth
+dependencies[] = fe_block
+dependencies[] = features
+dependencies[] = logintoboggan
+dependencies[] = menu
+features[fe_block_settings][] = fboauth-login
+features[fe_block_settings][] = logintoboggan-logintoboggan_logged_in
+features[fe_block_settings][] = menu-menu-log-out
+features[fe_block_settings][] = menu-menu-login-menu
+features[features_api][] = api:1
+features[menu_custom][] = menu-log-out
+features[menu_custom][] = menu-login-menu
+project path = sites/all/modules/bikebike
