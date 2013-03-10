@@ -30,6 +30,12 @@
   	<div class="button-container">
   	<?php if ($is_org_admin): ?>
 		<?php if (count($element['#object']->field_administrators['und']) > 1): ?><a href="<?php print $element['#object']->nid.'/remove-admin/'; ?>" class="important-button" id="remove-me-as-admin">Remove Me</a><?php endif; ?>
+	<?php elseif ($invitation = bikebike_get_invitation($element['#object'], $user->mail)): ?>
+		<div class="invitation">
+			<p>You have been invited to become a member of this Organization</p>
+			<a href="<?php print $element['#object']->nid.'/accept-invitation/'.$invitation->title; ?>" class="important-button" id="accept-invitation">Accept Invitation</a>
+			<a href="<?php print $element['#object']->nid.'/reject-invitation/'.$invitation->title; ?>" class="important-button" id="reject-invitation">Reject Invitation</a>
+		</div>
 	<?php elseif (bikebike_create_request_exists($element['#object'], $user)): ?>
 		<a href="<?php print $element['#object']->nid.'/cancel-request/'; ?>" class="important-button" id="cancel-add-me-as-admin">Cancel Your Request</a>
 	<?php else: ?>
@@ -45,6 +51,8 @@
 			$args = array();
 			$view = views_get_view('requests');
 			print $view->preview('block', $args);
+			$view = views_get_view('requests');
+			print $view->preview('invitations', $args);
 			?>
 </section>
 <?php endif; ?>

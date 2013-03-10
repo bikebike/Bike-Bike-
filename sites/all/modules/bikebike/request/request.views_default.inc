@@ -27,6 +27,7 @@ function request_views_default_views() {
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
@@ -36,7 +37,7 @@ function request_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
-  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="/[type]s/!1/requests" class="button">Approve/Deny Requests...</a>';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="!1/requests" class="button">Approve/Deny Requests...</a>';
   $handler->display->display_options['header']['area_text_custom']['tokenize'] = TRUE;
   /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
@@ -44,48 +45,22 @@ function request_views_default_views() {
   $handler->display->display_options['header']['result']['field'] = 'result';
   $handler->display->display_options['header']['result']['empty'] = TRUE;
   $handler->display->display_options['header']['result']['content'] = '<h2 class="field-label">Requests (@total):</h2>';
-  /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['required'] = TRUE;
   /* Relationship: Content: Node (field_node) */
   $handler->display->display_options['relationships']['field_node_nid']['id'] = 'field_node_nid';
   $handler->display->display_options['relationships']['field_node_nid']['table'] = 'field_data_field_node';
   $handler->display->display_options['relationships']['field_node_nid']['field'] = 'field_node_nid';
   $handler->display->display_options['relationships']['field_node_nid']['required'] = TRUE;
   $handler->display->display_options['relationships']['field_node_nid']['delta'] = '-1';
-  /* Field: User: Uid */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'users';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['uid']['label'] = '';
-  $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
-  /* Field: User: Rendered User */
-  $handler->display->display_options['fields']['rendered_entity']['id'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['table'] = 'views_entity_user';
-  $handler->display->display_options['fields']['rendered_entity']['field'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['rendered_entity']['label'] = '';
-  $handler->display->display_options['fields']['rendered_entity']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['rendered_entity']['alter']['path'] = 'user/[uid]';
-  $handler->display->display_options['fields']['rendered_entity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['rendered_entity']['display'] = 'view';
-  $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'entityreference_view_widget';
-  /* Field: Content: Type */
-  $handler->display->display_options['fields']['type']['id'] = 'type';
-  $handler->display->display_options['fields']['type']['table'] = 'node';
-  $handler->display->display_options['fields']['type']['field'] = 'type';
-  $handler->display->display_options['fields']['type']['relationship'] = 'field_node_nid';
-  $handler->display->display_options['fields']['type']['label'] = '';
-  $handler->display->display_options['fields']['type']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['type']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['type']['machine_name'] = TRUE;
+  /* Field: Content: Email Address */
+  $handler->display->display_options['fields']['field_email_address']['id'] = 'field_email_address';
+  $handler->display->display_options['fields']['field_email_address']['table'] = 'field_data_field_email_address';
+  $handler->display->display_options['fields']['field_email_address']['field'] = 'field_email_address';
+  $handler->display->display_options['fields']['field_email_address']['label'] = '';
+  $handler->display->display_options['fields']['field_email_address']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_email_address']['type'] = 'custom_formatters_user_profile_from_email';
+  $handler->display->display_options['fields']['field_email_address']['settings'] = array(
+    'field_formatter_class' => '',
+  );
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -118,10 +93,10 @@ function request_views_default_views() {
   $handler->display->display_options['filters']['field_invitation_value']['id'] = 'field_invitation_value';
   $handler->display->display_options['filters']['field_invitation_value']['table'] = 'field_data_field_invitation';
   $handler->display->display_options['filters']['field_invitation_value']['field'] = 'field_invitation_value';
-  $handler->display->display_options['filters']['field_invitation_value']['operator'] = 'not';
   $handler->display->display_options['filters']['field_invitation_value']['value'] = array(
     1 => '1',
   );
+  $handler->display->display_options['filters']['field_invitation_value']['reduce_duplicates'] = TRUE;
   /* Filter criterion: Content: State (field_state) */
   $handler->display->display_options['filters']['field_state_value']['id'] = 'field_state_value';
   $handler->display->display_options['filters']['field_state_value']['table'] = 'field_data_field_state';
@@ -133,6 +108,63 @@ function request_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'request' => 'request',
+  );
+  /* Filter criterion: Content: Invitation (field_invitation) */
+  $handler->display->display_options['filters']['field_invitation_value']['id'] = 'field_invitation_value';
+  $handler->display->display_options['filters']['field_invitation_value']['table'] = 'field_data_field_invitation';
+  $handler->display->display_options['filters']['field_invitation_value']['field'] = 'field_invitation_value';
+  $handler->display->display_options['filters']['field_invitation_value']['value'] = array(
+    0 => '0',
+  );
+  $handler->display->display_options['filters']['field_invitation_value']['reduce_duplicates'] = TRUE;
+  /* Filter criterion: Content: State (field_state) */
+  $handler->display->display_options['filters']['field_state_value']['id'] = 'field_state_value';
+  $handler->display->display_options['filters']['field_state_value']['table'] = 'field_data_field_state';
+  $handler->display->display_options['filters']['field_state_value']['field'] = 'field_state_value';
+  $handler->display->display_options['filters']['field_state_value']['value'] = array(
+    0 => '0',
+  );
+
+  /* Display: Invitations */
+  $handler = $view->new_display('block', 'Invitations', 'invitations');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Invitations';
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: Unfiltered text */
+  $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<a href="!1/invitations" class="button">Manage Invitations...</a>';
+  $handler->display->display_options['header']['area_text_custom']['tokenize'] = TRUE;
+  /* Header: Global: Result summary */
+  $handler->display->display_options['header']['result']['id'] = 'result';
+  $handler->display->display_options['header']['result']['table'] = 'views';
+  $handler->display->display_options['header']['result']['field'] = 'result';
+  $handler->display->display_options['header']['result']['content'] = '<h2 class="field-label">Invitations (@total):</h2>';
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = '<a href="!1/invitations" class="important-button">Invite Members...</a>';
+  $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
   $export['requests'] = $view;
 
   return $export;

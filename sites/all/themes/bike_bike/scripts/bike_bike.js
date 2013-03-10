@@ -248,37 +248,31 @@ jQuery(document).ready
 				}
 		});
 		
-		//console.log(jQuery('input[type="file"] + input[type="submit"]').length);
-		/*jQuery('input[type="file"] + input[type="submit"]').each
+		jQuery('#edit-invitemore-filter').keyup
 		(
 			function ()
 			{
-				jQuery(this).after('<input type="button" value="Upload File..." class="upload-button" />');
+				var str = jQuery(this).val();
+				//var checkboxes = jQuery(this).parent.find();
+				//console.log(jQuery(this).parent());
+				jQuery(this).parent().next().find('.form-item').each
+				(
+					function ()
+					{
+						var show = true;
+						var text = jQuery(this).find('label > .profile > h3').html();
+						if (str.length < 1 || text.match(new RegExp(str, 'gi')))
+						{
+							jQuery(this).show();
+						}
+						else
+						{
+							jQuery(this).hide();
+						}
+					}
+				);
 			}
 		);
-		
-		jQuery('input.upload-button').click
-		(
-			function (e)
-			{
-				//alert('pooo!');
-				//console.log('clicked');
-				//console.log('[ ' + file.val() + ' ]');
-				var button = jQuery(this).prev();
-				var file = button.prev();
-				//if (!file.val())
-				//{
-					file.click();
-					//button.mousedown();
-					//e.preventDefault();
-				//}
-				//else
-				//{
-					//button.submit();
-					//button.mousedown();
-				//}
-			}
-		);*/
 	}
 );
 

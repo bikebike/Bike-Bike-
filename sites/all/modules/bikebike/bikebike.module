@@ -137,6 +137,56 @@ function bikebike_menu()
 			'page arguments' => array('bikebike_requests_page', 'workshop', 1),
 			'access callback' => TRUE,
 			'type' => MENU_CALLBACK
+		),
+		'organizations/%/invitations' => array
+		(
+			'title' => 'Membership Invitations',
+			'page callback' => 'drupal_get_form',
+			'description' => 'Manage Membership Invitations',
+			'page arguments' => array('bikebike_invitations_page', 'organization', 1),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'workshops/%/invitations' => array
+		(
+			'title' => 'Coordinator Invitations',
+			'page callback' => 'drupal_get_form',
+			'description' => 'Manage Coordinator Invitations',
+			'page arguments' => array('bikebike_invitations_page', 'workshop', 1),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'organizations/%/accept-invitation/%' => array
+		(
+			'title' => 'Accept Organization Member Invitation',
+			'page callback' => 'bikebike_accept_invitation',
+			'page arguments' => array('organization', 1, 3, true),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'workshops/%/accept-invitation/%' => array
+		(
+			'title' => 'Accept Workshop Coordinator Invitation',
+			'page callback' => 'bikebike_accept_invitation',
+			'page arguments' => array('workshop', 1, 3, true),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'organizations/%/reject-invitation/%' => array
+		(
+			'title' => 'Reject Organization Member Invitation',
+			'page callback' => 'bikebike_accept_invitation',
+			'page arguments' => array('organization', 1, 3, false),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
+		),
+		'workshops/%/reject-invitation/%' => array
+		(
+			'title' => 'Reject Workshop Coordinator Invitation',
+			'page callback' => 'bikebike_accept_invitation',
+			'page arguments' => array('workshop', 1, 3, false),
+			'access callback' => TRUE,
+			'type' => MENU_CALLBACK
 		)/*,
 		'organizations/%/requests/%/approve' => array
 		(
@@ -357,7 +407,7 @@ function bikebike_node_access($node, $op, $user)
 				return node_access($op, node_load($node->field_conference[$node->language][0]['nid']));
 		}
 	}
-	return NODE_ACCESS_IGNORE;//node_access($action, $node);
+	return NODE_ACCESS_IGNORE;
 }
 
 function _bikebike_show_object($object)
@@ -367,7 +417,6 @@ function _bikebike_show_object($object)
 
 function bikebike_requests_page_submit(&$form, &$form_state)
 {
-	//_bikebike_show_object($form_state['clicked_button']);
 	$nid = $form['nid']['#value'];
 	$node = node_load($nid);
 	$request = node_load($form_state['clicked_button']['#array_parents'][1]);
@@ -407,7 +456,6 @@ function bikebike_requests_page($form_state, $args)
 	$node = node_load($nid);
 	if (!$node || $node->type != $args['build_info']['args'][0])
 	{
-		//drupal_set_message('Unknown ');
 		return;
 	}
 	
@@ -502,6 +550,403 @@ function bikebike_requests_page($form_state, $args)
 	$form['#method'] = 'post';
   	$form['#redirect'] = 'node/'.$nid;
 	return $form;
+}
+
+function bikebike_get_invitation($node, $email)
+{
+	$r = db_query("
+			SELECT
+				node.nid
+			FROM
+				node
+			JOIN
+				field_data_field_node AS n
+				ON
+					n.entity_id = node.nid
+			JOIN
+				field_data_field_invitation AS invite
+				ON
+					invite.entity_id = node.nid
+			JOIN
+				field_data_field_state AS state
+				ON
+					state.entity_id = node.nid
+			JOIN
+				field_data_field_email_address AS email
+				ON
+					email.entity_id = node.nid
+			WHERE
+				type = 'request'
+				AND
+				n.field_node_nid = :nid
+				AND
+				email.field_email_address_email = :email
+				AND
+				invite.field_invitation_value = 1
+				AND
+				state.field_state_value = 0
+			LIMIT
+				1
+			",
+			array('nid' => is_object($node) ? $node->nid : $node, 'email' => $email));
+	return $r->rowCount() > 0 ? node_load($r->fetchField()) : null;
+}
+
+function bikebike_accept_invitation($type, $nid, $request_title, $do_accept)
+{
+	global $user;
+	if (!$user)
+	{
+		// TODO: Handle this case, we should probably promt to log in, then redirect here again
+	}
+	else
+	{
+		$node = node_load($nid);
+		$invitation = bikebike_get_invitation($node, $user->mail);
+		$invite_node = $invitation ? node_load($invitation->field_node['und'][0]['nid']) : null;
+		if (!$invitation || $type != $invite_node->type || $invitation->title !== $request_title)
+		{
+			drupal_set_message('Invitation does not exist', 'error');
+		}
+		else
+		{
+			if ($do_accept)
+			{
+				switch ($node->type)
+				{
+					case 'organization':
+					case 'workshop':
+						$field = $node->type == 'organization' ? 'field_administrators' : 'field_coordinators';
+						$already_admin = false;
+						foreach ((isset($node->{$field}['und']) ? $node->{$field}['und'] : array()) as $admin)
+						{
+							if ($admin['target_id'] == $user->uid)
+							{
+								$alreadyadmin = true;
+							}
+						}
+						if (!$already_admin)
+						{
+							$node->{$field}['und'][] = array('target_id' => $user->uid);
+							node_save($node);
+						}
+						break;
+				}
+				drupal_set_message('Succesfully added as a '.($type == 'organization' ? 'member' : 'coordinator').' of '.$node->title);
+			}
+			else
+			{
+				drupal_set_message('You have rejected your invitation.');
+			}
+			$invitation->field_state['und'][0]['value'] = ($do_accept ? 1 : -1);
+			node_save($invitation);
+			drupal_goto('node/'.$nid);
+		}
+	}
+}
+
+function _bikebike_user_load_from_email($email)
+{
+	$r = db_query('SELECT uid FROM users WHERE users.mail = :email LIMIT 1', array('email' => $email));
+	if ($r->rowCount() > 0)
+	{
+		return user_load($r->fetchField());
+	}
+	return $email;
+}
+
+function bikebike_invitations_page($form_state, $args)
+{
+	$nid = $args['build_info']['args'][1];
+	$node = node_load($nid);
+	$type = $args['build_info']['args'][0];
+	if (!$node || $node->type != $type)
+	{
+		return;
+	}
+	
+	$language = $node->language;
+	
+	$field = $node->type == 'organization' ? 'field_administrators' : 'field_coordinators';
+	
+	$member_uids = array();
+	$members = array();
+	foreach ((isset($node->{$field}['und']) ? $node->{$field}['und'] : array()) as $admin)
+	{
+		$member = user_load($admin['target_id']);
+		$members[] = $member;
+		$member_uids[] = $member->uid;
+		$member_emails[] = $member->mail;
+	}
+	
+	$r = db_query("
+			SELECT
+				node.nid,
+				email.field_email_address_email,
+				users.uid
+			FROM
+				node
+			JOIN
+				field_data_field_node AS n
+				ON
+					n.entity_id = node.nid
+			JOIN
+				field_data_field_invitation AS invite
+				ON
+					invite.entity_id = node.nid
+			JOIN
+				field_data_field_state AS state
+				ON
+					state.entity_id = node.nid
+			JOIN
+				field_data_field_email_address AS email
+				ON
+					email.entity_id = node.nid
+			LEFT OUTER JOIN
+				users
+				ON
+					users.mail = email.field_email_address_email
+			WHERE
+				type = 'request'
+				AND
+				n.field_node_nid = :nid
+				AND
+				invite.field_invitation_value = 1
+				AND
+				state.field_state_value = 0
+			",
+			array('nid' => $nid));
+	
+	$cantinvite = "'".implode("', '", $member_emails)."'";
+	
+	if ($r->rowCount() > 0)
+	{
+		$form['invitations'] = array
+		(
+			'#type' => 'fieldset',
+			'#title' => t('Invitations:'),
+			'#tree' => TRUE
+		);
+		
+		$checkboxes = array();
+		
+		foreach ($r as $result)
+		{
+			$cantinvite .= ", '".$result->field_email_address_email."'";
+			$request = node_load($result->nid);
+			$checkboxes[$result->nid] = $result->uid ? drupal_render(user_view(user_load($result->uid), 'entityreference_view_widget')) : $result->field_email_address_email;
+		}
+		
+		$form['invitations']['members'] = array
+		(
+			'#type' => 'checkboxes',
+			'#options' => $checkboxes,
+			'#tree' => TRUE
+		);
+		
+		$form['invitations']['cancelinvitations'] = array
+		(
+			'#type' => 'submit',
+			'#value' => t('Cancel Selected Invitations'),
+			'#submit' => array('bikebike_invitaions_page_cancelinvitations'),
+			'#limit_validation_errors' => array()
+		);
+	}
+	
+	$form['emailinvite'] = array
+	(
+		'#type' => 'fieldset',
+		'#title' => t('Invite by Email:'),
+		'#tree' => TRUE
+	);
+	
+	$form['emailinvite']['message'] = array
+	(
+		'#title' => t('Message:'),
+		'#type' => 'textarea',
+		'#description' => t('You may include a message in the request.'),
+		'#default_value' => ''
+	);
+	$form['emailinvite']['emails'] = array
+	(
+		'#title' => t('Invite by Email:'),
+		'#type' => 'textarea',
+		'#description' => t('Invite users using their email, once the user registers they will be be given permission to join this '.$type.'. Multiple users may be invited by entering email addresses on seperate lines.'),
+		'#default_value' => '',
+		'#required' => TRUE,
+	);
+	$form['emailinvite']['emailinvite'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit'),
+		'#submit' => array('bikebike_invitaions_page_emailinvite'),
+		'#limit_validation_errors' => array()
+	);
+	
+	$r = db_query("
+			SELECT
+				email.field_email_address_email,
+				node.nid
+			FROM
+				{node}
+			JOIN
+				{field_data_field_node} AS n
+				ON
+					n.entity_id = node.nid
+			JOIN
+				{field_data_field_invitation} AS invite
+				ON
+					invite.entity_id = node.nid
+			JOIN
+				{field_data_field_state} AS state
+				ON
+					state.entity_id = node.nid
+			JOIN
+				field_data_field_email_address AS email
+				ON
+					email.entity_id = node.nid
+			WHERE
+				type = 'request'
+				AND
+				n.field_node_nid = :nid
+				AND
+				invite.field_invitation_value = 0
+				AND
+				state.field_state_value = 0
+			",
+			array('nid' => $nid));
+	
+	foreach ($r as $result)
+	{
+		$cantinvite .= ", '".$result->field_email_address_email."'";
+	}
+	
+	$r = db_query('SELECT uid FROM users WHERE users.mail NOT IN('.$cantinvite.') AND users.uid > 0 ORDER BY users.name');
+	$checkboxes = array();
+	foreach ($r as $result)
+	{
+		$checkboxes[$result->uid] = drupal_render(user_view(user_load($result->uid), 'entityreference_view_widget'));
+	}
+	$form['invitemore'] = array
+	(
+		'#type' => 'fieldset',
+		'#title' => t('Invite Other Members:'),
+		'#tree' => TRUE
+	);
+	$form['invitemore']['message'] = array
+	(
+		'#title' => t('Message:'),
+		'#type' => 'textarea',
+		'#description' => t('You may include a message in the request.'),
+		'#default_value' => ''
+	);
+	$form['invitemore']['filter'] = array
+	(
+		'#type' => 'textfield',
+		'#title' => 'Filter Users By Name:'
+	);
+	$form['invitemore']['members'] = array
+	(
+		'#type' => 'checkboxes',
+		'#options' => $checkboxes,
+		'#tree' => TRUE
+	);
+	$form['invitemore']['invitemore'] = array(
+		'#type' => 'submit',
+		'#value' => t('Invite Selected Members'),
+		'#submit' => array('bikebike_invitaions_page_invitemore'),
+		'#limit_validation_errors' => array()
+	);
+	
+	$form['done'] = array(
+		'#type' => 'submit',
+		'#value' => t('Done'),
+		'#submit' => array('bikebike_add_member_cancel'),
+		'#limit_validation_errors' => array()
+	);
+	
+	$form['nid'] = array
+	(
+		'#type' => 'value',
+		'#value' => $nid
+	);
+	$form['#method'] = 'post';
+  	$form['#redirect'] = 'node/'.$nid;
+	return $form;
+}
+
+function bikebike_invitaions_page_cancelinvitations($form, &$form_state)
+{
+	$invitations = $form['invitations']['members']['#value'];
+	if (count($invitations) < 1)
+	{
+		drupal_set_message('Please select at least 1 request', 'error');
+		return;
+	}
+	foreach ($invitations as $invitation)
+	{
+		node_delete($invitation);
+	}
+	//$nid = $form['nid']['#value'];
+	//$node = node_load($nid);
+	if (count($invitations) > 1)
+	{
+		drupal_set_message(count($invitations).' invitations have been cancelled.');
+	}
+	else
+	{
+		drupal_set_message('1 invitation has been cancelled.');
+	}
+}
+
+function bikebike_invitaions_page_invitemore($form, &$form_state)
+{
+	$members = $form['invitemore']['members']['#value'];
+	if (count($members) < 1)
+	{
+		drupal_set_message('You must select at least 1 member', 'error');
+		return;
+	}
+	$nid = $form['nid']['#value'];
+	$node = node_load($nid);
+	//drupal_set_message(_bikebike_show_object($form['invitemore']['members']['#value']));
+	foreach ($members as $uid)
+	{
+		$member = user_load($uid);
+		bikebike_create_request($node, $form['invitemore']['message']['#value'], $member->mail, true);
+	}
+	if (count($members) > 1)
+	{
+		drupal_set_message(count($members).' invitations have been sent.');
+	}
+	else
+	{
+		drupal_set_message('An invitation has been sent to '.$member->name.'.');
+	}
+}
+
+function bikebike_invitaions_page_emailinvite($form, &$form_state)
+{
+	$emails = preg_split('/\r\n|\n|\r/', $form['emailinvite']['emails']['#value']);
+	if (count($emails) < 1)
+	{
+		drupal_set_message('At least 1 email is required', 'error');
+		return;
+	}
+	$nid = $form['nid']['#value'];
+	$node = node_load($nid);
+	//drupal_set_message(_bikebike_show_object($form['invitemore']['members']['#value']));
+	foreach ($emails as $email)
+	{
+		bikebike_create_request($node, null, trim($email), true);
+	}
+	if (count($emails) > 1)
+	{
+		drupal_set_message(count($emails).' invitations have been sent.');
+	}
+	else
+	{
+		drupal_set_message('An invitation has been sent to '.$emails[0].'.');
+	}
 }
 
 function bikebike_add_member($form_state, $args)

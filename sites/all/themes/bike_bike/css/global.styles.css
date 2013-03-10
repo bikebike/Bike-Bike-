@@ -3231,6 +3231,11 @@ input[type="submit"]:hover {
 	background-color: #8A9BAB;
 	box-shadow: 0px 1px 2px #BBB;
 	color: #FFF;
+	border: 0;
+	-webkit-transition: all .25s ease;
+	-moz-transition: all .25s ease;
+	-o-transition: all .25s ease;
+	transition: all .25s ease;
 }
 
 #content .login-forgot a,
@@ -3245,6 +3250,7 @@ input[type="submit"]:hover {
 #content a.button:hover {
 	background-color: #9BAB8A;
 	text-decoration: none;
+	border: 0;
 }
 
 #block-user-login .form-actions {
@@ -4638,4 +4644,40 @@ body.page-organizations-requests .fieldset-wrapper > p {
 
 .views-field-field-coordinators ul {
 	list-style: none;
+}
+
+.view-empty {
+	text-align: center;
+}
+
+#bikebike-invitations-page .form-checkboxes .form-item.form-type-checkbox {
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+#bikebike-invitations-page .form-checkboxes .form-item.form-type-checkbox input.form-checkbox {
+    position: absolute;
+    z-index: 1;
+    left: 5px;
+    top: 5px;
+}
+
+#edit-invitemore .form-item-invitemore-message,
+#edit-emailinvite .form-item-emailinvite-message {
+	float: right;
+	width: 49%;
+}
+
+#edit-invitemore .form-item-invitemore-filter,
+#edit-emailinvite .form-item-emailinvite-emails {
+	width: 49%;
+}
+
+.invitation {
+	clear: both;
+}
+
+#content section .invitation p {
+	padding: 0;
 }
