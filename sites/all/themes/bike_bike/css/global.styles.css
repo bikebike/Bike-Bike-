@@ -5021,3 +5021,267 @@ body #main-content #content form#bikebike-registration-page > div > fieldset.for
 	background-position: 0px center;
 	background-repeat: no-repeat;
 }
+
+.schedulable {
+	display: inline-block;
+	border: 1px solid #DDD;
+	background-color: #EEE;
+	padding: 1px 10px 0px 10px;
+	margin: 0 5px 5px 0;
+	cursor: move;
+	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
+	z-index: 100;
+	width: 178px !important;
+	height: 24px;
+	line-height: 25px;
+	vertical-align: middle;
+	position: relative;
+}
+
+.schedulable.conflict {
+	background-color: #FDD;
+}
+
+/*#edit-schedule > .fieldset-wrapper > .form-wrapper > .fieldset-wrapper > .form-wrapper legend > .schedulable .fieldset-legend,*/
+.schedulable .fieldset-legend {
+	font-size: 12px;
+	margin: 0;
+	border-top: 1px solid #DDD;
+	display: block;
+	background-color: transparent;
+	text-align: left;
+	background-image: none;
+}
+
+html.js fieldset.collapsible .schedulable .fieldset-legend {
+	background-image: none;
+	padding: 0;
+}
+
+#content .schedulable .de-schedule {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 15px;
+	height: 15px;
+	background-image: url(../images/close.png);
+	background-repeat: no-repeat;
+	border: 0;
+	opacity: 0.5;
+	display: none;
+}
+
+#content .schedulable .de-schedule:hover {
+	opacity: 1;
+}
+
+#content ul.times .time-slot .schedulable .de-schedule {
+	display: block;
+}
+
+.schedulable.ui-draggable-dragging {
+	z-index: 1000;
+}
+
+#edit-schedule > .fieldset-wrapper {
+	max-width: 1600px !important;
+	text-align: center;
+	overflow-x: auto;
+	/*white-space: nowrap;*/
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper {
+	text-align: center;
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	padding: 10px 0 0 0;
+	margin: 10px;
+	position: relative;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper.collapsed {
+	border: 0;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper > legend > .fieldset-legend {
+	background-color: #EEE;
+	/*width: 100%;*/
+	display: block;
+	border-top: 1px solid #DDD;
+	text-align: center;
+	position: relative;
+	top: -20px;
+	background-image: url(../images/collapse.png);
+	background-position: 5px 5px;
+	background-repeat: no-repeat;
+	height: 35px;
+	line-height: 35px;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper.collapsed > legend > .fieldset-legend {
+	border: 1px solid #DDD;
+	background-image: url(../images/expand.png);
+}
+
+#content #edit-schedule > .fieldset-wrapper > .form-wrapper > legend > .fieldset-legend a {
+	border: 0;
+	display: block;
+	color: #333;
+}
+
+#content #edit-schedule > .fieldset-wrapper > .form-wrapper > legend > .fieldset-legend .summary {
+	display: none;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper > .fieldset-wrapper > .form-wrapper {
+	display: inline-block;
+	width: 250px;
+	text-align: left;
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	padding: 10px 0 0 0;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper > .fieldset-wrapper > .form-wrapper > legend > .fieldset-legend {
+	background-color: #EEE;
+	width: 100%;
+	display: block;
+	border-top: 1px solid #DDD;
+	text-align: center;
+	padding: 0;
+	background-image: none;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times {
+	list-style: none;
+	padding: 5px;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li.unpopular {
+	display: none;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li {
+	height: 25px;
+	line-height: 25px;
+	vertical-align: middle;
+	border-bottom: 1px solid #DDD;
+	position: relative;
+	padding-left: 40px;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li.available > .time-slot{
+	background-color: #FFF;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li > .time {
+    display: block;
+    position: absolute;
+    left: 0;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li > .time-slot {
+    width: 100%;
+    background-color: #F7F7F7;
+    height: 24px;
+}
+
+.ui-icon-gripsmall-diagonal-se {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	cursor: s-resize;
+	left: 0;
+	width: 100%;
+	height: 5px;
+	background: none;
+	background-color: #DDD;
+	border: 2px solid #F7F7F7;
+	box-sizing: border-box;
+}
+
+ul.times .time-slot > .schedulable,
+ul.times .time-slot > .schedulable .fieldset-legend {
+	background-color: #DFD;
+	border-color: #ACA;
+}
+
+.schedulable .ui-icon-gripsmall-diagonal-se {
+	border: 2px solid #DFD;
+	background-color: #ACA;
+}
+
+ul.times .time-slot > .schedulable.conflict,
+ul.times .time-slot > .schedulable.conflict .fieldset-legend {
+	background-color: #FDD;
+	border-color: #CAA;
+}
+
+.schedulable.conflict .ui-icon-gripsmall-diagonal-se {
+	border: 2px solid #FDD;
+	background-color: #CAA;
+}
+
+ul.times .time-slot > .schedulable {
+	/*position: absolute !important;
+	left: 40px !important;
+	top: -1px !important;*/
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li > .time-slot.ui-state-hover {
+	background-image: none;
+	border: 0;
+	background-color: #EEE;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper ul.times > li > .time-slot.ui-state-disabled {
+	opacity: 1;
+	filter: none;
+	background-color: #FFF;
+}
+
+#edit-schedule {
+	max-height: 600px;
+	overflow: auto;
+}
+
+#content #expand-schedule,
+#content #collapse-schedule {
+	width: 100%;
+	display: block;
+	padding: 2px 0 0px 0;
+	margin: 0px;
+}
+
+#content a.expand-day,
+#content a.collapse-day {
+	width: 200px;
+	margin: 30px auto 0px auto;
+	display: block;
+	padding: 2px 0 0px 0;
+}
+
+#content #collapse-schedule,
+#content a.collapse-day {
+	display: none;
+}
+
+/*#edit-workshops {
+	position: fixed;
+	bottom: 0;
+	background-color: #F7F7F7;
+	left: 0;
+	right: 0;
+}*/
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
+	padding-top: 30px;
+	position: relative;
+}
+
+#edit-workshops > legend > .fieldset-legend {
+	position: relative;
+	top: 30px;
+}

@@ -7,19 +7,243 @@ jQuery.extend(jQuery.expr[':'],{
     }
 });
 
+function expandDay(day)
+{
+	jQuery('#edit-schedule-' + day + ' ul.times > li.unpopular').slideDown();
+	jQuery('#expand-day-' + day).css('display', 'none');
+	jQuery('#collapse-day-' + day).css('display', 'block');
+}
+
+function collapseDay(day)
+{
+	jQuery('#edit-schedule-' + day + ' ul.times > li.unpopular').slideUp();
+	jQuery('#expand-day-' + day).css('display', 'block');
+	jQuery('#collapse-day-' + day).css('display', 'none');
+}
+
+var dumbGlobal;
+
 (function ($) {
 
+	function validateScheduledItem(item)
+	{
+		//console.log('validating...');
+		var li = $(item).closest('li');
+		var liNext = li;
+		var height = $(item).height() / 26;
+		for (var i = 1; i < height; i++)
+		{
+			liNext = liNext.next();
+			if (liNext.length < 1 || !liNext.is(':visible') || !liNext.hasClass('available'))
+			{
+				$(item).height((i * 26) - 2);
+				return;
+			}
+			if (liNext.find('.ui-draggable').length > 0)
+			{
+				$(item).height((i * 26) - 2);
+				return;
+			}
+		}
+	}
+	
+	function validateDroppables()
+	{
+		var droppableHeight = 0;
+		var dropClass = '';
+		$('.ui-draggable').find('input.location').val('');
+		$('.ui-draggable').find('input.time').val('');
+		$('.ui-draggable').find('input.length').val('');
+    	$('#edit-schedule ul.times > li').each
+    	(
+    		function ()
+    		{
+    			var draggable = $(this).find('.ui-draggable');
+    			var droppable = $(this).find('.ui-droppable');
+    			if (draggable.length > 0)
+    			{
+    				droppableHeight = Math.round(draggable.height() / 26);
+    				dropClass = draggable.attr('id');
+    				draggable.find('input.location').val(this.className.replace(/^.*l\-(\d+).*/, '$1'));
+    				draggable.find('input.time').val(this.className.replace(/^.*t\-(\d+).*/, '$1'));
+    				draggable.find('input.length').val(droppableHeight);
+    				draggable.removeClass('conflict').removeAttr('title');
+    			}
+    			if (droppable.length > 0)
+    			{
+    				droppable[0].className = droppable[0].className.replace(/\s*schedule-\d+/, '');
+	    			if (droppableHeight > 0)
+	    			{
+	    				droppable.droppable('disable');
+	    				droppable.addClass(dropClass);
+	    			}
+	    			else
+	    			{
+	    				droppable.droppable('enable');
+	    			}
+    			}   				
+   				if (droppableHeight > 0)
+   				{
+   	   				droppableHeight--;
+   				}
+    		}
+    	);
+    	$.ajax
+    	(
+			{
+				url: "manage/conflicts",
+				type: "post",
+				data: $('form#bikebike-scheduler-page').serialize(),
+				success:
+					function (data)
+					{
+						//dumbGlobal = data;
+						var conflicts = jQuery.parseJSON(data);
+						for (var nidA in conflicts)
+						{
+							//console.log('[ ' + nidA + ' ]');
+							var nidB = conflicts[nidA].nid;
+							$('#schedule-' + nidA).addClass('conflict').attr('title', conflicts[nidA].messageA);
+							$('#schedule-' + nidB).addClass('conflict').attr('title', conflicts[nidA].messageB);
+						}
+						//console.log(data);
+						//$("#result").html('submitted successfully');
+					},
+				error:
+					function ()
+					{
+						alert("failure");
+						//$("#result").html('there is error while submit');
+					}
+    	    }
+		);
+    	//console.log($('form#bikebike-scheduler-page').serialize());
+	}
+	
+	function dropInto(droppable, dropped, validate)
+	{
+  		$(dropped).detach().css({position: 'absolute', top: -1, left: 40}).appendTo(droppable);
+    	$(dropped).resizable
+    	(
+			{
+    	    	grid: 26,
+    	    	stop:
+    	    		function (event, ui)
+    	    		{
+    	    			validateScheduledItem(ui.element);
+    	    			validateDroppables();
+    	    		}
+        	}
+    	);
+    	$('.time-slot.has-droppable').each
+    	(
+    		function ()
+    		{
+    			if (droppable.find('.ui-draggable').length < 1)
+    			{
+    				droppable.removeClass('has-droppable');
+    				droppable.droppable("enable");
+    			}
+    		}
+    	);
+    	droppable.addClass('has-droppable');
+    	if (validate || validate == undefined)
+    	{
+    		console.log('yes');
+    		validateScheduledItem(dropped);
+    		validateDroppables();
+    	}
+	}
+	
 	  Drupal.behaviors.bike_bike = {
 	    attach: function (context, settings) {
-	    	//$('.field-widget-entityreference-autocomplete input.autocomplete-processed')
-	    	//completeAutocomplete('.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]');
+	    	
 	    	completeAutocomplete();
 	    	
-	        /*$(Drupal.settings.chosen.selector, context).each(function() {
-	            if ($(this).find('option').size() >= Drupal.settings.chosen.minimum) {
-	              $(this).chosen();
-	            }
-	          });*/ 
+	    	$('#expand-schedule').click
+	    	(
+	    		function ()
+	    		{
+	    			$('#edit-schedule').css('max-height', 'none');
+	    			$('#expand-schedule').css('display', 'none');
+	    			$('#collapse-schedule').css('display', 'block');
+	    		}
+	    	);
+
+	    	$('#collapse-schedule').click
+	    	(
+	    		function ()
+	    		{
+	    			$('#edit-schedule').css('max-height', 600);
+	    			$('#expand-schedule').css('display', 'block');;
+	    			$('#collapse-schedule').css('display', 'none');
+	    		}
+	    	);
+
+	    	$('.schedulable .de-schedule').click
+	    	(
+	    		function ()
+	    		{
+	    			var schedulable = $(this).closest('.schedulable');
+	    			schedulable.detach().removeAttr('style').appendTo('#edit-workshops > .fieldset-wrapper').resizable('destroy');
+					$('.ui-droppable.' + schedulable.attr('id')).removeClass('has-droppable');
+    		    	validateDroppables();
+	    		}
+	    	);
+	    	$('.schedulable').draggable
+	    	(
+    			{
+    				revert: "invalid",
+    				snap: ".schedulable, #edit-schedule ul.times li .time-slot:not(.ui-droppable-disabled)",
+    				cursorAt: { top: 10, left: 100 },
+					start:
+						function (event, ui)
+						{
+							$('.ui-droppable.' + $(this).attr('id')).droppable("enable");
+						},
+					stop:
+						function (event, ui)
+						{
+							$('.ui-droppable.' + $(this).attr('id')).droppable("disable");
+						},
+				}
+	    	);
+	    	$('#edit-schedule ul.times li.available .time-slot').droppable
+	    	(
+    			{
+    				activeClass: "ui-state-hover",
+					hoverClass: "ui-state-active",
+					tolerance: 'pointer',
+					drop:
+						function (event, ui)
+						{
+							var dropped = ui.draggable;
+							dropInto($(this), dropped)
+		    	      	},
+	    	    }
+			);
+	    	$('.schedulable').each
+	    	(
+	    		function ()
+	    		{
+	    			var location = $(this).find('input.location').val();
+	    			var time = $(this).find('input.time').val();
+	    			var length = $(this).find('input.length').val();
+	    			console.log($('.schedulable input.length').val());
+	    			if (location && time && length)
+	    			{
+	    				var timeSlot = $('ul.times li.t-' + time + '.l-' + location + ' .time-slot.ui-droppable');
+	    				//console.log(timeSlot.length);
+	    				if (timeSlot.length > 0)
+	    				{
+	    					dropInto(timeSlot, $(this), false);
+	    					$(this).height((length * 26) - 2);
+	    	    	    	//validateScheduledItem($(this));
+	    				}
+	    			}
+	    		}
+	    	);
+	    	validateDroppables();
 	    }
 	  };
 

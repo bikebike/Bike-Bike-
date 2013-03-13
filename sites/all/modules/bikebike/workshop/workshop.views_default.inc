@@ -121,6 +121,91 @@ function workshop_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'proposed');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'schedule');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'title',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_type'] = 'h2';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['type'] = 'text_summary_or_trimmed';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'trim_length' => '600',
+    'field_formatter_class' => '',
+  );
+  /* Field: Content: Presentation Style */
+  $handler->display->display_options['fields']['field_presentation_style']['id'] = 'field_presentation_style';
+  $handler->display->display_options['fields']['field_presentation_style']['table'] = 'field_data_field_presentation_style';
+  $handler->display->display_options['fields']['field_presentation_style']['field'] = 'field_presentation_style';
+  $handler->display->display_options['fields']['field_presentation_style']['label'] = '';
+  $handler->display->display_options['fields']['field_presentation_style']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_presentation_style']['type'] = 'custom_formatters_term_with_class';
+  $handler->display->display_options['fields']['field_presentation_style']['settings'] = array(
+    'field_formatter_class' => '',
+  );
+  /* Field: Content: Coordinators */
+  $handler->display->display_options['fields']['field_coordinators']['id'] = 'field_coordinators';
+  $handler->display->display_options['fields']['field_coordinators']['table'] = 'field_data_field_coordinators';
+  $handler->display->display_options['fields']['field_coordinators']['field'] = 'field_coordinators';
+  $handler->display->display_options['fields']['field_coordinators']['type'] = 'custom_formatters_link_with_picture';
+  $handler->display->display_options['fields']['field_coordinators']['settings'] = array(
+    'field_formatter_class' => '',
+  );
+  $handler->display->display_options['fields']['field_coordinators']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_coordinators']['multi_type'] = 'ul';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'workshop' => 'workshop',
+  );
+  /* Filter criterion: Broken/missing handler */
+  $handler->display->display_options['filters']['field_conference_location_target_id']['id'] = 'field_conference_location_target_id';
+  $handler->display->display_options['filters']['field_conference_location_target_id']['table'] = 'field_data_field_conference_location';
+  $handler->display->display_options['filters']['field_conference_location_target_id']['field'] = 'field_conference_location_target_id';
+  $handler->display->display_options['filters']['field_conference_location_target_id']['operator'] = 'empty';
+  $handler->display->display_options['filters']['field_conference_location_target_id']['value'] = array(
+    'min' => '',
+    'max' => '',
+    'value' => '',
+  );
   $translatables['workshops'] = array(
     t('Master'),
     t('Workshops'),

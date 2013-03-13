@@ -124,6 +124,35 @@ function bike_bike_conference_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_identity|node|conference|form';
+  $field_group->group_name = 'group_identity';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'conference';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Identity',
+    'weight' => '7',
+    'children' => array(
+      0 => 'field_banner',
+      1 => 'field_poster',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Identity',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'classes' => '',
+        'description' => '',
+      ),
+      'formatter' => 'open',
+    ),
+  );
+  $export['group_identity|node|conference|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_registration|node|conference|form';
   $field_group->group_name = 'group_registration';
   $field_group->entity_type = 'node';
@@ -148,6 +177,34 @@ function bike_bike_conference_field_group_info() {
     ),
   );
   $export['group_registration|node|conference|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_schedule|node|conference|form';
+  $field_group->group_name = 'group_schedule';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'conference';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Schedule',
+    'weight' => '8',
+    'children' => array(
+      0 => 'field_workshops_published',
+      1 => 'field_locations',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => '',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_schedule|node|conference|form'] = $field_group;
 
   return $export;
 }

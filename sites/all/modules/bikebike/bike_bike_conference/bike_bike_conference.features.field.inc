@@ -222,7 +222,7 @@ function bike_bike_conference_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => '8',
+        'weight' => '9',
       ),
     ),
   );
@@ -626,6 +626,148 @@ function bike_bike_conference_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-conference-field_locations'.
+  $fields['node-conference-field_locations'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '-1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_locations',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'lid' => array(
+          0 => 'lid',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'location_cck',
+      'settings' => array(
+        'gmap_macro' => '[gmap ]',
+        'gmap_marker' => 'drupal',
+        'location_settings' => array(
+          'display' => array(
+            'hide' => array(
+              'additional' => 0,
+              'city' => 0,
+              'coords' => 'coords',
+              'country' => 'country',
+              'country_name' => 'country_name',
+              'fax' => 'fax',
+              'locpick' => 'locpick',
+              'map_link' => 'map_link',
+              'name' => 0,
+              'phone' => 0,
+              'postal_code' => 'postal_code',
+              'province' => 'province',
+              'province_name' => 'province_name',
+              'street' => 0,
+            ),
+          ),
+          'form' => array(
+            'fields' => array(
+              'additional' => array(
+                'collect' => '1',
+                'default' => '',
+                'weight' => '6',
+              ),
+              'city' => array(
+                'collect' => '2',
+                'default' => '',
+                'weight' => '8',
+              ),
+              'country' => array(
+                'collect' => '2',
+                'default' => 'us',
+                'weight' => '14',
+              ),
+              'fax' => array(
+                'collect' => '0',
+                'default' => '',
+                'weight' => '30',
+              ),
+              'locpick' => array(
+                'collect' => '1',
+                'weight' => '20',
+              ),
+              'name' => array(
+                'collect' => '2',
+                'default' => '',
+                'weight' => '2',
+              ),
+              'phone' => array(
+                'collect' => '1',
+                'default' => '',
+                'weight' => '25',
+              ),
+              'postal_code' => array(
+                'collect' => '1',
+                'default' => '',
+                'weight' => '12',
+              ),
+              'province' => array(
+                'collect' => '2',
+                'default' => '',
+                'weight' => '10',
+                'widget' => 'autocomplete',
+              ),
+              'street' => array(
+                'collect' => '2',
+                'default' => '',
+                'weight' => '4',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'location',
+    ),
+    'field_instance' => array(
+      'bundle' => 'conference',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'location_cck',
+          'settings' => array(
+            'field_formatter_class' => '',
+          ),
+          'type' => 'location_default',
+          'weight' => 6,
+        ),
+        'entityreference_view_widget' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_locations',
+      'label' => 'Locations',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'location_cck',
+        'settings' => array(),
+        'type' => 'location',
+        'weight' => '10',
+      ),
+    ),
+  );
+
   // Exported field: 'node-conference-field_poster'.
   $fields['node-conference-field_poster'] = array(
     'field_config' => array(
@@ -725,7 +867,7 @@ function bike_bike_conference_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => '7',
+        'weight' => '8',
       ),
     ),
   );
@@ -895,6 +1037,7 @@ function bike_bike_conference_field_default_fields() {
   t('Host Organizations');
   t('If the conference is open for attendees to register.');
   t('Info');
+  t('Locations');
   t('Poster');
   t('Registration Form Fields');
   t('Registration Open');
