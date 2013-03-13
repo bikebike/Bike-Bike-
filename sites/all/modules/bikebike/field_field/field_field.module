@@ -1,0 +1,47 @@
+<?php 
+function _field_field_save_fields($uid, $nid, $fields)
+{
+	db_delete('field_field_data')
+  		->condition('nid', $nid)
+  		->condition('uid', $uid)
+  		->execute();
+  	foreach ($fields as $field)
+  	{
+  		db_insert('field_field_data')->fields($field)->execute();
+  		//_bikebike_show_object($field);
+  	}
+}
+
+function _field_field_load_fields($uid, $nid)
+{
+	$r = db_query("
+			SELECT
+				*
+			FROM
+				{field_field_data}
+			WHERE
+				uid = :uid
+				AND
+				nid = :nid
+			",
+			array('uid' => $uid, 'nid' => $nid));
+	$result = $r->fetchAll();//Assoc('field_nid');
+	$fields = array();
+	foreach ($result as $field)
+	{
+		if (isset($fields[$field->field_nid]))
+		{
+			if (!is_array($fields[$field->field_nid]->data))
+			{
+				$fields[$field->field_nid]->data = array($fields[$field->field_nid]->data);
+			}
+			$fields[$field->field_nid]->data[] = $field->data;
+		}
+		else
+		{
+			$fields[$field->field_nid] = $field;
+		}
+	}
+  	//_bikebike_show_object($fields);
+  	return $fields;
+}

@@ -165,6 +165,25 @@ function request_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = '<a href="!1/invitations" class="important-button">Invite Members...</a>';
   $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
+  $translatables['requests'] = array(
+    t('Master'),
+    t('Requests'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('<a href="!1/requests" class="button">Approve/Deny Requests...</a>'),
+    t('<h2 class="field-label">Requests (@total):</h2>'),
+    t('field_node'),
+    t('All'),
+    t('Block'),
+    t('Invitations'),
+    t('<a href="!1/invitations" class="button">Manage Invitations...</a>'),
+    t('<h2 class="field-label">Invitations (@total):</h2>'),
+    t('<a href="!1/invitations" class="important-button">Invite Members...</a>'),
+  );
   $export['requests'] = $view;
 
   return $export;

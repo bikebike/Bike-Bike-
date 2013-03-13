@@ -14,6 +14,12 @@ jQuery.extend(jQuery.expr[':'],{
 	    	//$('.field-widget-entityreference-autocomplete input.autocomplete-processed')
 	    	//completeAutocomplete('.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]');
 	    	completeAutocomplete();
+	    	
+	        /*$(Drupal.settings.chosen.selector, context).each(function() {
+	            if ($(this).find('option').size() >= Drupal.settings.chosen.minimum) {
+	              $(this).chosen();
+	            }
+	          });*/ 
 	    }
 	  };
 
@@ -58,7 +64,7 @@ jQuery.fn.hasParent =
 
 function completeAutocomplete(element)
 {
-	return;
+	/*return;
 	jQuery('.field-multiple-table').each
 	(
 		function ()

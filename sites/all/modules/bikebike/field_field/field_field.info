@@ -1,0 +1,9 @@
+name = FieldField
+core = 7.x
+package = Bike!Bike!
+php = 5.2.4
+dependencies[] = bikebike
+dependencies[] = multiple_selects
+dependencies[] = options_element
+dependencies[] = select_or_other
+project path = sites/all/modules/bikebike

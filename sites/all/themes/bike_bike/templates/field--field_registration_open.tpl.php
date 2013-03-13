@@ -5,9 +5,19 @@
 		<a href="conference-registration/<?php print $element['#object']->nid; ?>/close" class="important-button" id="reg-open">Close Registration</a>
 	<?php endif; ?>
 	<?php
-		$args = array();
+		/*$args = array();
 		$view = views_get_view('conference_registration_button');
-		print $view->preview('block', $args);
+		print $view->preview('block', $args);*/
+		global $user;
+		$reg = _bikebike_get_registation($user->uid, $element['#object']->nid);
+		if ($reg)
+		{
+			print '<p>'.t('You are currently registered for this conference').'</p><a href="/conferences/'.$element['#object']->nid.'/registration" class="important-button">'.t('Modify your registration details...').'</a>';
+		}
+		else
+		{
+			print '<a href="/conferences/'.$element['#object']->nid.'/registration" class="important-button">'.t('Register for this conference...').'</a>';
+		}
 	?>
 <?php else: ?>
 	<?php if (node_access('update', $element['#object'])): ?>

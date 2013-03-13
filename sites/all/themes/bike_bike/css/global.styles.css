@@ -2503,7 +2503,7 @@ tr.error*/ {
   width: auto;
 }
 
-.entityreference-view-widget h3 {
+/*.entityreference-view-widget h3 {
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
@@ -2607,7 +2607,7 @@ tr.error*/ {
 	top: 4px;
 	right: 4px;
 	bottom: 4px;
-}
+}*/
 
 .ajax-progress .throbber {
 	float: none;
@@ -3200,7 +3200,10 @@ body.not-front .region-leaderboard .region-inner > #block-menu-menu-log-out {
 .login-forgot a,
 a.autocomplete-remove,
 input[type="button"],
-input[type="submit"] {
+input[type="submit"],
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label,
+#content a.button,
+#content .button > a {
 	font-family: 'SansSerif';
 	background-color: #F7F7F7;
 	padding: 8px 10px;
@@ -3212,12 +3215,15 @@ input[type="submit"] {
 	transition: all .25s ease;
 	box-shadow: 0px 1px 2px #DDD;
 	border: 0;
+	margin-right: 10px;
+	margin-bottom: 10px;
 }
 
 #block-user-login .item-list ul li a:hover,
 a.autocomplete-remove:hover,
 input[type="button"]:hover,
-input[type="submit"]:hover {
+input[type="submit"]:hover,
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label:hover {
 	background-color: #888;
 	color: #FFF;
 	text-decoration: none;
@@ -3227,7 +3233,9 @@ input[type="submit"]:hover {
 #main-content input[type="button"],
 #main-content input[type="submit"],
 #content .login-forgot a,
-#content a.button {
+#content a.button,
+#content .button > a,
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label {
 	background-color: #8A9BAB;
 	box-shadow: 0px 1px 2px #BBB;
 	color: #FFF;
@@ -3239,7 +3247,8 @@ input[type="submit"]:hover {
 }
 
 #content .login-forgot a,
-#content input.negative {
+#content input.negative,
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label {
 	background-color: #AB8A9B;
 }
 
@@ -3247,7 +3256,9 @@ input[type="submit"]:hover {
 #main-content input[type="button"]:hover,
 #main-content input[type="submit"]:hover,
 .login-forgot a:hover,
-#content a.button:hover {
+#content a.button:hover,
+#content .button > a:hover,
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label:hover {
 	background-color: #9BAB8A;
 	text-decoration: none;
 	border: 0;
@@ -3427,12 +3438,12 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper > 
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset {
-	padding: 0;
+	padding: 0 0 20px 0;
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset > div.fieldset-wrapper {
-	border: 0;
-	padding: 20px 0;
+	/*border: 0;*/
+	/*padding: 20px 0;*/
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper {
@@ -3473,20 +3484,36 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper + 
 	border: 0;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper > legend:before,
+/*body.create-edit-page #main-content #content form > div > fieldset.form-wrapper > legend:before,*/
 body.create-edit-page #main-content #content form > div > fieldset.form-wrapper + div.form-wrapper:before,
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset:before,
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset:after {
 	content: '';
-	height: 1px;
+	height: 20px;
 	width: 100%;
 	border-top: 1px dashed #CCC;
 	display: block;
-	position: absolute;
+	/*position: absolute;*/
 	left: 0px;
 	right: 0px;
 	max-width: 1400px;
 	margin: 0px auto;
+}
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset:after {
+	border-top: 0;
+	border-bottom: 1px dashed #CCC;
+	position: absolute;
+	bottom: 0;
+}
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper {
+	border: 1px solid #DDD;
+	padding: 10px 30px;
+}
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper > :first-child {
+	margin-top: 40px;
 }
 
 body.create-edit-page #main-content #content form > div > fieldset.form-wrapper + fieldset.form-wrapper > legend:before {
@@ -3500,7 +3527,7 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper > 
 	display: block;
 	/*padding-top: 20px;*/
 	position: relative;
-	top: 20px;
+	top: 0px;
 	border: 1px solid #DDD;
 	border-bottom: 0;
 	box-sizing: border-box;
@@ -4400,6 +4427,19 @@ img.cropbox {
 	float: left;
 }
 
+.container-inline-date > div > label {
+	width: 50px;
+	line-height: 30px;
+}
+
+.container-inline-date .date-padding {
+	padding-top: 0px;
+}
+
+.fieldset-description {
+	height: 30px;
+}
+
 textarea.text-full.form-textarea {
 	border: 2px solid #DDD;
 	font-size: 14px;
@@ -4571,9 +4611,13 @@ body #main-content #content form > div fieldset.form-wrapper > legend {
 	font-family: 'SansSerif';
 	font-size: 18px;
 	position: relative;
-	top: 5px;
+	top: 0px;
 	height: 0;
 	/*border-top: 1px dashed #CCC;*/
+}
+
+body #main-content #content form > div fieldset.form-wrapper.collapsible > legend {
+	top: 20px;
 }
 
 body #main-content #content form > div > fieldset.form-wrapper:before {
@@ -4748,3 +4792,232 @@ body.page-organizations-requests .fieldset-wrapper > p {
 	background-image: url(../images/log-out.png);
 }
 
+.field-type-entityreference-form.field-name-field-fields-form .widget-right .node-content {
+	float: left;
+	margin-right: 10px;
+}
+
+.entityreference-view-widget {
+	padding-top: 30px;
+}
+
+#content .entityreference-view-widget .draggable a.tabledrag-handle {
+	width: auto;
+	margin-right: 15px;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form td {
+	position: relative;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > .warning {
+	position: absolute;
+	top: 5px;
+	left: 35px;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-title {
+	margin-bottom: 24px;
+	line-height: 18px;
+	font-size: 14px;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content {
+	position: absolute;
+	bottom: 0px;
+	left: 40px;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content > .form-item {
+	margin: 0;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content input {
+	margin: 0 5px 0 10px;
+	opacity: 0;
+}
+
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label {
+	padding: 2px 5px 0px 5px;
+	cursor: pointer;
+}
+
+select {
+	border: 1px solid #DDD;
+	padding: 5px;
+	font-family: 'Serif', serif;
+}
+
+div.vertical-tabs {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 980px;
+    padding-left: 15em;
+    box-sizing: border-box;
+	border: 0;
+	border-bottom: 0;
+}
+
+#content div.vertical-tabs a,
+#content div.vertical-tabs a:hover {
+	border: 0;
+	outline: 0;
+}
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper {
+	padding: 0;
+}
+
+.vertical-tabs ul.vertical-tabs-list {
+	margin-top: 0;
+}
+
+input[type="checkbox"] + label {
+	margin-left: 10px;
+}
+
+input[type="checkbox"] + label:before {
+    content: '';
+    display: block;
+    height: 18px;
+    width: 22px;
+    position: absolute;
+    left: -24px;
+    top: -4px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	background-image: url(../images/checkbox-unchecked.png);
+}
+
+input[type="checkbox"]:checked + label:before {
+	background-image: url(../images/checkbox-checked.png);
+}
+
+input:focus, select:focus {
+	outline: 0;
+}
+
+input[type="checkbox"]:focus + label,
+input[type="checkbox"] + label:focus {
+	border-bottom: 1px dotted #333;
+	outline: 0;
+}
+
+input[type="checkbox"] {
+    opacity: 0;
+}
+
+#bikebike-registration-page > div > div.form-type-select {
+	width: 100%;
+	max-width: 980px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+#bikebike-registration-page > div > div.form-type-select > label {
+	display: inline;
+	margin-right: 10px;
+}
+
+#bikebike-registration-page > div > fieldset.form-wrapper {
+	background-color: #FFF;
+	margin-top: 20px;
+}
+
+#bikebike-registration-page > div > fieldset.form-wrapper:after {
+	content: '';
+	display: block;
+	height: 1px;
+	width: 100%;
+	margin: 0 auto;
+	max-width: 1400px;
+	border-bottom: 1px dashed #DDD;
+}
+
+body #main-content #content form#bikebike-registration-page > div > fieldset.form-wrapper:before {
+	border-top: 1px dashed #DDD;
+	height: 10px;
+}
+
+#content .field-widget-options-select a,
+#content .field-widget-options-select a:hover {
+	border: 0;
+	color: #444;
+}
+
+#content .field-widget-options-select .ui-widget {
+	font-family: 'SansSerif', sans-serif;
+}
+
+#content .field-widget-options-select .ui-multiselect .ui-widget-header {
+	font-size: 14px;
+	font-weight: normal;
+	background: none;
+	background-color: #F7F7F7;
+	color: #444;
+	height: 40px;
+	padding: 0px 5px 0px 5px;
+	line-height: 25px;
+}
+
+
+#content .field-widget-options-select .ui-multiselect li {
+	font-size: 14px;
+	line-height: 40px;
+	height: 40px;
+	background: none;
+	vertical-align: middle;
+	cursor: move;
+	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
+	padding-left: 10px;
+	border: 1px solid #CCC;
+	background-color: #F7F7F7;
+	margin: 5px;
+}
+
+#content .field-widget-options-select .ui-multiselect .selected li {
+	padding-left: 30px;
+}
+
+#content .field-widget-options-select .ui-icon-arrowthick-2-n-s {
+	background: url(../images/reorder.png) no-repeat center center;
+	background-size: 18px 36px;
+	width: 18px;
+	height: 40px;
+	opacity: 0.5;
+	left: 4px;
+}
+
+#content .field-widget-options-select .ui-multiselect li[title="- None -"] {
+	display: none !important;
+}
+
+#content .field-widget-options-select .ui-multiselect {
+	border: 1px solid #DDD;
+}
+
+#content .field-widget-options-select .ui-multiselect div.right-column {
+	border-left: 1px solid #DDD;
+}
+
+#content .field-widget-options-select .ui-multiselect input.search {
+	padding: 8px 8px 6px 8px;
+	width: 200px;
+	opacity: 1;
+	height: auto;
+	border-radius: 0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-image: url(../images/autocomplete.png);
+	background-position: right -3px;
+	background-origin: content-box;
+}
+
+#content .field-widget-options-select .ui-widget-header .ui-state-active {
+	border: 2px solid #DDD;
+	color: #444;
+	background-image: url(../images/input-edit-select.png);
+	background-position: 0px center;
+	background-repeat: no-repeat;
+}

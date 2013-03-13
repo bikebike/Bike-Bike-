@@ -1,0 +1,64 @@
+<?php
+
+function field_field_schema()
+{
+	$columns = array(
+		'uid' => array(
+			'description' => 'The creator of this field',
+			'type' => 'int',
+			'not null' => TRUE,
+			'default' => 0
+		),
+		'nid' => array(
+			'description' => 'The node that this field belongs to',
+			'type' => 'int',
+			'not null' => TRUE,
+			'default' => 0
+		),
+		'field_nid' => array(
+			'description' => 'The field this data belongs to',
+			'type' => 'int',
+			'default' => 0,
+			'not null' => TRUE,
+		),
+		'field_vid' => array(
+			'description' => 'The verion of the field that existed when this data was saved',
+			'type' => 'int',
+			'default' => 0,
+			'not null' => TRUE,
+		),
+		'data' => array(
+			'description' => 'The data saved in this field',
+			'type' => 'blob',
+			'not null' => FALSE,
+		),
+	);
+	
+	return array(
+		'field_field_data' => array(
+			'fields' => $columns,
+    			//'primary key' => array('uid', 'nid'),
+    			'indexes' => array(
+					'uid' => array('uid'),
+    		),
+	    	'foreign keys' => array(
+	      		'users' => array(
+	        		'table' => 'users',
+	        		'columns' => array('uid' => 'uid'),
+	      		),
+	      		'node' => array(
+	        		'table' => 'node',
+	        		'columns' => array('nid' => 'nid', 'nid' => 'field_nid'),
+	      		),
+	    	),
+		)
+	);
+}
+
+function field_field_install()
+{
+}
+
+function field_field_uninstall()
+{
+}

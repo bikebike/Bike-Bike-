@@ -1,0 +1,13 @@
+name = Entity Reference Drag & Drop
+description = Provides a nice drag and drop widget
+package = Fields
+core = 7.x
+dependencies[] = entityreference
+dependencies[] = jquery_update
+
+; Information added by drupal.org packaging script on 2012-03-29
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "entityreference_dragdrop"
+datestamp = "1332980061"
+

@@ -304,6 +304,19 @@ function workshop_field_default_fields() {
       'label' => 'Location',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -391,6 +404,19 @@ function workshop_field_default_fields() {
       'label' => 'Coordinators',
       'required' => 1,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -554,6 +580,19 @@ function workshop_field_default_fields() {
       'label' => 'Presentation Style',
       'required' => 1,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(

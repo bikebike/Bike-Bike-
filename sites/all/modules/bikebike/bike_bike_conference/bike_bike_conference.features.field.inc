@@ -291,6 +291,19 @@ function bike_bike_conference_field_default_fields() {
       'label' => 'Conference Type',
       'required' => 1,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -397,6 +410,104 @@ function bike_bike_conference_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-conference-field_fields'.
+  $fields['node-conference-field_fields'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '-1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_fields',
+      'foreign keys' => array(
+        'node' => array(
+          'columns' => array(
+            'target_id' => 'nid',
+          ),
+          'table' => 'node',
+        ),
+      ),
+      'indexes' => array(
+        'target_id' => array(
+          0 => 'target_id',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'entityreference',
+      'settings' => array(
+        'handler' => 'base',
+        'handler_settings' => array(
+          'behaviors' => array(
+            'views-select-list' => array(
+              'status' => 0,
+            ),
+          ),
+          'sort' => array(
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'form_field' => 'form_field',
+          ),
+        ),
+        'target_type' => 'node',
+      ),
+      'translatable' => '0',
+      'type' => 'entityreference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'conference',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '3',
+        ),
+        'entityreference_view_widget' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_fields',
+      'label' => 'Registration Form Fields',
+      'required' => 0,
+      'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 1,
+          'height' => 400,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => '1',
+          'sortable' => 1,
+          'width' => 900,
+        ),
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
+        'weight' => '12',
+      ),
+    ),
+  );
+
   // Exported field: 'node-conference-field_host_organizations'.
   $fields['node-conference-field_host_organizations'] = array(
     'field_config' => array(
@@ -477,6 +588,19 @@ function bike_bike_conference_field_default_fields() {
           'test_instance_behavior' => array(
             'status' => 0,
           ),
+        ),
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
         ),
         'user_register_form' => FALSE,
       ),
@@ -758,7 +882,7 @@ function bike_bike_conference_field_default_fields() {
           'display_label' => 1,
         ),
         'type' => 'options_onoff',
-        'weight' => '10',
+        'weight' => '9',
       ),
     ),
   );
@@ -772,6 +896,7 @@ function bike_bike_conference_field_default_fields() {
   t('If the conference is open for attendees to register.');
   t('Info');
   t('Poster');
+  t('Registration Form Fields');
   t('Registration Open');
   t('Workshops Schedule Published');
 
