@@ -155,98 +155,101 @@ var dumbGlobal;
     	}
 	}
 	
-	  Drupal.behaviors.bike_bike = {
-	    attach: function (context, settings) {
-	    	
-	    	completeAutocomplete();
-	    	
-	    	$('#expand-schedule').click
-	    	(
-	    		function ()
-	    		{
-	    			$('#edit-schedule').css('max-height', 'none');
-	    			$('#expand-schedule').css('display', 'none');
-	    			$('#collapse-schedule').css('display', 'block');
-	    		}
-	    	);
-
-	    	$('#collapse-schedule').click
-	    	(
-	    		function ()
-	    		{
-	    			$('#edit-schedule').css('max-height', 600);
-	    			$('#expand-schedule').css('display', 'block');;
-	    			$('#collapse-schedule').css('display', 'none');
-	    		}
-	    	);
-
-	    	$('.schedulable .de-schedule').click
-	    	(
-	    		function ()
-	    		{
-	    			var schedulable = $(this).closest('.schedulable');
-	    			schedulable.detach().removeAttr('style').appendTo('#edit-workshops > .fieldset-wrapper').resizable('destroy');
-					$('.ui-droppable.' + schedulable.attr('id')).removeClass('has-droppable');
-    		    	validateDroppables();
-	    		}
-	    	);
-	    	$('.schedulable').draggable
-	    	(
-    			{
-    				revert: "invalid",
-    				snap: ".schedulable, #edit-schedule ul.times li .time-slot:not(.ui-droppable-disabled)",
-    				cursorAt: { top: 10, left: 100 },
-					start:
-						function (event, ui)
-						{
-							$('.ui-droppable.' + $(this).attr('id')).droppable("enable");
-						},
-					stop:
-						function (event, ui)
-						{
-							$('.ui-droppable.' + $(this).attr('id')).droppable("disable");
-						},
-				}
-	    	);
-	    	$('#edit-schedule ul.times li.available .time-slot').droppable
-	    	(
-    			{
-    				activeClass: "ui-state-hover",
-					hoverClass: "ui-state-active",
-					tolerance: 'pointer',
-					drop:
-						function (event, ui)
-						{
-							var dropped = ui.draggable;
-							dropInto($(this), dropped)
-		    	      	},
-	    	    }
-			);
-	    	$('.schedulable').each
-	    	(
-	    		function ()
-	    		{
-	    			var location = $(this).find('input.location').val();
-	    			var time = $(this).find('input.time').val();
-	    			var length = $(this).find('input.length').val();
-	    			console.log($('.schedulable input.length').val());
-	    			if (location && time && length)
-	    			{
-	    				var timeSlot = $('ul.times li.t-' + time + '.l-' + location + ' .time-slot.ui-droppable');
-	    				//console.log(timeSlot.length);
-	    				if (timeSlot.length > 0)
-	    				{
-	    					dropInto(timeSlot, $(this), false);
-	    					$(this).height((length * 26) - 2);
-	    	    	    	//validateScheduledItem($(this));
-	    				}
-	    			}
-	    		}
-	    	);
-	    	validateDroppables();
-	    }
-	  };
-
+	Drupal.behaviors.bike_bike = {
+		attach:
+			function (context, settings)
+	    	{
+		    	completeAutocomplete();
+		    	
+		    	if ($('body.page-conferences-schedule-manage').length > 0)
+		    	{
+			    	$('#expand-schedule').click
+			    	(
+			    		function ()
+			    		{
+			    			$('#edit-schedule').css('max-height', 'none');
+			    			$('#expand-schedule').css('display', 'none');
+			    			$('#collapse-schedule').css('display', 'block');
+			    		}
+			    	);
+		
+			    	$('#collapse-schedule').click
+			    	(
+			    		function ()
+			    		{
+			    			$('#edit-schedule').css('max-height', 600);
+			    			$('#expand-schedule').css('display', 'block');;
+			    			$('#collapse-schedule').css('display', 'none');
+			    		}
+			    	);
+		
+			    	$('.schedulable .de-schedule').click
+			    	(
+			    		function ()
+			    		{
+			    			var schedulable = $(this).closest('.schedulable');
+			    			schedulable.detach().removeAttr('style').appendTo('#edit-workshops > .fieldset-wrapper').resizable('destroy');
+							$('.ui-droppable.' + schedulable.attr('id')).removeClass('has-droppable');
+		    		    	validateDroppables();
+			    		}
+			    	);
+			    	$('.schedulable').draggable
+			    	(
+		    			{
+		    				revert: "invalid",
+		    				snap: ".schedulable, #edit-schedule ul.times li .time-slot:not(.ui-droppable-disabled)",
+		    				cursorAt: { top: 10, left: 100 },
+							start:
+								function (event, ui)
+								{
+									$('.ui-droppable.' + $(this).attr('id')).droppable("enable");
+								},
+							stop:
+								function (event, ui)
+								{
+									$('.ui-droppable.' + $(this).attr('id')).droppable("disable");
+								},
+						}
+			    	);
+			    	$('#edit-schedule ul.times li.available .time-slot').droppable
+			    	(
+		    			{
+		    				activeClass: "ui-state-hover",
+							hoverClass: "ui-state-active",
+							tolerance: 'pointer',
+							drop:
+								function (event, ui)
+								{
+									var dropped = ui.draggable;
+									dropInto($(this), dropped)
+				    	      	},
+			    	    }
+					);
+			    	$('.schedulable').each
+			    	(
+			    		function ()
+			    		{
+			    			var location = $(this).find('input.location').val();
+			    			var time = $(this).find('input.time').val();
+			    			var length = $(this).find('input.length').val();
+			    			console.log($('.schedulable input.length').val());
+			    			if (location && time && length)
+			    			{
+			    				var timeSlot = $('ul.times li.t-' + time + '.l-' + location + ' .time-slot.ui-droppable');
+			    				//console.log(timeSlot.length);
+			    				if (timeSlot.length > 0)
+			    				{
+			    					dropInto(timeSlot, $(this), false);
+			    					$(this).height((length * 26) - 2);
+			    	    	    	//validateScheduledItem($(this));
+			    				}
+			    			}
+			    		}
+			    	);
+			    	validateDroppables();
+		    	}
+	    	}
+    	};
 	})(jQuery);
 
 if (Drupal.jsAC)
@@ -509,7 +512,6 @@ jQuery(document).ready
 function initializeMap(selector)
 {
 	// Create an array of styles.
-	console.log('init');
 	var styles = [
 	              {
 	            	    "featureType": "water",

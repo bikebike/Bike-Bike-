@@ -844,6 +844,36 @@ function bikebike_scheduler_page($form_state, $args)
 
 	$form['#method'] = 'post';
 
+	$form['nid'] = array
+	(
+			'#type' => 'value',
+			'#value' => $nid
+	);
+	
+	if (!isset($node->field_locations[$language]) || count($node->field_locations[$language]) < 1)
+	{
+		$form['nolocations'] = array
+		(
+			'#type' => 'markup',
+			'#markup' => t('Before scheduling workshops locations must be added to the conference. You may add locations on your conference <a href="@link">edit</a> page.', array('@link' => '/node/'.$nid.'/edit'))
+		);
+		$form['edit'] = array(
+			'#type' => 'markup',
+			'#markup' => t('<a href="@url" class="button">Add Locations...</a>', array('@url' => url('node/'.$nid.'/edit', array('fragment' => 'node_conference_form_group_schedule')))),
+			//'#href' => ,
+			//'#suffix' => 'node_conference_form_group_schedule',
+			//'#attributes' => array('class' => array('button'))
+		);
+		
+		$form['cancel'] = array(
+			'#type' => 'submit',
+			'#value' => t('Cancel'),
+			'#submit' => array('bikebike_add_member_cancel'),
+			'#limit_validation_errors' => array()
+		);
+		return $form;
+	}
+
 	$r = db_query("
 			SELECT
 				nid
@@ -993,23 +1023,13 @@ function bikebike_scheduler_page($form_state, $args)
 		'#type' => 'submit',
 		'#value' => t('Save'),
 		'#submit' => array('bikebike_scheduler_page_save')
-		//'#limit_validation_errors' => array()
 	);
-	
-	$form['#method'] = 'post';
-  	//$form['#redirect'] = 'node/'.$nid;
 	
 	$form['cancel'] = array(
 		'#type' => 'submit',
 		'#value' => t('Cancel'),
 		'#submit' => array('bikebike_add_member_cancel'),
 		'#limit_validation_errors' => array()
-	);
-	
-	$form['nid'] = array
-	(
-		'#type' => 'value',
-		'#value' => $nid
 	);
 	return $form;
 }
