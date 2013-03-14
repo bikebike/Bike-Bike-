@@ -900,7 +900,7 @@ function bikebike_scheduler_page($form_state, $args)
 	$form['schedule']['expand'] = array
 	(
 		'#type' => 'markup',
-		'#markup' => '<a href="javascript:void(0)" class="button" id="expand-schedule">'.t('Expand').'</a><a href="javascript:void(0)" class="button" id="collapse-schedule">'.t('Collapse').'</a>',
+		'#markup' => '<div id="edit-screen"></div><a href="javascript:void(0)" class="button" id="expand-schedule">'.t('Expand').'</a><a href="javascript:void(0)" class="button" id="collapse-schedule">'.t('Collapse').'</a>',
 	);
 	
 	$start = new DateTime($node->field_date[$language][0]['value']);

@@ -90,6 +90,7 @@ var dumbGlobal;
     	);
     	if (validateWorkshopConflicts)
     	{
+    		$('#edit-schedule').addClass('screen-edits');
     		$.ajax
 	    	(
 				{
@@ -99,23 +100,20 @@ var dumbGlobal;
 					success:
 						function (data)
 						{
-							//dumbGlobal = data;
 							var conflicts = jQuery.parseJSON(data);
 							for (var nidA in conflicts)
 							{
-								//console.log('[ ' + nidA + ' ]');
 								var nidB = conflicts[nidA].nid;
 								$('#workshop-' + nidA).addClass('conflict').attr('title', conflicts[nidA].messageA);
 								$('#workshop-' + nidB).addClass('conflict').attr('title', conflicts[nidA].messageB);
 							}
-							//console.log(data);
-							//$("#result").html('submitted successfully');
+							$('#edit-schedule').removeClass('screen-edits');
 						},
 					error:
 						function ()
 						{
-							alert("failure");
-							//$("#result").html('there is error while submit');
+							//alert("failure");
+							$('#edit-schedule').removeClass('screen-edits');
 						}
 	    	    }
 			);
@@ -238,6 +236,7 @@ var dumbGlobal;
 			    			}
 			    			else
 			    			{
+			    				schedulable.removeClass('conflict').removeAttr('title');
 			    				var dest = schedulable.hasClass('event') ? 'events' : 'workshops';
 			    				schedulable.detach().removeAttr('style').prependTo('#edit-' + dest + ' > .fieldset-wrapper').resizable('destroy');
 			    			}

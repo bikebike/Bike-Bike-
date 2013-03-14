@@ -5092,6 +5092,7 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 	max-width: 1600px !important;
 	text-align: center;
 	overflow-x: auto;
+	position: relative;
 	/*white-space: nowrap;*/
 }
 
@@ -5315,4 +5316,23 @@ body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
 
 #edit-events-meals {
 	margin-top: 20px;
+}
+
+#edit-screen {
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #000;/*rgba(0, 0, 0, 0.25);*/
+	z-index: 10000;
+	opacity: 0;
+	-webkit-transition: all .25s ease;
+	-moz-transition: all .25s ease;
+	-o-transition: all .25s ease;
+	transition: all .25s ease;
+}
+
+fieldset.screen-edits #edit-screen {
+	position: absolute;
+	opacity: 0.25;
 }
