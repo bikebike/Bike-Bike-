@@ -151,7 +151,7 @@ var dumbGlobal;
     	    		function (event, ui)
     	    		{
     	    			validateScheduledItem(ui.element);
-    	    			validateDroppables();
+    	    			validateDroppables($(ui.element).hasClass('workshop'));
     	    		}
         	}
     	);
