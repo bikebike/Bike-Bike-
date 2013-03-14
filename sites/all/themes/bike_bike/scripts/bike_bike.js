@@ -47,7 +47,7 @@ var dumbGlobal;
 		}
 	}
 	
-	function validateDroppables()
+	function validateDroppables(validateWorkshopConflicts)
 	{
 		var droppableHeight = 0;
 		var dropClass = '';
@@ -71,7 +71,7 @@ var dumbGlobal;
     			}
     			if (droppable.length > 0)
     			{
-    				droppable[0].className = droppable[0].className.replace(/\s*schedule-\d+/, '');
+    				droppable[0].className = droppable[0].className.replace(/\s*(workshop|event|meal)-\d+/, '');
 	    			if (droppableHeight > 0)
 	    			{
 	    				droppable.droppable('disable');
@@ -88,41 +88,63 @@ var dumbGlobal;
    				}
     		}
     	);
-    	$.ajax
-    	(
-			{
-				url: "manage/conflicts",
-				type: "post",
-				data: $('form#bikebike-scheduler-page').serialize(),
-				success:
-					function (data)
-					{
-						//dumbGlobal = data;
-						var conflicts = jQuery.parseJSON(data);
-						for (var nidA in conflicts)
+    	if (validateWorkshopConflicts)
+    	{
+    		$.ajax
+	    	(
+				{
+					url: "manage/conflicts",
+					type: "post",
+					data: $('form#bikebike-scheduler-page').serialize(),
+					success:
+						function (data)
 						{
-							//console.log('[ ' + nidA + ' ]');
-							var nidB = conflicts[nidA].nid;
-							$('#schedule-' + nidA).addClass('conflict').attr('title', conflicts[nidA].messageA);
-							$('#schedule-' + nidB).addClass('conflict').attr('title', conflicts[nidA].messageB);
+							//dumbGlobal = data;
+							var conflicts = jQuery.parseJSON(data);
+							for (var nidA in conflicts)
+							{
+								//console.log('[ ' + nidA + ' ]');
+								var nidB = conflicts[nidA].nid;
+								$('#workshop-' + nidA).addClass('conflict').attr('title', conflicts[nidA].messageA);
+								$('#workshop-' + nidB).addClass('conflict').attr('title', conflicts[nidA].messageB);
+							}
+							//console.log(data);
+							//$("#result").html('submitted successfully');
+						},
+					error:
+						function ()
+						{
+							alert("failure");
+							//$("#result").html('there is error while submit');
 						}
-						//console.log(data);
-						//$("#result").html('submitted successfully');
-					},
-				error:
-					function ()
-					{
-						alert("failure");
-						//$("#result").html('there is error while submit');
-					}
-    	    }
-		);
-    	//console.log($('form#bikebike-scheduler-page').serialize());
+	    	    }
+			);
+    	}
 	}
 	
 	function dropInto(droppable, dropped, validate)
 	{
-  		$(dropped).detach().css({position: 'absolute', top: -1, left: 40}).appendTo(droppable);
+		if ($(dropped).hasClass('meal') && $(dropped).parent().parent().attr('id') == 'edit-events-meals')
+  		{
+			if ($('#edit-events-meals .meal').length < 2)
+			{
+				makeSchedulable($(dropped).clone().appendTo('#edit-events-meals > .fieldset-wrapper').removeAttr('style'));
+			}
+			var index = 1;
+			while ($(dropped).attr('id') == 'meal-0' && $('#meal-' + index).length > 0)
+			{
+				index++;
+			}
+			$(dropped).attr('id', 'meal-' + index);
+			$(dropped).html
+			(
+				function (i, html)
+				{
+					return html.replace(/\[meals\]\[\d+\]/g, '[meals][' + index + ']');
+				}
+			);
+  		}
+		$(dropped).detach().css({position: 'absolute', top: -1, left: 40}).appendTo(droppable);
     	$(dropped).resizable
     	(
 			{
@@ -149,10 +171,32 @@ var dumbGlobal;
     	droppable.addClass('has-droppable');
     	if (validate || validate == undefined)
     	{
-    		console.log('yes');
+    		//console.log('yes');
     		validateScheduledItem(dropped);
-    		validateDroppables();
+    		validateDroppables($(dropped).hasClass('workshop'));
     	}
+	}
+	
+	function makeSchedulable(item)
+	{
+    	item.draggable
+    	(
+			{
+				revert: "invalid",
+				snap: ".schedulable, #edit-schedule ul.times li .time-slot:not(.ui-droppable-disabled)",
+				cursorAt: { top: 10, left: 100 },
+				start:
+					function (event, ui)
+					{
+						$('.ui-droppable.' + $(this).attr('id')).droppable("enable");
+					},
+				stop:
+					function (event, ui)
+					{
+						$('.ui-droppable.' + $(this).attr('id')).droppable("disable");
+					},
+			}
+    	);
 	}
 	
 	Drupal.behaviors.bike_bike = {
@@ -188,29 +232,20 @@ var dumbGlobal;
 			    		function ()
 			    		{
 			    			var schedulable = $(this).closest('.schedulable');
-			    			schedulable.detach().removeAttr('style').appendTo('#edit-workshops > .fieldset-wrapper').resizable('destroy');
-							$('.ui-droppable.' + schedulable.attr('id')).removeClass('has-droppable');
+			    			if (schedulable.hasClass('meal'))
+			    			{
+			    				schedulable.remove();
+			    			}
+			    			else
+			    			{
+			    				var dest = schedulable.hasClass('event') ? 'events' : 'workshops';
+			    				schedulable.detach().removeAttr('style').prependTo('#edit-' + dest + ' > .fieldset-wrapper').resizable('destroy');
+			    			}
+			    			$('.ui-droppable.' + schedulable.attr('id')).removeClass('has-droppable');
 		    		    	validateDroppables();
 			    		}
 			    	);
-			    	$('.schedulable').draggable
-			    	(
-		    			{
-		    				revert: "invalid",
-		    				snap: ".schedulable, #edit-schedule ul.times li .time-slot:not(.ui-droppable-disabled)",
-		    				cursorAt: { top: 10, left: 100 },
-							start:
-								function (event, ui)
-								{
-									$('.ui-droppable.' + $(this).attr('id')).droppable("enable");
-								},
-							stop:
-								function (event, ui)
-								{
-									$('.ui-droppable.' + $(this).attr('id')).droppable("disable");
-								},
-						}
-			    	);
+			    	makeSchedulable($('.schedulable'));
 			    	$('#edit-schedule ul.times li.available .time-slot').droppable
 			    	(
 		    			{
@@ -232,16 +267,13 @@ var dumbGlobal;
 			    			var location = $(this).find('input.location').val();
 			    			var time = $(this).find('input.time').val();
 			    			var length = $(this).find('input.length').val();
-			    			console.log($('.schedulable input.length').val());
 			    			if (location && time && length)
 			    			{
 			    				var timeSlot = $('ul.times li.t-' + time + '.l-' + location + ' .time-slot.ui-droppable');
-			    				//console.log(timeSlot.length);
 			    				if (timeSlot.length > 0)
 			    				{
 			    					dropInto(timeSlot, $(this), false);
 			    					$(this).height((length * 26) - 2);
-			    	    	    	//validateScheduledItem($(this));
 			    				}
 			    			}
 			    		}

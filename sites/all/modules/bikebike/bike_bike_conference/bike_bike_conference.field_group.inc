@@ -193,6 +193,9 @@ function bike_bike_conference_field_group_info() {
     'children' => array(
       0 => 'field_workshops_published',
       1 => 'field_locations',
+      2 => 'field_meals_provided',
+      3 => 'field_meal_info',
+      4 => 'field_scheduled_times',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

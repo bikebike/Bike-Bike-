@@ -5224,6 +5224,28 @@ ul.times .time-slot > .schedulable.conflict .fieldset-legend {
 	background-color: #CAA;
 }
 
+ul.times .time-slot > .schedulable.event,
+ul.times .time-slot > .schedulable.event .fieldset-legend {
+	background-color: #ADF;
+	border-color: #8AC;
+}
+
+.schedulable.event .ui-icon-gripsmall-diagonal-se {
+	border: 2px solid #ADF;
+	background-color: #8AC;
+}
+
+ul.times .time-slot > .schedulable.meal,
+ul.times .time-slot > .schedulable.meal .fieldset-legend {
+	background-color: #FDA;
+	border-color: #DB8;
+}
+
+.schedulable.meal .ui-icon-gripsmall-diagonal-se {
+	border: 2px solid #FDA;
+	background-color: #DB8;
+}
+
 ul.times .time-slot > .schedulable {
 	/*position: absolute !important;
 	left: 40px !important;
@@ -5284,4 +5306,8 @@ body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
 #edit-workshops > legend > .fieldset-legend {
 	position: relative;
 	top: 30px;
+}
+
+#edit-events-meals {
+	margin-top: 20px;
 }
