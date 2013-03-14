@@ -5252,6 +5252,17 @@ ul.times .time-slot > .schedulable.meal .fieldset-legend {
 	background-color: #DB8;
 }
 
+ul.times .time-slot > .schedulable.workshop.validating,
+ul.times .time-slot > .schedulable.workshop.validating .fieldset-legend {
+	background-color: #EEE;
+	border-color: #DDD;
+}
+
+.schedulable.workshop.validating .ui-icon-gripsmall-diagonal-se {
+	border: 2px solid #EEE;
+	background-color: #DDD;
+}
+
 ul.times .time-slot > .schedulable {
 	/*position: absolute !important;
 	left: 40px !important;
@@ -5326,6 +5337,7 @@ body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
 	background-color: #000;/*rgba(0, 0, 0, 0.25);*/
 	z-index: 10000;
 	opacity: 0;
+	cursor: wait;
 	-webkit-transition: all .25s ease;
 	-moz-transition: all .25s ease;
 	-o-transition: all .25s ease;
@@ -5333,6 +5345,6 @@ body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
 }
 
 fieldset.screen-edits #edit-screen {
-	position: absolute;
-	opacity: 0.25;
+	/*position: absolute;
+	opacity: 0.25;*/
 }

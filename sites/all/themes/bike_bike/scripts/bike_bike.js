@@ -51,6 +51,10 @@ var dumbGlobal;
 	{
 		var droppableHeight = 0;
 		var dropClass = '';
+    	if (validateWorkshopConflicts)
+    	{
+    		$('#edit-schedule ul.times .schedulable').addClass('validating');
+    	}
 		$('.ui-draggable').find('input.location').val('');
 		$('.ui-draggable').find('input.time').val('');
 		$('.ui-draggable').find('input.length').val('');
@@ -108,6 +112,7 @@ var dumbGlobal;
 								$('#workshop-' + nidB).addClass('conflict').attr('title', conflicts[nidA].messageB);
 							}
 							$('#edit-schedule').removeClass('screen-edits');
+							$('#edit-schedule ul.times .schedulable').removeClass('validating');
 						},
 					error:
 						function ()
