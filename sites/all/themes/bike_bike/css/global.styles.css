@@ -5051,6 +5051,11 @@ body #main-content #content form#bikebike-registration-page > div > fieldset.for
 	background-color: transparent;
 	text-align: left;
 	background-image: none;
+	max-height: 25px;
+	overflow: hidden;
+	white-space: nowrap;
+	max-width: 178px;
+	text-overflow: ellipsis;
 }
 
 html.js fieldset.collapsible .schedulable .fieldset-legend {

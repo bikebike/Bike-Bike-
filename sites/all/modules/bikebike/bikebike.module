@@ -1154,7 +1154,7 @@ function bikebike_scheduler_page($form_state, $args)
 			'#attributes' => array('class' => array('length')),
 		);
 		$index = 1;
-		foreach ($node->field_scheduled_times[$language] as $meal)
+		foreach ((isset($node->field_scheduled_times[$language]) ? $node->field_scheduled_times[$language] : array()) as $meal)
 		{
 			//_bikebike_show_object($meal['value']);
 			$meal = field_collection_item_load($meal['value'], $reset = FALSE);
