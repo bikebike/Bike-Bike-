@@ -3533,6 +3533,7 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper > 
 	box-sizing: border-box;
 	padding: 9px 10px 4px 10px;
 	background-color: #F7F7F7;
+	background-image: none;
 }
 
 body.create-edit-page #main-content #content form > div > div.form-wrapper.form-actions {
@@ -3549,41 +3550,41 @@ body.create-edit-page #main-content #content form > div > div.form-wrapper.form-
 	margin-right: 20px;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible > legend > span {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span {
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible > legend > span > a {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a {
 	color: #333;
 	padding-left: 30px;
 	display: block;
 	border: 0;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible > legend > span > a:hover {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a:hover {
 	text-decoration: none;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible > legend > span > .summary {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > .summary {
 	display: none;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible .fieldset-legend {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend {
 	background: url(../images/collapse.png);
 	background-position: 5px 5px;
 	background-repeat: no-repeat;
 	background-color: #F7F7F7;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible.collapsed .fieldset-legend {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed > legend > .fieldset-legend {
 	background-image: url(../images/expand.png);
 	border-bottom: 1px solid #DDD;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible .fieldset-legend:hover {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend:hover {
 	background-color: #EEE;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper.collapsible.collapsed {
+body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed {
 	padding-bottom: 50px;
 }
 
@@ -4612,11 +4613,11 @@ body #main-content #content form > div fieldset.form-wrapper > legend {
 	font-size: 18px;
 	position: relative;
 	top: 0px;
-	height: 0;
+	height: 1px;
 	/*border-top: 1px dashed #CCC;*/
 }
 
-body #main-content #content form > div fieldset.form-wrapper.collapsible > legend {
+body #main-content #content form > div > fieldset.form-wrapper.collapsible > legend {
 	top: 20px;
 }
 
@@ -5116,7 +5117,7 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 	border-top: 1px solid #DDD;
 	text-align: center;
 	position: relative;
-	top: -20px;
+	top: 0px;
 	background-image: url(../images/collapse.png);
 	background-position: 5px 5px;
 	background-repeat: no-repeat;
@@ -5282,8 +5283,9 @@ ul.times .time-slot > .schedulable {
 }
 
 #edit-schedule {
-	max-height: 600px;
+	/*max-height: 600px;*/
 	overflow: auto;
+	background-color: #FFF;
 }
 
 #content #expand-schedule,
@@ -5315,18 +5317,134 @@ ul.times .time-slot > .schedulable {
 	right: 0;
 }*/
 
-body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
-	padding-top: 30px;
+/*body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
+	padding-top: 15px;
 	position: relative;
 }
 
 #edit-workshops > legend > .fieldset-legend {
 	position: relative;
 	top: 30px;
+}*/
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper,
+body #main-content #content form > div > fieldset#edit-events.form-wrapper {
+	/*float: right;*/
+	background-color: #FFF;
+	border: 0;
+	position: relative;
+	padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	position: fixed;
+	z-index: 10000;
+	width: 225px;
+	top: 175px;
+	box-shadow: 0px 2px 4px #DDD;
+}
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper > div.fieldset-wrapper,
+#edit-events > .fieldset-wrapper {
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid #DDD;
+}
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
+	left: 0px;
+}
+
+body #main-content #content form > div > fieldset#edit-events.form-wrapper {
+	right: 0px;
+}
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper:before,
+body #main-content #content form > div > fieldset#edit-events.form-wrapper:before {
+	height: 25px;
+}
+
+#edit-workshops > legend > .fieldset-legend,
+#edit-events > legend > .fieldset-legend {
+	/*top: -25px;*/
+	position: relative;
+	background-color: #EEE;
+	display: block;
+	width: 100%;
+	padding: 0 10px;
+	box-sizing: border-box;
+	border: 1px solid #DDD;
+	cursor: move;
+	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
+}
+
+body #main-content #content form > div > fieldset#edit-workshops.form-wrapper > legend > .fieldset-legend {
+	background-color: #DFD;
+	border-color: #ADA;
+}
+body #main-content #content form > div > fieldset#edit-events.form-wrapper > legend > .fieldset-legend {
+	background-color: #ADF;
+	border-color: #8AC;
+}
+/*body #main-content #content form > div > fieldset#edit-events.form-wrapper > legend > .fieldset-legend {
+	background-color: #ADF;
+	border-color: #8AC;
+}*/
+
+/*body #main-content #content form > div > fieldset#edit-workshops.form-wrapper > div.fieldset-wrapper {
+	border-color: #ADA;
+}
+body #main-content #content form > div > fieldset#edit-events.form-wrapper > div.fieldset-wrapper {
+	border-color: #8AC;
+}*/
+
+#edit-workshops > .fieldset-wrapper > .fieldset-description,
+#edit-events > .fieldset-wrapper > .fieldset-description {
+	height: auto;
+	width: 200px;
+	margin-bottom: 10px;
+	margin-top: 30px;
+}
+
+#edit-events-meals > legend > .fieldset-legend {
+	position: relative;
+	background-color: #FDA;
+	display: block;
+	width: 100%;
+	padding: 0 10px;
+	box-sizing: border-box;
+	border: 1px solid #DB8;
 }
 
 #edit-events-meals {
-	margin-top: 20px;
+	position: absolute;
+	bottom: 1px;
+	left: 0px;
+	right: 0px;
+	margin: 0;
+	padding: 0;
+	height: 0px;
+	border: 0;
+	box-shadow: 0px 2px 4px #DDD;
+}
+
+#edit-events-meals > .fieldset-wrapper {
+	background-color: #FFF;
+	padding-top: 30px;
+	border: 1px solid #DDD;
+	box-shadow: 0px 2px 4px #DDD;
+}
+
+#edit-events-meals > .fieldset-wrapper > .fieldset-description {
+	height: auto;
+	padding: 10px;
+}
+
+#edit-events-meals > .fieldset-wrapper > fieldset {
+	margin: 10px;
+}
+
+body #main-content #content form > div > fieldset#edit-events.form-wrapper > div.fieldset-wrapper {
+	/*padding-bottom: 80px;*/
 }
 
 #edit-screen {
@@ -5347,4 +5465,33 @@ body #main-content #content form > div > fieldset#edit-workshops.form-wrapper {
 fieldset.screen-edits #edit-screen {
 	/*position: absolute;
 	opacity: 0.25;*/
+}
+
+/*body.create-edit-page #main-content #content form > div > fieldset.form-wrapper + div.form-wrapper:before,*/
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset > legend {
+	top:20px;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div > input[type="submit"] {
+	display: inline-block;
+	margin: 20px 10px;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div {
+	text-align: center;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div > fieldset,
+body #main-content #content form#bikebike-scheduler-page > div > p {
+	text-align: left;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div > p {
+	width: 100%;
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+body #main-content #content form > div > fieldset#edit-schedule.form-wrapper:before {
+	display: none;
 }

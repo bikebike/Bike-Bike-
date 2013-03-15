@@ -865,8 +865,8 @@ function bikebike_scheduler_page($form_state, $args)
 
 	$form['nid'] = array
 	(
-			'#type' => 'value',
-			'#value' => $nid
+		'#type' => 'value',
+		'#value' => $nid
 	);
 	
 	if (!isset($node->field_locations[$language]) || count($node->field_locations[$language]) < 1)
@@ -890,18 +890,32 @@ function bikebike_scheduler_page($form_state, $args)
 		return $form;
 	}
 
+	$form['description'] = array
+	(
+		'#type' => 'markup',
+		'#markup' => '<p>'.($node->field_workshops_published[$language][0]['value'] ?
+						t('This schedule is currently published, any changes may negatively effect conference participants. Edit with caution and consider notifying participants after you have finished.') :
+						t('This schedule is currenly unpublished, and can only be seen by conference organizers. When you are complete you may publish or save you work and publish it at a later date.')).'</p>'
+	);
+	
+	$form['instructions'] = array
+	(
+		'#type' => 'markup',
+		'#markup' => '<p>'.t('Drag and drop workshops, events, or meals into the calendar to schedule them. Once in the calendar, you may resize the item to set the time span and removing an item simply puts it back into its original, unscheduled location. Once the schedule is published, coordinators of unscheduled workshops will be notified that their workshop has been cancelled, however you may rescheule later. Remember to save often!').'</p>'
+	);
+	
 	$form['schedule'] = array
 	(
 		'#type' => 'fieldset',
-		'#title' => t('Schedule:'),
+		//'#title' => t('Schedule:'),
 		'#tree' => TRUE
 	);
 
-	$form['schedule']['expand'] = array
+	/*$form['schedule']['expand'] = array
 	(
 		'#type' => 'markup',
 		'#markup' => '<div id="edit-screen"></div><a href="javascript:void(0)" class="button" id="expand-schedule">'.t('Expand').'</a><a href="javascript:void(0)" class="button" id="collapse-schedule">'.t('Collapse').'</a>',
-	);
+	);*/
 	
 	$start = new DateTime($node->field_date[$language][0]['value']);
 	$end = new DateTime($node->field_date[$language][0]['value2']);
@@ -1060,58 +1074,12 @@ function bikebike_scheduler_page($form_state, $args)
 		'#tree' => TRUE
 	);
 	
-	foreach ($r->fetchAll() as $field)
-	{
-		$event = node_load($field->nid);
-		$events[] = $event;
-		$form['events'][$field->nid] = array
-		(
-			'#type' => 'fieldset',
-			'#title' => $event->title,
-			'#tree' => TRUE,
-			'#attributes' => array(
-					'class' => array('schedulable', 'event'),
-					'id' => 'event-'.$field->nid
-			),
-			'#description' => '<a href="javascript:void(0)" class="de-schedule"></a>'
-		);
-		$time = isset($event->field_scheduled_time[$language]) ? ($event->field_scheduled_time[$language][0]['value'] ?: '') : '';
-		$time2 = isset($event->field_scheduled_time[$language]) ? ($event->field_scheduled_time[$language][0]['value2'] ?: '') : '';
-		$length = '';
-		if ($time)
-		{
-			$time = strtotime($time);
-			$length = (strtotime($time2) - $time) / 1800;
-		}
-		$form['events'][$field->nid]['location'] = array
-		(
-			'#type' => 'hidden',
-			'#default_value' => isset($event->field_lid[$language]) ? $event->field_lid[$language][0]['value'] : null,
-			'#attributes' => array('class' => array('location')),
-		);
-		$form['events'][$field->nid]['time'] = array
-		(
-			'#type' => 'hidden',
-			'#default_value' => $time,
-			'#attributes' => array('class' => array('time')),
-		);
-		$form['events'][$field->nid]['length'] = array
-		(
-			'#type' => 'hidden',
-			'#default_value' => $length ?: '1',
-			'#attributes' => array('class' => array('length')),
-		);
-	}
-	$form['events']['add'] = array(
-		'#type' => 'markup',
-		'#markup' => t('<a href="@url" class="button">Add An Event...</a>', array('@url' => url('node/add/event/'.$nid))),
-	);
 	$form['events']['meals'] = array
 	(
 		'#type' => 'fieldset',
-		//'#title' => t('Meals:'),
 		'#tree' => TRUE,
-		'#description' => ''
+		'#description' => '',
+		'#title' => t('Meals'),
 	);
 	if (isset($node->field_meals_provided[$language]) && $node->field_meals_provided[$language][0]['value'])
 	{
@@ -1202,11 +1170,65 @@ function bikebike_scheduler_page($form_state, $args)
 	{
 		$form['events']['meals']['#description'] = t('Meals will not be provided for this conference.').' '.t('You may change this by editing you conference details.');
 	}
-	
+
+	foreach ($r->fetchAll() as $field)
+	{
+		$event = node_load($field->nid);
+		$events[] = $event;
+		$form['events'][$field->nid] = array
+		(
+				'#type' => 'fieldset',
+				'#title' => $event->title,
+				'#tree' => TRUE,
+				'#attributes' => array(
+						'class' => array('schedulable', 'event'),
+						'id' => 'event-'.$field->nid
+				),
+				'#description' => '<a href="javascript:void(0)" class="de-schedule"></a>'
+		);
+		$time = isset($event->field_scheduled_time[$language]) ? ($event->field_scheduled_time[$language][0]['value'] ?: '') : '';
+		$time2 = isset($event->field_scheduled_time[$language]) ? ($event->field_scheduled_time[$language][0]['value2'] ?: '') : '';
+		$length = '';
+		if ($time)
+		{
+			$time = strtotime($time);
+			$length = (strtotime($time2) - $time) / 1800;
+		}
+		$form['events'][$field->nid]['location'] = array
+		(
+				'#type' => 'hidden',
+				'#default_value' => isset($event->field_lid[$language]) ? $event->field_lid[$language][0]['value'] : null,
+				'#attributes' => array('class' => array('location')),
+		);
+		$form['events'][$field->nid]['time'] = array
+		(
+				'#type' => 'hidden',
+				'#default_value' => $time,
+				'#attributes' => array('class' => array('time')),
+		);
+		$form['events'][$field->nid]['length'] = array
+		(
+				'#type' => 'hidden',
+				'#default_value' => $length ?: '1',
+				'#attributes' => array('class' => array('length')),
+		);
+	}
+	$form['events']['add'] = array(
+		'#type' => 'markup',
+		'#markup' => t('<a href="@url" class="button">Add An Event...</a>', array('@url' => url('node/add/event/'.$nid))),
+	);
+
 	$form['save'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save'),
 		'#submit' => array('bikebike_scheduler_page_save')
+	);
+
+	$form['publish'] = array(
+		'#type' => 'submit',
+		'#value' => $node->field_workshops_published[$language][0]['value'] ? t('Unpublish') : t('Publish'),
+		'#submit' => array('bikebike_scheduler_page_save'),
+		'#attributes' => array('publish' => !($node->field_workshops_published[$language][0]['value']))
 	);
 	
 	$form['cancel'] = array(
@@ -1227,6 +1249,9 @@ function bikebike_scheduler_page_save($form, &$form_state)
 	{
 		return;
 	}
+	
+	//_bikebike_show_object($form_state);//['publish']['#attributes']);
+	//return;
 	
 	$saved_fields = _field_field_load_fields($user->uid, $nid);
 	
@@ -1295,6 +1320,22 @@ function bikebike_scheduler_page_save($form, &$form_state)
 			$scheduled_time->save();
 		}
 	}
+	
+	$published = null;
+	
+	if ($form_state['values']['op'] == t('Publish'))
+	{
+		$node->field_workshops_published[$language][0]['value'] = 1;
+		$published = 1;
+	}
+	else if ($form_state['values']['op'] == t('Unublish'))
+	{
+		$node->field_workshops_published[$language][0]['value'] = 0;
+		$published = 0;
+	}
+	
+	drupal_set_message(t('Schedule was %saved at %time.', array('%saved' => t('saved').($published === 1 ? t(' and published') : ($published === 0 ? t(' and unpublished') : '')), '%time' => date('h:i:s A'))));
+	
 	node_save($node);
 }
 
@@ -2221,6 +2262,11 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		global $user;
 		if (!in_array('administrator', array_values($user->roles)))
 		{
+			$host = isset($form['field_host_organizations']['und']) ? $form['field_host_organizations']['und'][0]['target_id']['#entity']->field_host_organizations['und'][0]['target_id'] : null;
+			if ($host)
+			{
+				$host = node_load($host);
+			}
 			$form['field_workshops_published']['#access'] = FALSE;
 			$form['manage_registration_fields'] = array(
 							'#type' => 'markup',
@@ -2230,6 +2276,30 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			//_bikebike_show_object($form['field_fields']);//['und']['#prefix']);
 			$form['#fieldgroups']['group_registration']->children[] = 'manage_registration_fields';
 			$form['#group_children']['manage_registration_fields'] = 'group_registration';
+			
+			foreach ($form['field_locations']['und'] as $index => $value)
+			{
+				if (isset($value['#type']) && $value['#type'] == 'location_element')
+				{
+					if (isset($value['#default_value']['lid']) && $value['#default_value']['lid'])
+					{
+						$form['field_locations']['und'][$index]['#title'] = $value['#default_value']['name'];
+						$form['field_locations']['und'][$index]['#collapsible'] = TRUE;
+						$form['field_locations']['und'][$index]['#collapsed'] = TRUE;
+					}
+					else
+					{
+						$form['field_locations']['und'][$index]['#title'] = t('New Location');
+						$form['field_locations']['und'][$index]['#default_value']['city'] = $host->field_location['und'][0]['city'];
+						$form['field_locations']['und'][$index]['#default_value']['province'] = $host->field_location['und'][0]['province'];
+						$form['field_locations']['und'][$index]['#default_value']['country'] = $host->field_location['und'][0]['country'];
+						//_bikebike_show_object($value['#default_value']);
+						//_bikebike_show_object($host->field_location['und'][0]);
+					}
+				}
+				//_bikebike_show_object($value);
+			}
+			
 			//_bikebike_show_object($form['#group_children']);//array_keys($form));//array_keys($form));
 		}
 	}

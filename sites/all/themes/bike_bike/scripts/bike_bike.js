@@ -210,6 +210,14 @@ var dumbGlobal;
 		    	
 		    	if ($('body.page-conferences-schedule-manage').length > 0)
 		    	{
+			    	$('#edit-events, #edit-workshops').draggable
+			    	(
+						{
+							handle: '.fieldset-legend',
+							snap: 'body #main-content #content form > div > fieldset#edit-schedule.form-wrapper'
+						}
+			    	);
+			    	
 			    	$('#expand-schedule').click
 			    	(
 			    		function ()
@@ -256,6 +264,7 @@ var dumbGlobal;
 		    				activeClass: "ui-state-hover",
 							hoverClass: "ui-state-active",
 							tolerance: 'pointer',
+							accept: '.schedulable',
 							drop:
 								function (event, ui)
 								{
