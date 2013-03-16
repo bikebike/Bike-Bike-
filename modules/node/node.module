@@ -2894,10 +2894,6 @@ function node_access($op, $node, $account = NULL) {
   
   $cid = is_object($node) ? $node->nid : $node;
   
-  /*$s = debug_backtrace();
-  $s = $s[3];
-  _bikebike_show_object($s);*/
-
   // If we've already checked access for this node, user and op, return from
   // cache.
   if (isset($rights[$account->uid][$cid][$op])) {

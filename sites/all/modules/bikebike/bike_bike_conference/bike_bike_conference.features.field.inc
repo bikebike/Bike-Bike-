@@ -319,7 +319,7 @@ function bike_bike_conference_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => '5',
+          'weight' => '11',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -425,7 +425,7 @@ function bike_bike_conference_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => '4',
+          'weight' => '10',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -611,13 +611,13 @@ function bike_bike_conference_field_default_fields() {
       'bundle' => 'conference',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Select which questions will be asked of participants when registering for this conference. Re-order the fields by dragging them in the left column. You may preview your form by viewing the \'registration\' page.',
       'display' => array(
         'default' => array(
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => '3',
+          'weight' => '9',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -885,12 +885,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'location_cck',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'location_default',
-          'weight' => 6,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '5',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -957,12 +954,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'text',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'text_default',
-          'weight' => 8,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '7',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1065,12 +1059,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'list_default',
-          'weight' => 7,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '6',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1246,12 +1237,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'list_default',
-          'weight' => '5',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '3',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1312,17 +1300,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'field_collection',
-          'settings' => array(
-            'add' => 'Add',
-            'delete' => 'Delete',
-            'description' => TRUE,
-            'edit' => 'Edit',
-            'field_formatter_class' => '',
-            'view_mode' => 'full',
-          ),
-          'type' => 'field_collection_view',
-          'weight' => 9,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '8',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1395,12 +1375,9 @@ function bike_bike_conference_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
-          'settings' => array(
-            'field_formatter_class' => '',
-          ),
-          'type' => 'list_default',
-          'weight' => '3',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '4',
         ),
         'entityreference_view_widget' => array(
           'label' => 'above',
@@ -1451,6 +1428,7 @@ function bike_bike_conference_field_default_fields() {
   t('Registration Open');
   t('Scheduled Time');
   t('Scheduled Times');
+  t('Select which questions will be asked of participants when registering for this conference. Re-order the fields by dragging them in the left column. You may preview your form by viewing the \'registration\' page.');
   t('Workshops Schedule Published');
 
   return $fields;

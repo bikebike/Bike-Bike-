@@ -26,7 +26,7 @@
       </div>
     <?php endforeach; ?>
   </div>
-  <?php if (user_is_logged_in()): ?>
+  <?php /*if (user_is_logged_in()): ?>
   	<div class="button-container">
   	<?php if ($is_org_admin): ?>
 		<?php if (count($element['#object']->field_administrators['und']) > 1): ?><a href="<?php print $element['#object']->nid.'/remove-admin/'; ?>" class="important-button" id="remove-me-as-admin">Remove Me</a><?php endif; ?>
@@ -55,4 +55,4 @@
 			print $view->preview('invitations', $args);
 			?>
 </section>
-<?php endif; ?>
+<?php endif;*/ ?>

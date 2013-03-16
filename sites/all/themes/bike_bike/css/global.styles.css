@@ -1439,39 +1439,84 @@ ul.primary {
 	width: 100%;
 	margin: 0px auto;
 	max-width: 980px;
+	min-height: 100px;
 }
 
 ul.primary li {
-	display: block;
+	/*display: block;*/
+	display: inline-block;
 	/*float: left;*/
-	margin: 0 1px -1px;
+	margin: 0;/* 1px -1px*/;
+	vertical-align: bottom;
+	/*display: table-cell;*/
 }
 
 ul.primary li a {
 	display: block;
-	float: left;
-	border: 0;
-	color: #333;
+	color: #555;/*#3888CC;*/
 	background-color: #EEE;
 	box-shadow: 0px 1px 2px #DDD;
 	padding: 5px 15px;
 	margin-right: 5px;
 	margin-top: 2px;
+	
+	background-color: transparent;
+	margin-top: 0px;
+	border: 0;
+	box-shadow: none;
+	text-align: center;
+	/*display: table-cell;*/
+	width: 100px;
+	margin: 0;
+	height: 100px;
+	/*line-height: 100px;*/
+	vertical-align: bottom;
+	position: relative;
+}
+
+ul.primary li a .tab-title {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	top: 70px;
+	display: table;
+	width: 130px;
+	height: 40px;
+}
+
+ul.primary li a .tab-title-inner {
+    display: table-cell;
+    vertical-align: middle;
+    white-space: normal;
+    text-align: center;
+}
+
+ul.primary li {
+}
+
+ul.primary li.active {
+}
+
+ul.primary li a.active,
+ul.primary li a.active:hover,
+ul.primary li a.active:focus {
+	background-color: #EEE;
+	/*background-color: transparent;*/
+	border: 0;
 }
 
 ul.primary li a:hover,
 ul.primary li a:focus {
-	background-color: #F7F7F7;
-	margin-top: 1px;
+	/*background-color: #F7F7F7;*/
+	/*margin-top: 1px;*/
+	background-color: #DDD;
+	/*background-color: #F7F7F7;*/
 }
 
-ul.primary li.active a,
-ul.primary li.active a:hover,
-ul.primary li.active a:focus {
-	background-color: #fff;
-	border-bottom-color: #fff;
-	margin-top: 1px;
-	border: 0;
+ul.primary li a img {
+	display: block;
+	margin: 0 auto 5px auto;
 }
 
 ul.secondary {
@@ -2784,7 +2829,7 @@ body.node-type-conference-registration #main-content-header,
 body.node-type-organization #main-content-header {
 	position: relative;
 	box-shadow: 0px 4px 2px -2px #DDD;
-	margin-bottom: 48px;
+	/*margin-bottom: 48px;*/
 }
 
 body.node-type-organization #main-content-header img.logo {
@@ -4920,12 +4965,14 @@ input[type="checkbox"] {
 	margin-right: 10px;
 }
 
-#bikebike-registration-page > div > fieldset.form-wrapper {
+#bikebike-registration-page > div > fieldset.form-wrapper,
+#bikebike-registration-options-page > div > fieldset.form-wrapper {
 	background-color: #FFF;
 	margin-top: 20px;
 }
 
-#bikebike-registration-page > div > fieldset.form-wrapper:after {
+#bikebike-registration-page > div > fieldset.form-wrapper:after,
+#bikebike-registration-options-page > div > fieldset.form-wrapper:after {
 	content: '';
 	display: block;
 	height: 1px;
@@ -4935,7 +4982,8 @@ input[type="checkbox"] {
 	border-bottom: 1px dashed #DDD;
 }
 
-body #main-content #content form#bikebike-registration-page > div > fieldset.form-wrapper:before {
+body #main-content #content form#bikebike-registration-page > div > fieldset.form-wrapper:before,
+body #main-content #content form#bikebike-registration-options-page > div > fieldset.form-wrapper:before {
 	border-top: 1px dashed #DDD;
 	height: 10px;
 }
@@ -5494,4 +5542,54 @@ body #main-content #content form#bikebike-scheduler-page > div > p {
 
 body #main-content #content form > div > fieldset#edit-schedule.form-wrapper:before {
 	display: none;
+}
+
+#tasks {
+	background-color: #FFF;
+	padding: 0px;
+	margin: 0;
+	font-family: 'SansSerif', sans-serif;
+	/*border-bottom: 1px solid #EFE18A;*/
+	z-index: 11;
+	top: -5px;
+	box-shadow: 0px 4px 2px -2px #DDD;
+	position: relative;
+}
+
+body.page-conferences-registration-fields #content,
+#bikebike-registration-options-page/* > div > .form-item*/ {
+	width: 100%;
+	margin: 0 auto;
+	max-width: 980px;	
+}
+
+.field-type-entityreference.field-widget-options-select > .form-item.form-type-select > label {
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.tab-title .notify {
+	position: absolute;
+	top: -67px;
+	right: 22px;
+	border: 3px solid #BBB;
+	display: block;
+	width: 24px;
+	height: 24px;
+	border-radius: 24px;
+	text-align: center;
+	line-height: 24px;
+	background-color: #F7F7F7;
+	vertical-align: text-bottom;
+	font-size: 18px;
+	font-family: 'Serif';
+	font-weight: bold;
+	white-space: nowrap;
+	letter-spacing: -2px;
+	padding-right: 2px;
+}
+
+.profile-list li {
+	list-style: none;
+	display: inline-block;
 }

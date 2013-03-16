@@ -1,6 +1,7 @@
 name = Form Fields
 core = 7.x
 package = Bike!Bike!
+php = 5.2.4
 dependencies[] = conditional_fields
 dependencies[] = custom_formatters
 dependencies[] = entity

@@ -212,7 +212,7 @@ else if (isset($node))
 						initializeOrgMap(<?php print $node->field_location[$node->language][0]['latitude'];?>, <?php print $node->field_location[$node->language][0]['longitude'];?>)
 					</script>
 				</div>
-				<?php print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo'))); ?>
+				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php elseif (isset($conference)): ?>
 				<div id="conference-banner">
 					<?php print theme('image', array('style_name' => 0, 'path' => $conference->field_banner[$conference->language][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
@@ -225,6 +225,8 @@ else if (isset($node))
                 </h1>
               <?php endif; ?>
 
+            </header>
+          <?php endif; ?>
               <?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 
@@ -242,10 +244,7 @@ else if (isset($node))
 
                 </div>
               <?php endif; ?>
-
-            </header>
-          <?php endif; ?>
-
+          
 			<!-- Messages and Help -->
 			<?php print $messages; ?>
 			<?php print render($page['help']); ?>

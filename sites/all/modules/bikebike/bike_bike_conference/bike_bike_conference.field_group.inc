@@ -22,17 +22,11 @@ function bike_bike_conference_field_group_info() {
   $field_group->data = array(
     'label' => 'Proposed Workshops',
     'weight' => '2',
-    'children' => array(
-      0 => 'field_workshops_published',
-    ),
-    'format_type' => 'fieldset',
+    'children' => array(),
+    'format_type' => 'hidden',
     'format_settings' => array(
-      'label' => 'Proposed Workshops',
-      'instance_settings' => array(
-        'classes' => '',
-        'description' => '',
-      ),
-      'formatter' => 'open',
+      'formatter' => '',
+      'instance_settings' => array(),
     ),
   );
   $export['group_attachments|node|conference|default'] = $field_group;
@@ -107,7 +101,6 @@ function bike_bike_conference_field_group_info() {
     'children' => array(
       0 => 'field_host_organizations',
       1 => 'field_date',
-      2 => 'field_registration_open',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

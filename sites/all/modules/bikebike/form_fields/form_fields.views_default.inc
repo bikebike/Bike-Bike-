@@ -193,6 +193,10 @@ function form_fields_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'form-fields/manage';
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $translatables['form_fields'] = array(
     t('Master'),
     t('Form Fields'),
@@ -207,6 +211,7 @@ function form_fields_views_default_views() {
     t('Field Type'),
     t('Help Text'),
     t('Page'),
+    t('Block'),
   );
   $export['form_fields'] = $view;
 
