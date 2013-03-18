@@ -3067,12 +3067,13 @@ body.page-user- #block-system-main > .profile {
 	height: 64px;
 	background-size: 64px auto;
 	display: inline-block;
-	width: 64px;
+	/*width: 64px;*/
 	vertical-align: middle;
 	line-height: 64px;
 	padding-left: 72px;
 	background-repeat: no-repeat;
 	color: #888;
+	white-space: nowrap;
 }
 
 .field-type-taxonomy-term-reference {
@@ -3595,41 +3596,41 @@ body.create-edit-page #main-content #content form > div > div.form-wrapper.form-
 	margin-right: 20px;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span {
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a {
 	color: #333;
 	padding-left: 30px;
 	display: block;
 	border: 0;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a:hover {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > a:hover {
 	text-decoration: none;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > .summary {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > span > .summary {
 	display: none;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend {
 	background: url(../images/collapse.png);
 	background-position: 5px 5px;
 	background-repeat: no-repeat;
 	background-color: #F7F7F7;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed > legend > .fieldset-legend {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed > legend > .fieldset-legend {
 	background-image: url(../images/expand.png);
 	border-bottom: 1px solid #DDD;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend:hover {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend:hover {
 	background-color: #EEE;
 }
 
-body.create-edit-page #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed {
+body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed {
 	padding-bottom: 50px;
 }
 
@@ -4652,7 +4653,8 @@ body.page-organizations-add-admin #content #block-system-main {
 	margin: 0 auto;*/
 }
 
-body #main-content #content form > div fieldset.form-wrapper > legend {
+body #main-content #content form > div fieldset.form-wrapper > legend,
+body #main-content #content #block-system-main > fieldset.form-wrapper > div fieldset.form-wrapper > legend {
 	width: 100%;
 	font-family: 'SansSerif';
 	font-size: 18px;
@@ -5087,6 +5089,11 @@ body #main-content #content form#bikebike-registration-options-page > div > fiel
 	position: relative;
 }
 
+.schedulable.scheduled-item {
+	cursor: pointer;
+	overflow: hidden;
+}
+
 .schedulable.conflict {
 	background-color: #FDD;
 }
@@ -5166,11 +5173,14 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 	text-align: center;
 	position: relative;
 	top: 0px;
+	height: 35px;
+	line-height: 35px;
+}
+
+#edit-schedule > .fieldset-wrapper > .form-wrapper.collapsible > legend > .fieldset-legend {
 	background-image: url(../images/collapse.png);
 	background-position: 5px 5px;
 	background-repeat: no-repeat;
-	height: 35px;
-	line-height: 35px;
 }
 
 #edit-schedule > .fieldset-wrapper > .form-wrapper.collapsed > legend > .fieldset-legend {
@@ -5384,10 +5394,10 @@ body #main-content #content form > div > fieldset#edit-events.form-wrapper {
 	padding: 0;
 	box-sizing: border-box;
 	margin: 0;
-	position: fixed;
+	position: fixed;/*fixed;*/
 	z-index: 10000;
 	width: 225px;
-	top: 175px;
+	top: 75%;
 	box-shadow: 0px 2px 4px #DDD;
 }
 
@@ -5557,10 +5567,16 @@ body #main-content #content form > div > fieldset#edit-schedule.form-wrapper:bef
 }
 
 body.page-conferences-registration-fields #content,
-#bikebike-registration-options-page/* > div > .form-item*/ {
+#bikebike-registration-options-page,
+#bikebike-schedule-locations-page,
+body.page-conferences-schedule-events #content {
 	width: 100%;
 	margin: 0 auto;
 	max-width: 980px;	
+}
+
+.button-block {
+	text-align: center;
 }
 
 .field-type-entityreference.field-widget-options-select > .form-item.form-type-select > label {
@@ -5592,4 +5608,98 @@ body.page-conferences-registration-fields #content,
 .profile-list li {
 	list-style: none;
 	display: inline-block;
+}
+
+#bikebike-scheduler-page {
+	position: relative;
+}
+
+.scheduled-item {
+    position: absolute;
+    left: 40px;
+    right: 0px;
+    top: -1px;
+    background-color: #F7F7F7;
+    padding: 0px 10px;
+	border: 1px solid #DDD;
+	z-index: 10;
+}
+
+body #main-content #content form fieldset.form-wrapper.collapsible.location > legend > .fieldset-legend {
+    background-color: transparent;
+    border: 0;
+    min-height: 30px;
+    padding-top: 5px;
+}
+body #main-content #content form fieldset.form-wrapper.collapsible.location {
+    border: 0;
+	margin-left: 0;
+	padding-left: 0;
+}
+body #main-content #content form fieldset.form-wrapper.collapsible.location > .fieldset-wrapper {
+    margin: 30px 0 0 50px;
+}
+
+body #main-content #content form fieldset.form-wrapper.collapsible.collapsed.location {
+	padding-bottom: 20px;
+}
+
+/*body.not-front .field-type-location a.tabledrag-handle .handle {
+	height: 30px;
+}
+
+body.not-front .field-type-location a.tabledrag-handle .handle {
+	background: url(../images/reorder-small.png) no-repeat 0px 0px;
+	height: 32px;
+}*/
+
+#bikebike-schedule-locations-page .fn {
+    display: block;
+    position: absolute;
+    font-size: 18px;
+    font-family: 'SansSerif', sans-serif;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #EEE;
+    padding: 0px 10px;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+}
+#bikebike-schedule-locations-page .adr > * {
+    display: block;
+}
+#bikebike-schedule-locations-page .adr {
+    background-color: #FFF;
+    margin: 10px;
+    padding: 40px 20px 20px 20px;
+    position: relative;
+    border: 1px solid #DDD;
+}
+
+.scheduled-item h4 {
+	margin: 0;
+	font-size: 14px;
+	/*font-weight: bold;*/
+	background-color: #ACA;
+	position: relative;
+	left: -10px;
+	right: 0;
+	width: 188px;
+	padding: 0px 5px;
+}
+
+.scheduled-item.event h4 {
+	background-color: #8AC;
+}
+
+.scheduled-item.meal h4 {
+	background-color: #DB8;
+}
+
+.scheduled-item .field-name-body {
+	font-size: 13px;
+	line-height: 16px;
+	margin-top: 5px;
 }

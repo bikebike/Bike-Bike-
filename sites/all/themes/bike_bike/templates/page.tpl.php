@@ -91,19 +91,19 @@ if (arg(2) == 'edit')
 {
 	if (isset($node))
 	{
-		if($node->type == 'organization')
+		if ($node->type == 'organization')
 		{
 			$title = 'Update '.$node->title;
 			print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location[$node->language][0]['latitude'].", ".$node->field_location[$node->language][0]['longitude']."); } );</script>";
 		}
-		else if($node->type == 'conference')
+		else if ($node->type == 'conference')
 		{
 			$conference = $node;
 		}
-		else if($node->type == 'conference_registration')
+		else if (!isset($conference) && isset($node->field_conference) && isset($node->field_conference['und']))//$node->type == 'conference_registration')
 		{
-			$conference = node_load($node->field_conference[$node->language][0]['nid']);
-			$title = $conference->title.' Registration';
+			$conference = node_load($node->field_conference['und'][0]['nid']);
+			//$title = $conference->title.' Registration';
 		}
 	}
 }
@@ -130,15 +130,24 @@ else if (arg(1) == 'add')
 }
 else if (isset($node))
 {
-	if ($node->type == 'conference_registration')
-	{
-		$conference = node_load($node->field_conference[$node->language][0]['nid']);
-		$title = $conference->title.' Registration';
-	}
-	else if ($node->type == 'conference')
+	//if ()//$node->type == 'conference_registration')
+	//{
+		//$conference = node_load($node->field_conference[$node->language][0]['nid']);
+		//$title = $conference->title.' Registration';
+	//}
+	//else
+	if ($node->type == 'conference')
 	{
 		$conference = $node;
 	}
+	else if (!isset($conference) && isset($node->field_conference) && isset($node->field_conference['und']))
+	{
+		$conference = node_load($node->field_conference['und'][0]['nid']);
+	}
+}
+else if (arg(0) == 'conferences' && is_numeric(arg(1)))
+{
+	$conference = node_load(arg(1));
 }
 ?>
 <!-- <?php /*print_r($node);*/ ?> -->
