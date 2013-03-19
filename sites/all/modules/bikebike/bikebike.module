@@ -3,7 +3,44 @@
 require_once('field_field/field_field.module');
 require_once('bikebike.menu.inc');
 
-function bikebike_registration_openclose_access($node, $open)
+function bikebike_ajax_form()
+{
+	module_load_include('inc', 'node', 'node.pages');
+	if (isset($_POST['url']))
+	{
+		$url = $_POST['url'];
+		$menu_item = menu_get_item($url);
+		if (isset($menu_item['page_arguments']) && isset($menu_item['page_arguments'][0]) && is_string($menu_item['page_arguments'][0]))
+		{
+			$class = str_replace('_', '-', str_replace('bikebike_', '', $menu_item['page_arguments'][0]));
+		}
+		else
+		{
+			$class = str_replace('_', '-', str_replace('bikebike_', '', $menu_item['page_callback']));
+		}
+		
+		$form = call_user_func_array($menu_item['page_callback'], $menu_item['page_arguments']);
+		if (isset($form['#action']))
+		{
+			$form['#action'] = url($url);
+		}
+		$html = drupal_render($form);
+		//$html .= '<!-- '.print_r($url, true).' -->';
+		//$html .= '<!-- '.print_r($menu_item, true).' -->';
+		//$html .= '<!-- '.print_r($menu_item['page_callback'], true).' -->';
+		//$html .= '<!-- '.print_r($menu_item['page_arguments'], true).' -->';
+		//$html .= '<!-- '.print_r($form, true).' -->';
+		$title = '';
+		if (isset($menu_item['title']))
+		{
+			$title = '<h1>'.$menu_item['title'].'</h1>';
+		}
+		die('<div id="ajax-form-inner"'.($class ? ' class="'.$class.'"' : '').'>'.$title.'<div id="ajax-form-inner-inner">'.$html.'</div></div>');
+	}
+	die('');
+}
+
+function bikebike_registration_openclose_access($form, &$form_state, $node, $open)
 {
 	global $user;
 	if (bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW)
@@ -64,8 +101,10 @@ function bikebike_conference_schedule_access($node)
 	return _bikebike_is_schedule_published($node) || _bikebike_is_conference_organizer($user, $node);
 }
 
-function bikebike_conference_registration_open($reg, $do_open)
+function bikebike_conference_registration_open($form, &$form_state)//$reg, $do_open)
 {
+	$reg = $form_state['build_info']['args'][0];
+	$do_open = $form_state['build_info']['args'][1];
 	//$reg = node_load($nid);
 	global $user;
 	if (!$reg || $reg->type != 'conference' || !node_access('update', $reg))
@@ -80,6 +119,41 @@ function bikebike_conference_registration_open($reg, $do_open)
 		drupal_set_message('Registration is now '.($do_open ? 'open.' : 'closed.'));
 		drupal_goto('conferences/'.$reg->nid.'/registration');
 	}
+}
+
+function bikebike_options_dlg($form, &$form_state, $options)
+{
+	$form = array();
+	
+	$form['message'] = array
+	(
+		'#type' => 'markup',
+		'#markup' => t($options['message'])
+	);
+
+	$args = func_get_args();
+	array_shift($args);
+	array_shift($args);
+	array_shift($args);
+	$form_state['build_info']['args'] = $args;
+
+	/*$form['debug'] = array
+	(
+		'#type' => 'markup',
+		'#markup' => '<pre>'.print_r($args, true).'</pre>'
+	);*/
+	
+	foreach ($options['actions'] as $action)
+	{
+		$form[$action['name']] = array
+		(
+			'#type' => 'submit',
+			'#value' => t($action['title']),
+			'#submit' => array($action['action'])
+		);
+	}
+
+	return $form;
 }
 
 function bikebike_schedule_events_page($node)
@@ -690,9 +764,11 @@ function bikebike_conference_workshops($nid)
 	return $items;
 }
 
-function bikebike_change_registration($reg, $confirm)
+function bikebike_change_registration($form, &$form_state)//$reg, $confirm)
 {
-	//$reg = node_load($crid);
+	$reg = $form_state['build_info']['args'][0];
+	$confirm = $form_state['build_info']['args'][1];
+	
 	global $user;
 	if (!$reg || $user->uid != $reg->uid || $reg->type != 'conference-registration')
 	{
@@ -794,31 +870,6 @@ function bikebike_add_workshop_access($action, $type, $conference_id)
 	}
 	$reg = _bikebike_get_registation($user->uid, $conference_id);
 	return ($reg && $reg[0]->data == 'yes' ? NODE_ACCESS_ALLOW : NODE_ACCESS_DENY);
-	/*$r = db_query("
-			SELECT
-				nid
-			FROM
-				{node}
-			JOIN
-				{field_data_field_conference} AS conference
-				ON
-					conference.entity_id = nid
-			JOIN
-				{field_data_field_attending_conference} AS attending
-				ON
-					attending.entity_id = nid
-			WHERE
-				type = 'conference_registration'
-				AND
-				uid = :uid
-				AND
-				field_conference_nid = :nid
-				AND
-				attending.field_attending_conference_value <> 0
-			LIMIT
-				1",
-			array('uid' => $user->uid, 'nid' => $conference_id));
-	return $r->rowCount() > 0;*/
 }
 
 function bikebike_node_access($node, $op, $user)
@@ -1350,8 +1401,13 @@ function bikebike_get_invitation($node, $email)
 	return $r->rowCount() > 0 ? node_load($r->fetchField()) : null;
 }
 
-function bikebike_accept_invitation($type, $nid, $request_title, $do_accept)
+function bikebike_accept_invitation($form, &$form_state)//$type, $nid, $request_title, $do_accept)
 {
+	$type = $form_state['build_info']['args'][0];
+	$nid = $form_state['build_info']['args'][1];
+	$request_title = $form_state['build_info']['args'][2];
+	$do_accept = $form_state['build_info']['args'][3];
+	
 	global $user;
 	if (!$user)
 	{
@@ -2557,6 +2613,10 @@ function bikebike_invitaions_page_emailinvite($form, &$form_state)
 function bikebike_add_member($form_state, $args)
 {
 	$node = $args['build_info']['args'][0];
+	if (!is_object($node))
+	{
+		$node = node_load($node);
+	}
 	//$node = node_load($nid);
 	$nid = $node->nid;
 	$type = $args['build_info']['args'][2];
@@ -2823,9 +2883,14 @@ function bikebike_create_request_exists($node, $user)
 	return bikebike_request_query($node, $user)->rowCount() > 0;
 }
 
-function bikebike_cancel_request($node)
+function bikebike_cancel_request($form, &$form_state, $node = null)
 {
 	global $user;
+	if (!$node)
+	{
+		$node = $form_state['build_info']['args'][0];
+	}
+	
 	$r = bikebike_request_query($node, $user);
 	if ($r->rowCount() > 0)
 	{
@@ -2837,7 +2902,14 @@ function bikebike_cancel_request($node)
 
 function bikebike_add_member_cancel($form, &$form_state)
 {
-	$nid = $form['nid']['#value'];
+	if (isset($form_state['build_info']['args']))
+	{
+		$nid = $form_state['build_info']['args'][0]->nid;
+	}
+	else
+	{
+		$nid = $form['nid']['#value'];
+	}
 	$form_state['redirect'] = 'node/'.$nid;
 }
 
@@ -3337,13 +3409,13 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'node' => 'node-view',
 			'conferences-registration-manage' => 'node-options',
 			'conferences-schedule-manage' => 'node-options',
-			'organizations-remove-admin' => 'node-delete',
+			'organizations-remove-member' => 'node-delete',
 			'organizations-cancel-request' => 'node-delete',
 			'conferences-workshops-cancel-request' => 'node-delete',
 			'conferences-workshops-remove-member' => 'node-delete',
 			'conferences-reject-invitation' => 'node-delete',
 			'conferences-workshops-reject-invitation' => 'node-delete',
-			'organizations-add-admin' => 'node-add',
+			'organizations-add-member' => 'node-add',
 			'node-add-workshop' => 'node-add',
 			'conferences-workshops-add-coordinator' => 'node-add',
 			'conferences-workshops-accept-invitation' => 'node-add',
@@ -3354,6 +3426,24 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'conferences-workshops-members' => 'members',
 			'conferences-registration-close' => 'close',
 			'conferences-registration-open' => 'open'
+		);
+		$overlay_links = array
+		(
+			'organizations-add-member',
+			'organizations-remove-member',
+			'organizations-cancel-request',
+			'conferences-workshops-add-coordinator',
+			'conferences-workshops-remove-coordinator',
+			'conferences-workshops-cancel-request',
+			//'node-add-workshop',
+			//'node-edit',
+			//'user-edit',
+			'conferences-registration-close',
+			'conferences-registration-open',
+			'organizations-accept-invitation',
+			'organizations-reject-invitation',
+			'conferences-workshops-accept-invitation',
+			'conferences-workshops-reject-invitation'
 		);
 		foreach ($data['tabs'][0]['output'] as $index => $tab)
 		{
@@ -3383,6 +3473,10 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 					$data['tabs'][0]['output'][$index]['#link']['title'] = $image.'<span class="tab-title"><span class="tab-title-inner">'.$data['tabs'][0]['output'][$index]['#link']['title'].'</span></span>';
 					$data['tabs'][0]['output'][$index]['#link']['localized_options']['attributes']['id'] = 'tab-'.$id;
 					$data['tabs'][0]['output'][$index]['#link']['localized_options']['html'] = TRUE;
+					if (in_array($id, $overlay_links))
+					{
+						$data['tabs'][0]['output'][$index]['#link']['localized_options']['attributes']['class'][] = 'overlay';
+					}
 					break;
 			}
 		}

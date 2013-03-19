@@ -94,9 +94,10 @@ function bikebike_menu()
 			'conferences/%node/registration/open' => array
 			(
 					'title' => t('Open Registraion'),
-					'page callback' => 'bikebike_conference_registration_open',
+					'page callback' => 'drupal_get_form',
 					'description' => 'Open Registration',
-					'page arguments' => array(1, true),
+					//'page arguments' => array(1, true),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, true),
 					'access callback' => 'bikebike_registration_openclose_access',
 					'access arguments' => array(1, true),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -105,9 +106,10 @@ function bikebike_menu()
 			'conferences/%node/registration/close' => array
 			(
 					'title' => t('Close Registration'),
-					'page callback' => 'bikebike_conference_registration_open',
+					'page callback' => 'drupal_get_form',
 					'description' => 'Open Registration',
-					'page arguments' => array(1, false),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, false),
+					//'page arguments' => array(1, false),
 					'access callback' => 'bikebike_registration_openclose_access',
 					'access arguments' => array(1, false),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -116,9 +118,9 @@ function bikebike_menu()
 			'organizations/%node/cancel-request' => array
 			(
 					'title' => t('Cancel Membership Request'),
-					'page callback' => 'bikebike_cancel_request',
+					'page callback' => 'drupal_get_form',
 					'description' => 'Cancel your request to be an organization administrator',
-					'page arguments' => array(1, 'organization'),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_cancel_request'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, 'organization'),
 					'access callback' => 'bikebike_organization_cancel_request_access',
 					'access arguments' => array(1),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -127,9 +129,10 @@ function bikebike_menu()
 			'conferences/%/workshops/%node/cancel-request' => array
 			(
 					'title' => t('Cancel Coordinator Request'),
-					'page callback' => 'bikebike_cancel_request',
+					'page callback' => 'drupal_get_form',
 					'description' => 'Cancel your request to be an workshop coordinator',
-					'page arguments' => array(3, 'workshop'),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_cancel_request'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 3, 'workshop'),
+					//'page arguments' => array(3, 'workshop'),
 					'access callback' => 'bikebike_organization_cancel_request_access',
 					'access arguments' => array(3),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -193,8 +196,9 @@ function bikebike_menu()
 			'organizations/%node/accept-invitation/%' => array
 			(
 					'title' => t('Accept Membership'),
-					'page callback' => 'bikebike_accept_invitation',
-					'page arguments' => array('organization', 1, 3, true),
+					'page callback' => 'drupal_get_form',
+					//'page arguments' => array('organization', 1, 3, true),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_accept_invitation'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 'organization', 1, 3, true),
 					'access callback' => 'bikebike_organization_accept_invitation_access',
 					'access arguments' => array(1),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -203,8 +207,10 @@ function bikebike_menu()
 			'conferences/%/workshops/%node/accept-invitation/%' => array
 			(
 					'title' => t('Accept Coordinator Invitation'),
-					'page callback' => 'bikebike_accept_invitation',
-					'page arguments' => array('workshop', 3, 5, true),
+					//'page callback' => 'bikebike_accept_invitation',
+					//'page arguments' => array('workshop', 3, 5, true),
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_accept_invitation'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 'organization', 3, 5, true),
 					'access callback' => 'bikebike_organization_accept_invitation_access',
 					'access arguments' => array(3),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -213,8 +219,10 @@ function bikebike_menu()
 			'organizations/%node/reject-invitation/%' => array
 			(
 					'title' => t('Reject Member Invitation'),
-					'page callback' => 'bikebike_accept_invitation',
-					'page arguments' => array('organization', 1, 3, false),
+					//'page callback' => 'bikebike_accept_invitation',
+					//'page arguments' => array('organization', 1, 3, false),
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_accept_invitation'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 'organization', 1, 3, false),
 					'access callback' => 'bikebike_organization_accept_invitation_access',
 					'access arguments' => array(1),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -223,8 +231,10 @@ function bikebike_menu()
 			'conferences/%/workshops/%node/reject-invitation/%' => array
 			(
 					'title' => t('Reject Coordinator Invitation'),
-					'page callback' => 'bikebike_accept_invitation',
-					'page arguments' => array('workshop', 3, 5, false),
+					//'page callback' => 'bikebike_accept_invitation',
+					//'page arguments' => array('workshop', 3, 5, false),
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_accept_invitation'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 'organization', 3, 5, false),
 					'access callback' => 'bikebike_organization_accept_invitation_access',
 					'access arguments' => array(3),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -338,7 +348,17 @@ function bikebike_menu()
 					'access arguments' => array('view', 1),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
 					'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-			)
+			),
+			'ajax-form' => array
+			(
+					//'title' => t('Workshops'),
+					'page callback' => 'bikebike_ajax_form',
+					//'description' => 'Work out your conference schedule',
+					'page arguments' => array(),
+					'access callback' => TRUE,//'node_access',
+					//'access arguments' => array('view', 1),
+					'type' => MENU_CALLBACK,
+			),
 	);
 	return $items;
 }

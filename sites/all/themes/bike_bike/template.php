@@ -57,6 +57,11 @@ function bike_bike_process_html(&$vars) {
 function bike_bike_preprocess_page(&$vars)
 {
 	drupal_add_js('https://maps.googleapis.com/maps/api/js?key=AIzaSyDitM1lyVWkrumteDvSkje6GiIKYyHlAXM&sensor=false');
+	if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed')
+	{
+		$variables['theme_hook_suggestions'][] = 'page__embed';
+		$variables['template_file'] = 'page--embed';
+	}
 	/*if (!empty($vars['node']))
 	{
 		$variables['theme_hook_suggestions'][] = 'page--node--' . $vars['node']->type;
@@ -161,4 +166,12 @@ function bike_bike_menu_link(array $variables)
 	}
 	$output = l($title, $element['#href'], $element['#localized_options']);
 	return '<li' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
+}
+
+function bike_bike_preprocess_html(&$variables)
+{
+	if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed')
+	{
+		$variables['theme_hook_suggestions'][] = 'html__embed';
+	}
 }

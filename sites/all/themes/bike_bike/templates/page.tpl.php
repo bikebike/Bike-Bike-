@@ -150,6 +150,14 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 	$conference = node_load(arg(1));
 }
 ?>
+<?php if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed') :?>
+	<?php if ($title): ?>
+    	<h1 id="page-title">
+			<?php print $title; ?>
+		</h1>
+	<?php endif; ?>
+	<?php print render($page['content']); ?>
+<?php else: ?>
 <!-- <?php /*print_r($node);*/ ?> -->
 <div id="page" class="container <?php print $classes; ?>">
 
@@ -304,3 +312,4 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
   <?php endif; ?>
 
 </div>
+<?php endif; ?>

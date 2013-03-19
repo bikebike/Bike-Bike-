@@ -202,12 +202,85 @@ var dumbGlobal;
     	);
 	}
 	
+	function hashChange()
+	{
+		if (location.hash.length > 1)
+		{
+			var url = location.hash.substr(3);
+			$('html').addClass('overlay');
+			if ($('#ajax-form').length < 1)
+			{
+				$('#content').append('<div id="ajax-form"></div>');
+			}
+			$.ajax
+	    	(
+				{
+					url: "/ajax-form",
+					type: "post",
+					data: {url: url},
+					success:
+						function (data)
+						{
+							$('#ajax-form').html(data);
+							$('input#edit-cancel').click
+							(
+								function (event)
+								{
+									location.hash = '';
+									event.preventDefault();
+								}
+							);
+
+							$('#ajax-form-inner').ready
+							(
+								function ()
+								{
+									var top = ($(window).height() - $('#ajax-form-inner').outerHeight()) / 3;
+									if (top > 30)
+									{
+										$('#ajax-form-inner').css({marginTop: top});
+									}
+								}
+							);
+						},
+					error:
+						function ()
+						{
+						}
+	    	    }
+			);
+		}
+		else
+		{
+			$('html').removeClass('overlay');
+			$('#ajax-form').remove();
+		}
+	}
+	
 	Drupal.behaviors.bike_bike = {
 		attach:
 			function (context, settings)
 	    	{
 		    	completeAutocomplete();
 		    	
+		    	$('a.overlay').each
+		    	(
+		    		function ()
+		    		{
+		    			$(this).removeClass('overlay');
+		    			$(this).attr
+		    			(
+	    					'href',
+	    					function (i, href)
+	    					{
+	    						return '#!' + href;
+	    					}
+    					);
+		    		}
+	    		);
+				jQuery(window).hashchange(function () { hashChange(); });
+				hashChange();
+	
 		    	if ($('body.page-conferences-schedule-manage').length > 0)
 		    	{
 			    	$('#edit-events, #edit-workshops').draggable
