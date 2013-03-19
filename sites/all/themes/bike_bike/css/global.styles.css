@@ -128,7 +128,9 @@ h1 {}
 
 h2 {}
 
-h3 {}
+h3 {
+	margin: 0;
+}
 
 h4 {}
 
@@ -2189,6 +2191,10 @@ body.front #content > .block:nth-child(2n) {
   border: 1px solid #c00;
 }
 
+.form-textarea-wrapper textarea {
+	border: 1px solid #DDD;
+}
+
 .form-item label {
   font-weight: normal;
 }
@@ -3344,11 +3350,13 @@ input.username.form-text {
 	background-image: url(../images/input-edit-name.png) !important;
 }
 
-.form-type-date-popup .form-type-textfield input.date-clear {
+.form-type-date-popup .form-type-textfield input[type="text"] {
+/*input.hasDatepicker.date-popup-init {*/
 	background-image: url(../images/input-edit-date.png);
 }
 
-.form-type-date-popup .form-type-textfield + .form-type-textfield input.date-clear {
+.form-type-date-popup .form-type-textfield + .form-type-textfield input[type="text"] {
+/*input.hasTimeEntry.date-popup-init {*/
 	background-image: url(../images/input-edit-time.png);
 }
 
@@ -3476,15 +3484,19 @@ body.create-edit-page #main-content #content form > div > fieldset.form-wrapper 
 	margin: 0px auto;
 }
 
-body.create-edit-page #main-content #content form > div fieldset.form-wrapper > div.fieldset-wrapper {
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper > div.fieldset-wrapper,
+body #main-content #content #block-system-main > form > fieldset.form-wrapper > div.fieldset-wrapper {
 	padding: 10px;
 	box-sizing: border-box;
 	border: 1px solid #DDD;
 	background-color: #FFF;
+	/*padding-top: 50px;*/
+	margin-bottom: 20px;
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset {
 	padding: 0 0 20px 0;
+	position: relative;
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset > div.fieldset-wrapper {
@@ -3515,7 +3527,8 @@ body.create-edit-page.page-node-add-organization #main-content #content form > d
 	margin: 0 auto;
 }
 
-body.create-edit-page #main-content #content form > div fieldset.form-wrapper > legend {
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper > legend,
+body #main-content #content #block-system-main > form > fieldset.form-wrapper > legend {
 	width: 100%;
 	font-family: 'SansSerif';
 	font-size: 14px;
@@ -3546,6 +3559,10 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper.fi
 	margin: 0px auto;
 }
 
+body.create-edit-page #main-content #content form > div > fieldset.form-wrapper + div#edit-field-scheduled-times {
+	display: none;
+}
+
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset:after {
 	border-top: 0;
 	border-bottom: 1px dashed #CCC;
@@ -3553,20 +3570,32 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper.fi
 	bottom: 0;
 }
 
-body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper {
+body #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper {
 	border: 1px solid #DDD;
 	padding: 10px 30px;
 }
 
-body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper > :first-child {
-	margin-top: 40px;
+body #main-content #content #block-system-main > form > fieldset.form-wrapper {
+	padding: 0;
+	margin: 0;
+	border: 0;
 }
 
-body.create-edit-page #main-content #content form > div > fieldset.form-wrapper + fieldset.form-wrapper > legend:before {
+body #main-content #content #block-system-main > form > fieldset.form-wrapper fieldset {
+	border: 0;
+	padding: 10px;
+}
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper.field-group-fieldset .fieldset-wrapper > :first-child {
+	/*margin-top: 40px;*/
+}
+
+body #main-content #content form > div > fieldset.form-wrapper + fieldset.form-wrapper > legend:before {
 	display: none;
 }
 
-body.create-edit-page #main-content #content form > div fieldset.form-wrapper > legend > span {
+body #main-content #content form > div fieldset.form-wrapper > legend > span,
+body #main-content #content #block-system-main > form > fieldset.form-wrapper > legend > span {
 	width: 100%;
 	margin: 0px auto;
 	max-width: 980px;
@@ -3582,7 +3611,20 @@ body.create-edit-page #main-content #content form > div fieldset.form-wrapper > 
 	background-image: none;
 }
 
-body.create-edit-page #main-content #content form > div > div.form-wrapper.form-actions {
+body #main-content #content form#bikebike-scheduler-page > div fieldset.form-wrapper > legend > span {
+	max-width: none;
+	padding: 0 10px;
+	border-left: 0;
+	border-right: 0;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div ul.times fieldset.form-wrapper > legend > span {
+	border-left: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+body #main-content #content form > div > div.form-wrapper.form-actions {
 	text-align: center;
 }
 
@@ -3621,9 +3663,10 @@ body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible >
 	background-color: #F7F7F7;
 }
 
-body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed > legend > .fieldset-legend {
+body #main-content #content form#bikebike-scheduler-page > div fieldset.form-wrapper.collapsible.collapsed > legend > span {
+/*body #main-content #content form / *> div >* / fieldset.form-wrapper.collapsible.collapsed > legend > .fieldset-legend {*/
 	background-image: url(../images/expand.png);
-	border-bottom: 1px solid #DDD;
+	border: 1px solid #DDD;
 }
 
 body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible > legend > .fieldset-legend:hover {
@@ -3631,7 +3674,7 @@ body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible >
 }
 
 body #main-content #content form /*> div >*/ fieldset.form-wrapper.collapsible.collapsed {
-	padding-bottom: 50px;
+	padding-bottom: 10px;
 }
 
 #content a.important-button,
@@ -3844,7 +3887,7 @@ body.create-edit-page #main-content #content form > div fieldset.entityreference
 	border: 0;
 }
 
-body.create-edit-page .defaultSkin td.mceToolbar {
+body .defaultSkin td.mceToolbar {
 	background: #F7F7F7;
 }
 
@@ -3852,174 +3895,175 @@ body#tinymce {
 	background-color: #FFF;/*#F7F7F7;*/
 }
 
-body.create-edit-page table.mceLayout {
+body table.mceLayout {
 	/*border: 2px solid #DDD;*/
 	background: none;
 	border: none;
 }
 
-body.create-edit-page #content table.mceLayout a{
+body #content table.mceLayout a{
 	border: 0;
 }
 
-body.create-edit-page .defaultSkin .mceIcon {
+body .defaultSkin .mceIcon {
 	/*background: none;*/
 	background-color: #FFF;
 	cursor: pointer;
 }
 
-body.create-edit-page .defaultSkin .mceIcon:hover {
+body .defaultSkin .mceIcon:hover {
 	background-color: #EEE;
 }
 
-body.create-edit-page .defaultSkin a.big:hover .mceIcon {
+body .defaultSkin a.big:hover .mceIcon {
 	background-color: #EEE;
 }
 
-body.create-edit-page .defaultSkin table.mceLayout tr.mceFirst td,
-body.create-edit-page .defaultSkin table.mceLayout tr.mceLast td {
+body .defaultSkin table.mceLayout tr.mceFirst td,
+body .defaultSkin table.mceLayout tr.mceLast td {
 	background: none;
 	background-color: #F7F7F7;
 	border: 2px solid #DDD;
 }
-body.create-edit-page .defaultSkin table.mceLayout td.ribbon *,
-body.create-edit-page .defaultSkin table.mceLayout td.mceStatusbar * {
+body .defaultSkin table.mceLayout td.ribbon *,
+body .defaultSkin table.mceLayout td.mceStatusbar * {
 	font-family: 'SansSerif' !important;
 }
 
-body.create-edit-page .defaultSkin .mceIframeContainer {
+body .defaultSkin .mceIframeContainer {
 	/*border-top: 2px solid #DDD;*/
 	border: 2px solid #DDD;
 	border-top: 0;
 	border-bottom: 0;
 }
 
-body.create-edit-page .defaultSkin div.ribbon_tab_div {
+body .defaultSkin div.ribbon_tab_div {
 	background: none;
 	background-color: #FFF;
 	border-radius: 0;
 	border: 2px solid #DDD;
 	position: relative;
-	z-index: 1;
+	z-index: 10;
 }
 
-body.create-edit-page .defaultSkin div.ribbon_group {
+body .defaultSkin div.ribbon_group {
 	background: none;
 	background-color: #F7F7F7;
 	border-radius: 0;
 	border: 2px solid #DDD;
 }
 
-body.create-edit-page .defaultSkin a.big {
+body .defaultSkin a {
 	border-radius: 0;
 	background-color: #FFF;
 	border: 0;
 	box-shadow: 0px 2px 6px #DDD;
 }
 
-body.create-edit-page .defaultSkin a.big * {
+body .defaultSkin a.big * {
 	cursor: pointer;
 }
 
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li {
+body .defaultSkin ul.ribbon_tab_btn li {
 	border-radius: 0;
 	border: 0;
 }
 
-body.create-edit-page .defaultSkin .ribbon a.big:hover {
+body .defaultSkin .ribbon a.big:hover {
 	border: 0;
 	background-color: #EEE;
 }
 
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li {
+body .defaultSkin ul.ribbon_tab_btn li {
 	border-top: 2px solid #DDD;
 	border-right: 2px solid #DDD;
 	border-bottom: 2px solid #DDD;
 	background-color: #F7F7F7;
 }
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li:hover {
+body .defaultSkin ul.ribbon_tab_btn li:hover {
 	background-color: #EEE;
 }
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li.active {
+body .defaultSkin ul.ribbon_tab_btn li.active {
 	background-color: #FFF;
 	border-bottom-color: #FFF;
 	padding-bottom: 2px;
 	top: -2px;
+	border-width: 2px;
 }
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li:first-child {
+body .defaultSkin ul.ribbon_tab_btn li:first-child {
 	border-left: 2px solid #DDD;
 }
 
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li span {
+body .defaultSkin ul.ribbon_tab_btn li span {
 	cursor: pointer;
 }
 
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn li.active span {
+body .defaultSkin ul.ribbon_tab_btn li.active span {
 	cursor: default;
 }
 
-body.create-edit-page .defaultSkin ul.ribbon_tab_btn {
+body .defaultSkin ul.ribbon_tab_btn {
 	position: relative;
 	z-index: 5;
 	top: 3px;
 	background: transparent;
 }
 
-body.create-edit-page .defaultSkin .big span.mce_paste {
+body .defaultSkin .big span.mce_paste {
 	background-image: url(../images/paste.png)	
 }
 
-body.create-edit-page .defaultSkin .big span.mce_image {
+body .defaultSkin .big span.mce_image {
 	background-image: url(../images/image.png)	
 }
-body.create-edit-page .defaultSkin .undo {
+body .defaultSkin .undo {
 	background: url(../images/undo.png) 0px 0px no-repeat;
 	cursor: pointer;
 }
 
-body.create-edit-page .defaultSkin .redo{
+body .defaultSkin .redo{
 	background: url(../images/redo.png) 0px 0px no-repeat;
 	position: relative;
 	left: 5px;
 }
 
-body.create-edit-page .defaultSkin a.big p,
-body.create-edit-page .defaultSkin a.big h1,
-body.create-edit-page .defaultSkin a.big h2,
-body.create-edit-page .defaultSkin a.big h3,
-body.create-edit-page .defaultSkin a.big h4,
-body.create-edit-page .defaultSkin a.big h5,
-body.create-edit-page .defaultSkin a.big h6 {
+body .defaultSkin a.big p,
+body .defaultSkin a.big h1,
+body .defaultSkin a.big h2,
+body .defaultSkin a.big h3,
+body .defaultSkin a.big h4,
+body .defaultSkin a.big h5,
+body .defaultSkin a.big h6 {
 	color: #333;
 }
 
-body.create-edit-page .defaultSkin a.big:hover p,
-body.create-edit-page .defaultSkin a.big:hover h1,
-body.create-edit-page .defaultSkin a.big:hover h2,
-body.create-edit-page .defaultSkin a.big:hover h3,
-body.create-edit-page .defaultSkin a.big:hover h4,
-body.create-edit-page .defaultSkin a.big:hover h5,
-body.create-edit-page .defaultSkin a.big:hover h6 {
+body .defaultSkin a.big:hover p,
+body .defaultSkin a.big:hover h1,
+body .defaultSkin a.big:hover h2,
+body .defaultSkin a.big:hover h3,
+body .defaultSkin a.big:hover h4,
+body .defaultSkin a.big:hover h5,
+body .defaultSkin a.big:hover h6 {
 	background-color: #EEE;
 	background-image: none;
 	color: #666;
 }
 
-body.create-edit-page .defaultSkin a.mceButtonLabeled {
+body .defaultSkin a.mceButtonLabeled {
 	cursor: pointer;
 	background-color: #FFF;
 }
 
-body.create-edit-page .defaultSkin a.mceButtonLabeled > span {
+body .defaultSkin a.mceButtonLabeled > span {
 	cursor: pointer;
 }
 
-body.create-edit-page .defaultSkin a.mceButtonLabeled:hover {
+body .defaultSkin a.mceButtonLabeled:hover {
 	background: none;
 	background-color: #EEE;
 }
 
-body.create-edit-page .defaultSkin a.mceButtonLabeled:hover > span {
+body .defaultSkin a.mceButtonLabeled:hover > span {
 	background-color: #EEE;
 }
 
@@ -4484,7 +4528,7 @@ img.cropbox {
 }
 
 .fieldset-description {
-	height: 30px;
+	/*height: 30px;*/
 }
 
 textarea.text-full.form-textarea {
@@ -4914,6 +4958,7 @@ div.vertical-tabs {
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper {
 	padding: 0;
+	padding-top: 30px;
 }
 
 .vertical-tabs ul.vertical-tabs-list {
@@ -5082,7 +5127,7 @@ body #main-content #content form#bikebike-registration-options-page > div > fiel
 	cursor: move;
 	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
 	z-index: 100;
-	width: 178px !important;
+	width: 198px !important;
 	height: 24px;
 	line-height: 25px;
 	vertical-align: middle;
@@ -5121,8 +5166,8 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 
 #content .schedulable .de-schedule {
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	top: 3px;
+	right: 3px;
 	width: 15px;
 	height: 15px;
 	background-image: url(../images/close.png);
@@ -5268,9 +5313,23 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 }
 
 ul.times .time-slot > .schedulable,
-ul.times .time-slot > .schedulable .fieldset-legend {
+body #main-content #content form > div fieldset.form-wrapper.schedulable > legend > span.fieldset-legend {
 	background-color: #DFD;
 	border-color: #ACA;
+	padding: 0 5px;
+}
+
+body #main-content #content form > div fieldset.form-wrapper.schedulable > legend > span.fieldset-legend {
+	border: 0;
+	border: 1px solid #ACA;
+	padding-top: 0;
+}
+
+body #main-content #content form > div fieldset.form-wrapper.schedulable {
+	padding: 0;
+}
+
+ul.times .time-slot > .schedulable {
 }
 
 .schedulable .ui-icon-gripsmall-diagonal-se {
@@ -5279,7 +5338,7 @@ ul.times .time-slot > .schedulable .fieldset-legend {
 }
 
 ul.times .time-slot > .schedulable.conflict,
-ul.times .time-slot > .schedulable.conflict .fieldset-legend {
+body #main-content #content form > div fieldset.form-wrapper.schedulable.conflict > legend > span.fieldset-legend {
 	background-color: #FDD;
 	border-color: #CAA;
 }
@@ -5290,7 +5349,7 @@ ul.times .time-slot > .schedulable.conflict .fieldset-legend {
 }
 
 ul.times .time-slot > .schedulable.event,
-ul.times .time-slot > .schedulable.event .fieldset-legend {
+body #main-content #content form > div fieldset.form-wrapper.schedulable.event > legend > span.fieldset-legend {
 	background-color: #ADF;
 	border-color: #8AC;
 }
@@ -5301,7 +5360,7 @@ ul.times .time-slot > .schedulable.event .fieldset-legend {
 }
 
 ul.times .time-slot > .schedulable.meal,
-ul.times .time-slot > .schedulable.meal .fieldset-legend {
+body #main-content #content form > div fieldset.form-wrapper.schedulable.meal > legend > span.fieldset-legend {
 	background-color: #FDA;
 	border-color: #DB8;
 }
@@ -5340,10 +5399,11 @@ ul.times .time-slot > .schedulable {
 	background-color: #FFF;
 }
 
-#edit-schedule {
+body #main-content #content form > div > fieldset.form-wrapper#edit-schedule {
 	/*max-height: 600px;*/
 	overflow: auto;
 	background-color: #FFF;
+	border: 1px solid #DDD;
 }
 
 #content #expand-schedule,
@@ -5437,10 +5497,16 @@ body #main-content #content form > div > fieldset#edit-events.form-wrapper:befor
 
 body #main-content #content form > div > fieldset#edit-workshops.form-wrapper > legend > .fieldset-legend {
 	background-color: #DFD;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
 	border-color: #ADA;
 }
 body #main-content #content form > div > fieldset#edit-events.form-wrapper > legend > .fieldset-legend {
 	background-color: #ADF;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
 	border-color: #8AC;
 }
 /*body #main-content #content form > div > fieldset#edit-events.form-wrapper > legend > .fieldset-legend {
@@ -5463,7 +5529,7 @@ body #main-content #content form > div > fieldset#edit-events.form-wrapper > div
 	margin-top: 30px;
 }
 
-#edit-events-meals > legend > .fieldset-legend {
+body #main-content #content form > div fieldset#edit-events-meals.form-wrapper > legend > span {
 	position: relative;
 	background-color: #FDA;
 	display: block;
@@ -5569,10 +5635,22 @@ body #main-content #content form > div > fieldset#edit-schedule.form-wrapper:bef
 body.page-conferences-registration-fields #content,
 #bikebike-registration-options-page,
 #bikebike-schedule-locations-page,
-body.page-conferences-schedule-events #content {
+body.page-conferences-schedule-events #content,
+#bikebike-requests-page {
 	width: 100%;
 	margin: 0 auto;
-	max-width: 980px;	
+	max-width: 980px;
+
+	background-color: #FFF;
+	padding: 10px 30px;
+	border: 1px solid #DDD;
+}
+
+body.page-conferences-registration-fields #content > .block:nth-child(n),
+#bikebike-registration-options-page #content > .block:nth-child(n),
+#bikebike-schedule-locations-page #content > .block:nth-child(n),
+body.page-conferences-schedule-events #content > .block:nth-child(n) {
+	background-color: transparent;
 }
 
 .button-block {
@@ -5729,8 +5807,14 @@ body.not-front .field-type-location a.tabledrag-handle .handle {
     padding:  30px;
 }
 
-#ajax-form-inner.options-dlg {
-	max-width: 480px;
+#ajax-form-inner.options-dlg/*,
+#ajax-form-inner.add-member*/ {
+	max-width: 360px;
+	text-align: center;
+}
+
+#ajax-form-inner.options-dlg #ajax-form-inner-inner {
+	padding: 10px;
 }
 
 #ajax-form-inner.node-page-edit,
@@ -5749,4 +5833,64 @@ html.overlay {
     padding: 10px 10px 5px 10px;
     text-align: center;
     border-bottom: 1px solid #DDD;
+}
+
+#content table td.button > a {
+    padding: 2px 5px 1px 5px;
+    font-size: 14px;
+}
+
+.form-actions {
+	text-align: center;
+	margin: 10px 0 0 0;
+}
+
+#bikebike-options-dlg {
+	font-size: 18px;
+}
+
+#content .field-widget-options-select .ui-multiselect li > strong {
+	display: none;
+}
+
+#content .field-widget-options-select #edit-field-host-organizations-und + .ui-multiselect li {
+	height: 50px;
+	padding: 2px 0 0 2px;
+}
+
+#content .field-widget-options-select .ui-multiselect li > img {
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+#content .field-widget-options-select #edit-field-host-organizations-und + .ui-multiselect .selected li {
+	padding-left: 30px;
+}
+
+#content a.edit-button {
+    display: block;
+    height: 30px;
+    width: 30px;
+    border: 0;
+    background-image: url(../images/node-edit.png);
+    border-radius: 30px;
+    border: 2px solid #AAA;
+}
+#content a.edit-button:hover {
+    background-color: #DDD;
+}
+
+.location fieldset .form-item label {
+	line-height: 20px;
+}
+
+#edit-requests .profile {
+	float: left;
+	margin-right: 20px;
+	clear: both;
+}
+
+body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:before,
+body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:after {
+	display: none;
 }

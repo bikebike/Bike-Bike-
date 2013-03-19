@@ -2,14 +2,14 @@
 
 function bikebike_menu_alter(&$items)
 {
-	$items['entityreference/autocomplete/single/%/%/%'] = array(
+	/*$items['entityreference/autocomplete/single/%/%/%'] = array(
 			'title' => 'Entity Reference Autocomplete',
 			'page callback' => 'bikebike_autocomplete_callback',
 			'page arguments' => array(2, 3, 4, 5),
 			'access callback' => 'entityreference_autocomplete_access_callback',
 			'access arguments' => array(2, 3, 4, 5),
 			'type' => MENU_CALLBACK,
-	);
+	);*/
 	$items['node/add/workshop/%']['access callback'] = 'bikebike_add_workshop_access';
 	$items['node/add/workshop/%']['access arguments'] = array('create', 'workshop', 3);
 	$items['node/add/workshop/%']['title'] = t('Propose a Workshop');
@@ -97,7 +97,7 @@ function bikebike_menu()
 					'page callback' => 'drupal_get_form',
 					'description' => 'Open Registration',
 					//'page arguments' => array(1, true),
-					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, true),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure? Once registration is open, users will be able to register using you registration form. Have you finished compiling the form? (Go to: Registration > Registration Options)', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, true),
 					'access callback' => 'bikebike_registration_openclose_access',
 					'access arguments' => array(1, true),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -108,7 +108,7 @@ function bikebike_menu()
 					'title' => t('Close Registration'),
 					'page callback' => 'drupal_get_form',
 					'description' => 'Open Registration',
-					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure?', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, false),
+					'page arguments' => array('bikebike_options_dlg', array('message' => 'Are you sure? Closing registration will prevent users from registering for this conference.', 'actions' => array(array('name' => 'yes', 'title' => 'Yes', 'action' => 'bikebike_conference_registration_open'), array('name' => 'cancel', 'title' => 'No', 'action' => 'bikebike_add_member_cancel'))), 1, false),
 					//'page arguments' => array(1, false),
 					'access callback' => 'bikebike_registration_openclose_access',
 					'access arguments' => array(1, false),
@@ -268,6 +268,28 @@ function bikebike_menu()
 					'page callback' => 'bikebike_registration_fields_page',
 					'description' => '',
 					'page arguments' => array(1),
+					'access callback' => 'bikebike_conference_access',
+					'access arguments' => array(1),
+					'type' => MENU_VISIBLE_IN_BREADCRUMB,
+					'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+			),
+			'conferences/%node/registration/fields/add' => array
+			(
+					'title' => t('Create Registration Form Field'),
+					'page callback' => 'drupal_get_form',
+					'description' => '',
+					'page arguments' => array('bikebike_registration_field_create_page', 1),
+					'access callback' => 'bikebike_conference_access',
+					'access arguments' => array(1),
+					'type' => MENU_VISIBLE_IN_BREADCRUMB,
+					'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+			),
+			'conferences/%node/registration/fields/edit/%' => array
+			(
+					'title' => t('Create Registration Form Field'),
+					'page callback' => 'drupal_get_form',
+					'description' => '',
+					'page arguments' => array('bikebike_registration_field_create_page', 1, 5),
 					'access callback' => 'bikebike_conference_access',
 					'access arguments' => array(1),
 					'type' => MENU_VISIBLE_IN_BREADCRUMB,

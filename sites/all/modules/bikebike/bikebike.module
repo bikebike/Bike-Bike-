@@ -25,11 +25,6 @@ function bikebike_ajax_form()
 			$form['#action'] = url($url);
 		}
 		$html = drupal_render($form);
-		//$html .= '<!-- '.print_r($url, true).' -->';
-		//$html .= '<!-- '.print_r($menu_item, true).' -->';
-		//$html .= '<!-- '.print_r($menu_item['page_callback'], true).' -->';
-		//$html .= '<!-- '.print_r($menu_item['page_arguments'], true).' -->';
-		//$html .= '<!-- '.print_r($form, true).' -->';
 		$title = '';
 		if (isset($menu_item['title']))
 		{
@@ -137,15 +132,10 @@ function bikebike_options_dlg($form, &$form_state, $options)
 	array_shift($args);
 	$form_state['build_info']['args'] = $args;
 
-	/*$form['debug'] = array
-	(
-		'#type' => 'markup',
-		'#markup' => '<pre>'.print_r($args, true).'</pre>'
-	);*/
-	
+	$form['actions'] = array('#type' => 'actions');
 	foreach ($options['actions'] as $action)
 	{
-		$form[$action['name']] = array
+		$form['actions'][$action['name']] = array
 		(
 			'#type' => 'submit',
 			'#value' => t($action['title']),
@@ -573,14 +563,62 @@ function bikebike_registration_fields_page($node)
 {
 	$items = array();
 	
+	$items['description'] = array
+	(
+		'#type' => 'markup',
+		'#markup' => '<p>'.t('Below is a list of all fields available for use in your registration form. You may edit them or add a new one if none of them are suitable. If a field does not appear on the options page, it may be \'retired\', you may edit and un-retire it.').'</p>'
+	);
+	
 	$view = views_get_view('form_fields');
 	
-	$items['workshops'] = array
+	$items['fields'] = array
 	(
 		'#type' => 'markup',
 		'#markup' => $view->preview('block', array())
 	);
 	return $items;
+}
+
+function bikebike_registration_field_create_page($form, &$form_state)
+{
+	//$nid = $node->nid;
+	$node = $form_state['build_info']['args'][0];
+	$nid = $node->nid;
+	
+	//_bikebike_show_object($nid);
+	
+	module_load_include('inc', 'node', 'node.pages');
+	
+	global $user;
+	
+	if (isset($form_state['build_info']['args'][1]))
+	{
+		$field = node_load($form_state['build_info']['args'][1]);
+	}
+	else
+	{
+		$field = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => 'form_field', 'language' => LANGUAGE_NONE);
+	}
+	$form = node_form($form, $form_state, $field);
+	
+	form_load_include($form_state, 'inc', 'node', 'node.pages');
+
+	$form['conference'] = array
+	(
+		'#type' => 'value',
+		'#value' => $nid
+	);
+	$form['actions']['submit']['#submit'][] = 'bikebike_registration_field_update_submit';
+		
+	return $form;
+}
+
+function bikebike_registration_field_update_submit(&$form, &$form_state)
+{
+	//node_form_submit(&$form, &$form_state);
+	$form_state['redirect'] = 'conferences/'.$form['conference']['#value'].'/registration/fields';
+	//_bikebike_show_object($form_state['redirect']);
+	//die('poop');
 }
 
 function bikebike_registration_options_page($form, &$form_state, $args)
@@ -600,7 +638,7 @@ function bikebike_registration_options_page($form, &$form_state, $args)
 	{
 		if (is_array($field) && isset($field['#type']))
 		{
-			if (!in_array($field_name, array('field_registration_open', 'field_fields')))
+			if (!in_array($field_name, array(/*'field_registration_open', */'field_fields')))
 			{
 				$form[$field_name]['#access'] = FALSE;
 			}
@@ -1411,7 +1449,6 @@ function bikebike_accept_invitation($form, &$form_state)//$type, $nid, $request_
 	global $user;
 	if (!$user)
 	{
-		// TODO: Handle this case, we should probably promt to log in, then redirect here again
 	}
 	else
 	{
@@ -1967,7 +2004,7 @@ function bikebike_scheduler_page($form_state, $args)
 
 	$form['publish'] = array(
 		'#type' => 'submit',
-		'#value' => $node->field_workshops_published[$language][0]['value'] ? t('Unpublish') : t('Publish'),
+		'#value' => $node->field_workshops_published[$language][0]['value'] ? t('Save and Unpublish') : t('Save and Publish'),
 		'#submit' => array('bikebike_scheduler_page_save'),
 		'#attributes' => array('publish' => !($node->field_workshops_published[$language][0]['value']))
 	);
@@ -2202,14 +2239,15 @@ function bikebike_registration_page($form_state, $args)
 	
 	//$form['details'][40]['#default_value'] = array('bed', 'floor');
 	
-	$form['save'] = array(
+	$form['actions'] = array('#type' => 'actions');
+	$form['actions']['save'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save'),
 		'#submit' => array('bikebike_registration_page_save')
 		//'#limit_validation_errors' => array()
 	);
 	
-	$form['cancel'] = array(
+	$form['actions']['cancel'] = array(
 		'#type' => 'submit',
 		'#value' => t('Cancel'),
 		'#submit' => array('bikebike_add_member_cancel'),
@@ -2634,10 +2672,22 @@ function bikebike_add_member($form_state, $args)
 		$form['remove'] = array
 		(
 			'#type' => 'fieldset',
-			'#title' => t('Are you sure you want to be removed as a member of '.$node->title.'?'),
+			//'#title' => t('Are you sure you want to be removed as a member of @organization?', array('@organization' => $node->title)),
 			'#tree' => TRUE
 		);
-		$form['remove']['remove'] = array(
+		$form['remove'] = array
+		(
+			'#type' => 'fieldset',
+			//'#title' => t('Are you sure you want to be removed as a member of @organization?', array('@organization' => $node->title)),
+			'#tree' => TRUE
+		);
+		$form['remove']['remove_p'] = array
+		(
+			'#type' => 'markup',
+			'#markup' => t('Are you sure you want to be removed as a member of @organization?', array('@organization' => $node->title)),
+		);
+		$form['actions'] = array('#type' => 'actions');
+		$form['actions']['remove'] = array(
 			'#type' => 'submit',
 			'#value' => t('Yes'),
 			'#submit' => array('bikebike_add_member_remove'),
@@ -2672,7 +2722,7 @@ function bikebike_add_member($form_state, $args)
 		  	$form['secret']['secret_p'] = array
 		  	(
 		    	'#type' => 'markup',
-		    	'#markup' => '<p>You may automatically add yourself as a member of this organization by completing the following secret.</p>',
+		    	'#markup' => '<p>'.t('You may automatically add yourself as a member of this organization by completing the following secret.').'</p>',
 		  	);
 			$form['secret']['answer'] = array
 			(
@@ -2695,13 +2745,13 @@ function bikebike_add_member($form_state, $args)
 		$form['request'] = array
 		(
 			'#type' => 'fieldset',
-			'#title' => t('Request Current Members to Add You'),
+			//'#title' => t('Request Current Members to Add You'),
 			'#tree' => TRUE
 		);
 		$form['request']['request_p'] = array
 		(
 			'#type' => 'markup',
-			'#markup' => ($type == 'workshop' ? '<p>You may request the current coordinators to add you, any of the current coordinators may accept or deny your request.</p>' : '<p>'.($show_secret ? 'Alternatively, y' : 'Y').'ou may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.</p>'),
+			'#markup' => ($type == 'workshop' ? '<p>'.t('You may request the current coordinators to add you, any of the current coordinators may accept or deny your request.').'</p>' : '<p>'.($show_secret ? t('Alternatively, you may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.') : t('You may make a request to any of the current organizaion members. Once your request is seen, any member of the organization can accept or deny your request.')).'</p>'),
 		);
 		$form['request']['message'] = array(
 			'#title' => t('Message'),
@@ -2709,7 +2759,8 @@ function bikebike_add_member($form_state, $args)
 			'#description' => t('Adding a message is optional but may help to confirm who you are or what your intent is.'),
 			'#default_value' => '',
 		);
-		$form['request']['request'] = array(
+		$form['actions'] = array('#type' => 'actions');
+		$form['actions']['request'] = array(
 			'#type' => 'submit',
 			'#value' => t('Make a Request'),
 			'#submit' => array('bikebike_add_member_request'),
@@ -2921,7 +2972,7 @@ function bikebike_add_member_request($form, &$form_state)
 	$form_state['redirect'] = 'node/'.$nid;
 }
 
-function bikebike_autocomplete_callback($type, $field_name, $entity_type, $bundle_name, $entity_id = '', $string = '')
+/*function bikebike_autocomplete_callback($type, $field_name, $entity_type, $bundle_name, $entity_id = '', $string = '')
 {
 	$field = field_info_field($field_name);
 	$instance = field_info_instance($entity_type, $field_name, $bundle_name);
@@ -3000,7 +3051,7 @@ function bikebike_autocomplete_callback_get_matches($type, $field, $instance, $e
 	}
 
 	drupal_json_output($matches);
-}
+}*/
 
 function bikebike_form_alter(&$form, $form_state, $form_id)
 {
@@ -3039,10 +3090,16 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		global $user;
 		if (!in_array('administrator', array_values($user->roles)))
 		{
-			$host = isset($form['field_host_organizations']['und']) ? $form['field_host_organizations']['und'][0]['target_id']['#entity']->field_host_organizations['und'][0]['target_id'] : null;
-			if ($host)
+			foreach ($form['field_host_organizations']['und']['#options'] as $id => $text)
 			{
-				$host = node_load($host);
+				$host = node_load($id);
+				$img = '';
+				if (isset($host->field_icon['und']))
+				{
+					$img = image_style_url('icon_small', $host->field_icon['und'][0]['uri']);//theme('image_style', array('style_name' => 'icon_small', 'path' => ($host->field_icon ? $host->field_icon['und'][0]['uri'] : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar')));
+					$img = '<strong>'.$img.'</strong>';
+				}
+				$form['field_host_organizations']['und']['#options'][$id] = $img.$text;
 			}
 			$form['field_workshops_published']['#access'] = FALSE;
 
@@ -3051,6 +3108,8 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			$form['field_meal_info']['#access'] = FALSE;
 			$form['field_registration_open']['#access'] = FALSE;
 			$form['field_fields']['#access'] = FALSE;
+			//$form['options']['#access'] = FALSE;
+			unset($form['options']);
 		}
 	}
 	else if ($form_id == 'workshop_node_form')
@@ -3077,7 +3136,15 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	else if ($form_id == 'bikebike_add_member')
 	{
   		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
-	}// else { drupal_set_message($form_id); }
+	}
+	/*else if ($form_id == 'form_field_node_form')
+	{
+		//_bikebike_show_object($form['nid']);
+		/// TODO: scream
+		$form['actions']['submit']['#submit'][] = 'bikebike_registration_field_update_submit';
+	}*/
+		
+	 //else { drupal_set_message($form_id); }
 	//drupal_set_message('<pre>'.print_r($form['field_email_address'], true).'</pre>');
 	
 	if ($form_id == 'workshop_node_form' || $form_id == 'event_node_form')

@@ -437,7 +437,7 @@ function form_fields_field_default_fields() {
         ),
       ),
       'deleted' => '0',
-      'description' => '',
+      'description' => 'If the field is required, the user will be prevented from submitting the form without answering this question.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -514,7 +514,7 @@ function form_fields_field_default_fields() {
         ),
       ),
       'deleted' => '0',
-      'description' => '',
+      'description' => 'You may retire this field if you feel that it is no longer need for yours or anyone else\'s form in the future. It will be hidden from the selection on the registration form page but another user may un-retire it at a later date.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -565,10 +565,12 @@ function form_fields_field_default_fields() {
 3|Maybe');
   t('Field Type');
   t('Help Text');
+  t('If the field is required, the user will be prevented from submitting the form without answering this question.');
   t('Include Other Option');
   t('Options');
   t('Required');
   t('Retired');
+  t('You may retire this field if you feel that it is no longer need for yours or anyone else\'s form in the future. It will be hidden from the selection on the registration form page but another user may un-retire it at a later date.');
 
   return $fields;
 }

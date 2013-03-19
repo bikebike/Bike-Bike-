@@ -204,7 +204,7 @@ var dumbGlobal;
 	
 	function hashChange()
 	{
-		if (location.hash.length > 1)
+		if (location.hash.length > 1 && location.hash.substr(1, 2) == '!/')
 		{
 			var url = location.hash.substr(3);
 			$('html').addClass('overlay');
@@ -262,6 +262,16 @@ var dumbGlobal;
 			function (context, settings)
 	    	{
 		    	completeAutocomplete();
+		    	
+		    	$('#content .field-widget-options-select .ui-multiselect li > strong').each
+		    	(
+		    		function ()
+		    		{
+		    			var src = $(this).html();
+		    			$(this).after('<img src="' + src + '" />');
+		    			$(this).remove();
+		    		}
+		    	);
 		    	
 		    	$('a.overlay').each
 		    	(
@@ -359,7 +369,7 @@ var dumbGlobal;
 			    				if (timeSlot.length > 0)
 			    				{
 			    					dropInto(timeSlot, $(this), false);
-			    					$(this).height((length * 26) - 2);
+			    					$(this).height((length * 26) - 1);
 			    				}
 			    			}
 			    		}

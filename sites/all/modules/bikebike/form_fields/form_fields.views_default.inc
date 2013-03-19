@@ -130,7 +130,7 @@ function form_fields_views_default_views() {
   $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="/node/add/form-field" class="button">Create a new Field</a>';
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="fields/add" class="button">Create a new Field</a>';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -138,6 +138,7 @@ function form_fields_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = 'Label';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_type'] = 'h3';
   /* Field: Content: Field Type */
   $handler->display->display_options['fields']['field_field_type']['id'] = 'field_field_type';
   $handler->display->display_options['fields']['field_field_type']['table'] = 'field_data_field_field_type';
@@ -158,6 +159,7 @@ function form_fields_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
+  $handler->display->display_options['fields']['edit_node']['exclude'] = TRUE;
   $handler->display->display_options['fields']['edit_node']['element_class'] = 'button';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   /* Field: Content: Retired */
@@ -165,10 +167,19 @@ function form_fields_views_default_views() {
   $handler->display->display_options['fields']['field_retired']['table'] = 'field_data_field_retired';
   $handler->display->display_options['fields']['field_retired']['field'] = 'field_retired';
   $handler->display->display_options['fields']['field_retired']['label'] = '';
+  $handler->display->display_options['fields']['field_retired']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_retired']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_retired']['settings'] = array(
     'field_formatter_class' => '',
   );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['nid']['alter']['text'] = '<a href="fields/edit/[nid]" class="edit-button"></a>';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -206,10 +217,11 @@ function form_fields_views_default_views() {
     t('Sort by'),
     t('Asc'),
     t('Desc'),
-    t('<a href="/node/add/form-field" class="button">Create a new Field</a>'),
+    t('<a href="fields/add" class="button">Create a new Field</a>'),
     t('Label'),
     t('Field Type'),
     t('Help Text'),
+    t('<a href="fields/edit/[nid]" class="edit-button"></a>'),
     t('Page'),
     t('Block'),
   );
