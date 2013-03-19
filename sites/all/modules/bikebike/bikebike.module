@@ -40,7 +40,7 @@ function bikebike_ajax_form()
 	die('');
 }
 
-function bikebike_registration_openclose_access($form, &$form_state, $node, $open)
+function bikebike_registration_openclose_access($node, $open)
 {
 	global $user;
 	if (bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW)
