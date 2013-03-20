@@ -155,21 +155,29 @@ function bikebike_schedule_events_page($node)
 		'#markup' => '<p>'.'Coming soon..'.'</p>'
 	);*/
 
-	$items['create'] = array(
-		'#type' => 'link',
-		'#href' => 'node/add/event/'.$node->nid,
-		'#title' => t('Add an Event'),
-		'#attributes' => array('class' => 'important-button'),
-		'#prefix' => '<div class="button-block">',
-		'#suffix' => '</div>'
-	);
+	global $user;
+	
+	$block = 'block';
+	
+	if (_bikebike_is_conference_organizer($user, $node))
+	{
+		$items['create'] = array(
+			'#type' => 'link',
+			'#href' => 'conferences/'.$node->nid.'/schedule/events/add',
+			'#title' => t('Add an Event'),
+			'#attributes' => array('class' => 'important-button'),
+			'#prefix' => '<div class="button-block">',
+			'#suffix' => '</div>'
+		);
+		$block = 'coordinator_block';
+	}
 	
 	$view = views_get_view('events');
 	
 	$items['events'] = array
 	(
 		'#type' => 'markup',
-		'#markup' => $view->preview('block', array())
+		'#markup' => $view->preview($block, array())
 	);
 	
 	return $items;
@@ -569,6 +577,15 @@ function bikebike_registration_fields_page($node)
 		'#markup' => '<p>'.t('Below is a list of all fields available for use in your registration form. You may edit them or add a new one if none of them are suitable. If a field does not appear on the options page, it may be \'retired\', you may edit and un-retire it.').'</p>'
 	);
 	
+	$items['create'] = array(
+		'#type' => 'link',
+		'#href' => 'conferences/'.$node->nid.'/registration/fields/add',
+		'#title' => t('Create a New Field'),
+		'#attributes' => array('class' => 'important-button'),
+		'#prefix' => '<div class="button-block">',
+		'#suffix' => '</div>'
+	);
+	
 	$view = views_get_view('form_fields');
 	
 	$items['fields'] = array
@@ -591,22 +608,35 @@ function bikebike_registration_field_create_page($form, &$form_state)
 	
 	global $user;
 	
-	if (isset($form_state['build_info']['args'][1]))
+	$type = $form_state['build_info']['args'][1];
+	
+	if (isset($form_state['build_info']['args'][2]))
 	{
-		$field = node_load($form_state['build_info']['args'][1]);
+		$field = node_load($form_state['build_info']['args'][2]);
 	}
 	else
 	{
-		$field = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => 'form_field', 'language' => LANGUAGE_NONE);
+		$field = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => LANGUAGE_NONE);
 	}
 	$form = node_form($form, $form_state, $field);
 	
 	form_load_include($form_state, 'inc', 'node', 'node.pages');
+	
+	$form['field_lid']['#access'] = FALSE;
+	$form['field_scheduled_time']['#access'] = FALSE;
+	$form['field_conference']['#access'] = FALSE;
+	$form['field_conference']['und'][0]['nid']['#default_value'] = $node->nid;
+	//_bikebike_show_object($form['field_conference']['und']);//['#default_value']);
 
 	$form['conference'] = array
 	(
 		'#type' => 'value',
 		'#value' => $nid
+	);
+	$form['type'] = array
+	(
+		'#type' => 'value',
+		'#value' => $type
 	);
 	$form['actions']['submit']['#submit'][] = 'bikebike_registration_field_update_submit';
 		
@@ -615,10 +645,15 @@ function bikebike_registration_field_create_page($form, &$form_state)
 
 function bikebike_registration_field_update_submit(&$form, &$form_state)
 {
-	//node_form_submit(&$form, &$form_state);
-	$form_state['redirect'] = 'conferences/'.$form['conference']['#value'].'/registration/fields';
-	//_bikebike_show_object($form_state['redirect']);
-	//die('poop');
+	switch ($form['type']['#value'])
+	{
+		case 'form_field':
+			$form_state['redirect'] = 'conferences/'.$form['conference']['#value'].'/registration/fields';
+			break;
+		case 'event';
+			$form_state['redirect'] = 'conferences/'.$form['conference']['#value'].'/schedule/events';
+			break;
+	}
 }
 
 function bikebike_registration_options_page($form, &$form_state, $args)
@@ -696,7 +731,8 @@ function bikebike_schedule_locations_page($form, &$form_state, $args)
 		}
 	}
 	
-	$host = isset($form['field_host_organizations']['und']) ? $form['field_host_organizations']['und'][0]['target_id']['#entity']->field_host_organizations['und'][0]['target_id'] : null;
+	//_bikebike_show_object($form['field_host_organizations']['und']['#entity']->field_host_organizations['und']);
+	$host = isset($form['field_host_organizations']['und']) ? $form['field_host_organizations']['und']['#entity']->field_host_organizations['und'][0]['target_id'] : null;
 	if ($host)
 	{
 		$host = node_load($host);
@@ -722,6 +758,11 @@ function bikebike_schedule_locations_page($form, &$form_state, $args)
 				$form['field_locations']['und'][$index]['#collapsed'] = FALSE;
 			}
 		}
+		//_bikebike_show_object($form['field_locations']['und']);
+		//foreach ($value['#location_settings']['form']['fields'] as $name => $data)
+		//{
+			//$form['field_locations']['und'][$index]
+		//}
 	}
 	
 	form_load_include($form_state, 'inc', 'node', 'node.pages');
@@ -3392,6 +3433,8 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 		case 'conferences/%/schedule/manage':
 		case 'conferences/%/schedule/locations':
 		case 'conferences/%/schedule/events':
+		case 'conferences/%/schedule/events/add':
+		case 'conferences/%/schedule/events/edit/%':
 			$node = $router_item['page_arguments'][is_object($router_item['page_arguments'][0]) ? 0 : 1];
 			$add_to_array[t('Conference')] = 'node/'.$node->nid.'/view';
 			$add_to_array[] = 'conferences/'.$node->nid.'/schedule';
@@ -3408,6 +3451,8 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 		case 'conferences/%/registration':
 		case 'conferences/%/registration/manage':
 		case 'conferences/%/registration/fields':
+		case 'conferences/%/registration/fields/add':
+		case 'conferences/%/registration/fields/edit/%':
 		case 'conferences/%/registration/registrations':
 			//_bikebike_show_object($router_item['page_arguments']);
 			$node = $router_item['page_arguments'][is_object($router_item['page_arguments'][0]) ? 0 : 1];
@@ -3522,12 +3567,16 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 				case 'conferences/%/registration':
 				case 'conferences/%/registration/manage':
 				case 'conferences/%/registration/fields':
+				case 'conferences/%/registration/fields/add':
+				case 'conferences/%/registration/fields/edit/%':
 				case 'conferences/%/registration/registrations':
 				case 'organizations/%/members':
 				case 'conferences/%/schedule':
 				case 'conferences/%/schedule/manage':
 				case 'conferences/%/schedule/locations':
 				case 'conferences/%/schedule/events':
+				case 'conferences/%/schedule/events/add':
+				case 'conferences/%/schedule/events/edit/%':
 				case 'user/%':
 				case 'user/%/edit':
 					$id = str_replace('/', '-', preg_replace('/\/(%)|(\d+)/', '', $tab['#link']['path']));

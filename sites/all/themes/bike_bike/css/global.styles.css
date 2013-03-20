@@ -2230,7 +2230,7 @@ body.front #content > .block:nth-child(2n) {
  * Define consistent borders
  */
 fieldset {
-  border: 1px solid #ccc;
+  border: 0;/*1px solid #ccc;*/
 }
 
 /*
@@ -3388,11 +3388,13 @@ input#edit-conf-mail {
 	background-image: url(../images/input-edit-org-name.png);
 }
 
+fieldset.location input[type="text"][id$="-street"],
 input#edit-field-location-und-0-street {
 	background-image: url(../images/input-edit-street.png);
 }
 
-input#edit-field-location-und-0-city {
+input#edit-field-location-und-0-city,
+fieldset.location input[type="text"][id$="-city"] {
 	background-image: url(../images/input-edit-city.png);
 }
 
@@ -3400,14 +3402,17 @@ input.location_auto_province {
 	background-image: url(../images/input-edit-state.png);
 }
 
+fieldset.location input[type="text"][id$="-postal-code"],
 input#edit-field-location-und-0-postal-code {
 	background-image: url(../images/input-edit-postalcode.png);
 }
 
+fieldset.location input[type="text"][id$="-phone"],
 input#edit-field-location-und-0-phone {
 	background-image: url(../images/input-edit-phone.png);
 }
 
+fieldset.location input[type="text"][id$="-fax"],
 input#edit-field-location-und-0-fax {
 	background-image: url(../images/input-edit-fax.png);
 }
@@ -3622,6 +3627,7 @@ body #main-content #content form#bikebike-scheduler-page > div ul.times fieldset
 	border-left: 0;
 	border-right: 0;
 	border-bottom: 0;
+	padding: 0;
 }
 
 body #main-content #content form > div > div.form-wrapper.form-actions {
@@ -3777,7 +3783,8 @@ html.js input.form-autocomplete {
 	background-origin: content-box;
 }
 
-html.js .form-item-field-location-und-0-province input.form-autocomplete {
+html.js .form-item-field-location-und-0-province input.form-autocomplete,
+html.js input.location_auto_province.form-autocomplete {
 	background-image: url(../images/input-edit-state.png), url(../images/autocomplete.png);
 }
 html.js .form-item-field-location-und-0-province input.throbbing {
@@ -5127,16 +5134,17 @@ body #main-content #content form#bikebike-registration-options-page > div > fiel
 	cursor: move;
 	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
 	z-index: 100;
-	width: 198px !important;
+	width: 178px !important;
 	height: 24px;
 	line-height: 25px;
 	vertical-align: middle;
 	position: relative;
 }
 
-.schedulable.scheduled-item {
+ul.times .time-slot > .schedulable.scheduled-item {
 	cursor: pointer;
 	overflow: hidden;
+	padding: 0 10px;
 }
 
 .schedulable.conflict {
@@ -5313,6 +5321,7 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 }
 
 ul.times .time-slot > .schedulable,
+body #main-content #content form > div fieldset.form-wrapper.schedulable,
 body #main-content #content form > div fieldset.form-wrapper.schedulable > legend > span.fieldset-legend {
 	background-color: #DFD;
 	border-color: #ACA;
@@ -5321,12 +5330,16 @@ body #main-content #content form > div fieldset.form-wrapper.schedulable > legen
 
 body #main-content #content form > div fieldset.form-wrapper.schedulable > legend > span.fieldset-legend {
 	border: 0;
-	border: 1px solid #ACA;
+	border-top: 1px solid #ACA;
 	padding-top: 0;
 }
 
-body #main-content #content form > div fieldset.form-wrapper.schedulable {
+body #main-content #content form#bikebike-scheduler-page > div fieldset.form-wrapper.schedulable > legend > span {
 	padding: 0;
+}
+
+body #main-content #content form > div fieldset.form-wrapper.schedulable {
+	padding: 0 10px;
 }
 
 ul.times .time-slot > .schedulable {
@@ -5338,6 +5351,7 @@ ul.times .time-slot > .schedulable {
 }
 
 ul.times .time-slot > .schedulable.conflict,
+body #main-content #content form > div fieldset.form-wrapper.schedulable.conflict,
 body #main-content #content form > div fieldset.form-wrapper.schedulable.conflict > legend > span.fieldset-legend {
 	background-color: #FDD;
 	border-color: #CAA;
@@ -5349,6 +5363,7 @@ body #main-content #content form > div fieldset.form-wrapper.schedulable.conflic
 }
 
 ul.times .time-slot > .schedulable.event,
+body #main-content #content form > div fieldset.form-wrapper.schedulable.event,
 body #main-content #content form > div fieldset.form-wrapper.schedulable.event > legend > span.fieldset-legend {
 	background-color: #ADF;
 	border-color: #8AC;
@@ -5360,6 +5375,7 @@ body #main-content #content form > div fieldset.form-wrapper.schedulable.event >
 }
 
 ul.times .time-slot > .schedulable.meal,
+body #main-content #content form > div fieldset.form-wrapper.schedulable.meal,
 body #main-content #content form > div fieldset.form-wrapper.schedulable.meal > legend > span.fieldset-legend {
 	background-color: #FDA;
 	border-color: #DB8;
@@ -5636,7 +5652,8 @@ body.page-conferences-registration-fields #content,
 #bikebike-registration-options-page,
 #bikebike-schedule-locations-page,
 body.page-conferences-schedule-events #content,
-#bikebike-requests-page {
+#bikebike-requests-page,
+body.page-conferences-workshops #content {
 	width: 100%;
 	margin: 0 auto;
 	max-width: 980px;
@@ -5644,13 +5661,64 @@ body.page-conferences-schedule-events #content,
 	background-color: #FFF;
 	padding: 10px 30px;
 	border: 1px solid #DDD;
+	margin-bottom: 30px;
 }
 
 body.page-conferences-registration-fields #content > .block:nth-child(n),
 #bikebike-registration-options-page #content > .block:nth-child(n),
 #bikebike-schedule-locations-page #content > .block:nth-child(n),
-body.page-conferences-schedule-events #content > .block:nth-child(n) {
+body.page-conferences-schedule-events #content > .block:nth-child(n),
+body.page-conferences-workshops #content > .block:nth-child(n) {
 	background-color: transparent;
+}
+
+body.page-conferences-workshops #content .view-workshops > .view-content > .view-grouping > .view-grouping-content > .item-list > h3,
+body.page-conferences-schedule-events #content .view-events .views-field.views-field-title {
+	border: 1px solid #DDD;
+	padding: 5px 10px 3px 10px;
+	background-color: #EEE;
+	border-bottom: 0;
+}
+
+body.page-conferences-workshops #content .view-workshops > .view-content > .view-grouping > .view-grouping-content > .item-list > ul,
+body.page-conferences-schedule-events #content .view-events .views-field.views-field-body {
+	border: 1px solid #DDD;
+	padding: 5px 10px 3px 10px;
+	background-color: #F7F7F7;
+	margin-bottom: 10px;
+}
+
+body.page-conferences-workshops #content .view-workshops > .view-content > .view-grouping > .view-grouping-content > .item-list > ul > li {
+	list-style: none;
+	margin: 0;
+}
+
+body.page-conferences-workshops #content .view-workshops .views-field-field-presentation-style > h3,
+body.page-conferences-workshops #content .view-workshops .views-field-field-presentation-style > .field-content {
+	display: inline-block;
+}
+body.page-conferences-workshops #content .view-workshops .views-field-field-coordinators {
+	float: right;
+	max-width: 140px;
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	margin-left: 10px;
+}
+
+body.page-conferences-workshops #content .view-workshops .views-field-body {
+	overflow: auto;
+}
+
+body.page-conferences-workshops #content .view-workshops .views-field-field-coordinators .views-label {
+    background-color: #EEE;
+    display: block;
+    font-family: 'SansSerif', sans-serif;
+    padding: 0px 5px;
+}
+
+body.page-conferences-workshops #content .view-workshops .views-field-field-coordinators ul > li {
+	margin: 0;
+	padding: 10px 10px 0 10px;
 }
 
 .button-block {
@@ -5869,12 +5937,14 @@ html.overlay {
 
 #content a.edit-button {
     display: block;
-    height: 30px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
     border: 0;
     background-image: url(../images/node-edit.png);
-    border-radius: 30px;
+    border-radius: 35px;
     border: 2px solid #AAA;
+	float: right;
+	margin: 3px;
 }
 #content a.edit-button:hover {
     background-color: #DDD;

@@ -30,21 +30,22 @@ var dumbGlobal;
 		//console.log('validating...');
 		var li = $(item).closest('li');
 		var liNext = li;
-		var height = $(item).height() / 26;
+		var height = Math.round($(item).height() / 26.0);
 		for (var i = 1; i < height; i++)
 		{
 			liNext = liNext.next();
 			if (liNext.length < 1 || !liNext.is(':visible') || !liNext.hasClass('available'))
 			{
-				$(item).height((i * 26) - 2);
+				$(item).height((i * 26) - 1);
 				return;
 			}
 			if (liNext.find('.ui-draggable').length > 0)
 			{
-				$(item).height((i * 26) - 2);
+				$(item).height((i * 26) - 1);
 				return;
 			}
 		}
+		$(item).height((height * 26) - 1);
 	}
 	
 	function validateDroppables(validateWorkshopConflicts)

@@ -125,12 +125,6 @@ function form_fields_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Footer: Global: Unfiltered text */
-  $handler->display->display_options['footer']['area_text_custom']['id'] = 'area_text_custom';
-  $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
-  $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
-  $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="fields/add" class="button">Create a new Field</a>';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -217,7 +211,6 @@ function form_fields_views_default_views() {
     t('Sort by'),
     t('Asc'),
     t('Desc'),
-    t('<a href="fields/add" class="button">Create a new Field</a>'),
     t('Label'),
     t('Field Type'),
     t('Help Text'),

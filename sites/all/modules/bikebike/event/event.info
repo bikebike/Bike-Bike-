@@ -1,6 +1,7 @@
 name = Event
 core = 7.x
 package = Bike!Bike!
+php = 5.2.4
 dependencies[] = date
 dependencies[] = features
 dependencies[] = node

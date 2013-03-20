@@ -81,13 +81,13 @@ function event_field_default_fields() {
       'settings' => array(
         'better_formats' => array(
           'allowed_formats' => array(
-            'css_code' => 'css_code',
-            'filtered_html' => 'filtered_html',
+            'css_code' => 0,
+            'filtered_html' => 0,
             'full_html' => 'full_html',
-            'php_code' => 'php_code',
-            'plain_text' => 'plain_text',
+            'php_code' => 0,
+            'plain_text' => 0,
           ),
-          'allowed_formats_toggle' => 0,
+          'allowed_formats_toggle' => 1,
           'default_order_toggle' => 0,
           'default_order_wrapper' => array(
             'formats' => array(

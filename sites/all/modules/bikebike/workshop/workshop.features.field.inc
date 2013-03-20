@@ -155,8 +155,12 @@ function workshop_field_default_fields() {
           'conference' => 'conference',
           'conference_location' => 0,
           'conference_registration' => 0,
+          'event' => 0,
+          'form_field' => 0,
           'organization' => 0,
           'page' => 0,
+          'registration_form' => 0,
+          'request' => 0,
           'workshop' => 0,
         ),
         'view' => array(
