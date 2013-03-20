@@ -2757,13 +2757,13 @@ function bikebike_add_member($form_state, $args)
 			$form['secret'] = array
 			(
 				'#type' => 'fieldset',
-				'#title' => t('Complete This Organization\'s Secret'),
+				//'#title' => t('Complete This Organization\'s Secret'),
 				'#tree' => TRUE
 			);
 		  	$form['secret']['secret_p'] = array
 		  	(
 		    	'#type' => 'markup',
-		    	'#markup' => '<p>'.t('You may automatically add yourself as a member of this organization by completing the following secret.').'</p>',
+		    	'#markup' => '<p>'.t('You may immediately add yourself as a member of this organization by completing the following secret.').'</p>',
 		  	);
 			$form['secret']['answer'] = array
 			(
@@ -3408,6 +3408,7 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 					break;
 				case 'workshop':
 					$conference = $node->field_conference['und'][0]['nid'];
+					$add_to_array[] = 'conferences/'.$conference.'/workshops';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/add-coordinator';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/remove-coordinator';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/cancel-request';

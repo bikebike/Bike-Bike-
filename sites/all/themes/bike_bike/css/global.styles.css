@@ -1062,7 +1062,7 @@ body.front ul.menu li a {
 	position: absolute;
 	width: 100%;
 	height: 0;
-	z-index: 11;
+	z-index: 12;
 	margin: 0;
 	top: 0px;
 }
@@ -5961,6 +5961,7 @@ html.overlay {
 }
 
 body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:before,
-body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:after {
+body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:after,
+body #main-content #content #ajax-form form > div > fieldset.form-wrapper:before {
 	display: none;
 }
