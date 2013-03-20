@@ -2192,7 +2192,7 @@ body.front #content > .block:nth-child(2n) {
 }
 
 .form-textarea-wrapper textarea {
-	border: 1px solid #DDD;
+	border: 2px solid #DDD;
 }
 
 .form-item label {
@@ -5652,8 +5652,10 @@ body.page-conferences-registration-fields #content,
 #bikebike-registration-options-page,
 #bikebike-schedule-locations-page,
 body.page-conferences-schedule-events #content,
-#bikebike-requests-page,
-body.page-conferences-workshops #content {
+/*#bikebike-requests-page,*/
+body.page-conferences-workshops #content,
+body.node-type-workshop #content,
+body.node-type-event #content {
 	width: 100%;
 	margin: 0 auto;
 	max-width: 980px;
@@ -5668,7 +5670,9 @@ body.page-conferences-registration-fields #content > .block:nth-child(n),
 #bikebike-registration-options-page #content > .block:nth-child(n),
 #bikebike-schedule-locations-page #content > .block:nth-child(n),
 body.page-conferences-schedule-events #content > .block:nth-child(n),
-body.page-conferences-workshops #content > .block:nth-child(n) {
+body.page-conferences-workshops #content > .block:nth-child(n),
+body.node-type-workshop #content > .block:nth-child(n),
+body.node-type-event #content > .block:nth-child(n) {
 	background-color: transparent;
 }
 
@@ -5964,4 +5968,34 @@ body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-
 body #main-content #content #ajax-form form > div > fieldset.form-wrapper:first-child:after,
 body #main-content #content #ajax-form form > div > fieldset.form-wrapper:before {
 	display: none;
+}
+
+input#edit-invitations-cancelinvitations {
+	display: block;
+	clear: both;
+}
+
+input#edit-invitations-members > .form-item {
+	position: relative;
+}
+
+#bikebike-requests-page .form-checkboxes > .form-item {
+	display: inline-block;
+}
+
+#bikebike-requests-page .form-checkboxes > .form-item > input[type="checkbox"] {
+    width: 0;
+}
+
+#bikebike-requests-page .form-checkboxes > .form-item > input[type="checkbox"] + label {
+	position: relative;
+	margin: 0;
+}
+
+#bikebike-requests-page .form-checkboxes > .form-item > input[type="checkbox"] + label:before {
+	position: absolute;
+	top: -100px;
+	left: auto;
+	z-index: 1;
+	right: 1px;
 }

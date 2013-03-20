@@ -58,7 +58,14 @@ function bikebike_organization_cancel_request_access($node)
 function bikebike_organization_add_member_access($node)
 {
 	global $user;
-	return !bikebike_organization_cancel_request_access($node) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW;
+	return !bikebike_organization_cancel_request_access($node) && !bikebike_organization_accept_invitation_access($node) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW;
+}
+
+function bikebike_organization_accept_invitation_access($node)
+{
+	global $user;
+	//_bikebike_show_object(bikebike_create_request_exists($node, $user, true) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW);
+	return bikebike_create_request_exists($node, $user, true) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW;
 }
 
 function bikebike_organization_remove_member_access($node)
@@ -679,6 +686,8 @@ function bikebike_registration_options_page($form, &$form_state, $args)
 			}
 		}
 	}
+	
+	unset($form['field_fields']['und']['#title']);
 	
 	form_load_include($form_state, 'inc', 'node', 'node.pages');
 
@@ -1482,8 +1491,10 @@ function bikebike_get_invitation($node, $email)
 
 function bikebike_accept_invitation($form, &$form_state)//$type, $nid, $request_title, $do_accept)
 {
+	//_bikebike_show_object($type = $form_state['build_info']['args']);
 	$type = $form_state['build_info']['args'][0];
 	$nid = $form_state['build_info']['args'][1];
+	//$invite_id = $form_state['build_info']['args'][2];
 	$request_title = $form_state['build_info']['args'][2];
 	$do_accept = $form_state['build_info']['args'][3];
 	
@@ -1493,12 +1504,25 @@ function bikebike_accept_invitation($form, &$form_state)//$type, $nid, $request_
 	}
 	else
 	{
-		$node = $nid; $nid = $node->nid;//node_load($nid);
-		$invitation = bikebike_get_invitation($node, $user->mail);
-		$invite_node = $invitation ? node_load($invitation->field_node['und'][0]['nid']) : null;
-		if (!$invitation || $type != $invite_node->type || $invitation->title !== $request_title)
+		if (is_object($nid))
 		{
-			drupal_set_message('Invitation does not exist', 'error');
+			$node = $nid;
+			$nid = $node->nid;
+		}
+		else
+		{
+			$node = node_load($nid);
+		}
+		//$invitation = node_load($nid);//
+		$invitation = bikebike_get_invitation($node, $user->mail);
+		//$invite_node = $invitation ? node_load($invitation->field_node['und'][0]['nid']) : null;
+		if (!$invitation || $type != $node->type || $invitation->title !== $request_title)
+		{
+			_bikebike_show_object($invitation);
+			_bikebike_show_object($type);
+			_bikebike_show_object($request_title);
+			_bikebike_show_object($node->type);
+			drupal_set_message(t('Invitation does not exist'), 'error');
 		}
 		else
 		{
@@ -1524,11 +1548,11 @@ function bikebike_accept_invitation($form, &$form_state)//$type, $nid, $request_
 						}
 						break;
 				}
-				drupal_set_message('Succesfully added as a '.($type == 'organization' ? 'member' : 'coordinator').' of '.$node->title);
+				drupal_set_message(t('Succesfully added as a '.($type == 'organization' ? 'member' : 'coordinator').' of @orgOrWorkshop', array('@orgOrWorkshop' => $node->title)));
 			}
 			else
 			{
-				drupal_set_message('You have rejected your invitation.');
+				drupal_set_message(t('You have rejected your invitation.'));
 			}
 			$invitation->field_state['und'][0]['value'] = ($do_accept ? 1 : -1);
 			node_save($invitation);
@@ -2917,12 +2941,12 @@ function bikebike_create_request($node, $message, $email = null, $is_invite = fa
 	node_save($request);
 }
 
-function bikebike_request_query($node, $user)
+function bikebike_request_query($node, $user, $invite = false)
 {
 	$nid = is_object($node) ? $node->nid : $node;
 	$email = is_object($user) ? $user->mail : $user;
 	
-	$params = array('nid' => $nid, 'email' => $email);
+	$params = array('nid' => $nid, 'email' => $email, 'is_invite' => $invite ? 1 : 0);
 	if (!$email)
 	{
 		unset($params['email']);
@@ -2952,7 +2976,7 @@ function bikebike_request_query($node, $user)
 			WHERE
 				type = 'request'
 				AND
-				invitation.field_invitation_value = 0
+				invitation.field_invitation_value = :is_invite
 				AND
 				n.field_node_nid = :nid" . ($email ? "
 				AND
@@ -2970,9 +2994,9 @@ function _bikebike_request_count($node)
 	return bikebike_request_query($node, null)->rowCount();
 }
 
-function bikebike_create_request_exists($node, $user)
+function bikebike_create_request_exists($node, $user, $invite = false)
 {
-	return bikebike_request_query($node, $user)->rowCount() > 0;
+	return bikebike_request_query($node, $user, $invite)->rowCount() > 0;
 }
 
 function bikebike_cancel_request($form, &$form_state, $node = null)
@@ -3391,6 +3415,8 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 					$add_to_array[] = 'organizations/'.$node->nid.'/add-member';
 					$add_to_array[] = 'organizations/'.$node->nid.'/remove-member';
 					$add_to_array[] = 'organizations/'.$node->nid.'/cancel-request';
+					$add_to_array[] = 'organizations/'.$node->nid.'/accept-invitation/'.$node->title;
+					$add_to_array[] = 'organizations/'.$node->nid.'/reject-invitation/'.$node->title;
 					if (node_access('update', $node) == NODE_ACCESS_ALLOW)
 					{
 						$notify = '';
@@ -3412,6 +3438,12 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/add-coordinator';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/remove-coordinator';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/cancel-request';
+					global $user;
+					if ($invite = bikebike_get_invitation($node, $user->mail))
+					{
+						$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/accept-invitation/'.$invite->title;
+						$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/reject-invitation/'.$invite->title;
+					}
 					if (node_access('update', $node) == NODE_ACCESS_ALLOW)
 					{
 						$notify = '';
@@ -3525,7 +3557,7 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'organizations-remove-member' => 'node-delete',
 			'organizations-cancel-request' => 'node-delete',
 			'conferences-workshops-cancel-request' => 'node-delete',
-			'conferences-workshops-remove-member' => 'node-delete',
+			'conferences-workshops-remove-coordinator' => 'node-delete',
 			'conferences-reject-invitation' => 'node-delete',
 			'conferences-workshops-reject-invitation' => 'node-delete',
 			'organizations-add-member' => 'node-add',

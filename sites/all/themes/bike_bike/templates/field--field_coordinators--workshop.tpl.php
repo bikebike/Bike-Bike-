@@ -26,7 +26,7 @@
       </div>
     <?php endforeach; ?>
   </div>
-  <?php if (user_is_logged_in()): ?>
+  <?php /*if (user_is_logged_in()): ?>
   	<div class="button-container">
   	<?php if ($is_coordinator): ?>
 		<a href="<?php print $element['#object']->nid.'/remove-coordinator/'; ?>" class="important-button" id="remove-me-as-coordinator">Remove Me</a>
@@ -55,4 +55,4 @@
 			print $view->preview('invitations', $args);
 			?>
 </section>
-<?php endif; ?>
+<?php endif;*/ ?>

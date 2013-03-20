@@ -60,6 +60,7 @@ if (arg(1) == 'add')
 {
 	$classes .= ' create-page create-edit-page';
 }
+$classes = preg_replace('/(\s)node\-type\-(workshop|event)(\s)/', '$0node-type-conference ', $classes);
 
 ?><!DOCTYPE html>
 <!--[if IEMobile 7]><html class="iem7"<?php print $html_attributes; ?>><![endif]-->
