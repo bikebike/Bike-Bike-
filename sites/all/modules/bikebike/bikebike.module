@@ -1063,6 +1063,34 @@ function _bikebike_is_current_conference_organizer($user)
 	/// TODO: Yup...
 }
 
+function _bikebike_get_current_conference()
+{
+	$nid = db_query(
+	"
+		SELECT
+			node.nid
+		FROM
+			node
+			JOIN
+				field_data_field_date as conf_date
+			ON
+				conf_date.entity_id = node.nid
+			JOIN
+				field_data_field_conference_type as conf_type
+			ON
+				conf_type.entity_id = node.nid
+		WHERE
+			type = 'conference'
+			AND
+			conf_type.field_conference_type_tid = 4
+		ORDER BY
+			conf_date.field_date_value DESC
+		LIMIT
+			1"
+	)->fetchField();
+	return node_load($nid);
+}
+
 function _bikebike_is_conference_organizer($user, $conference)
 {
 	foreach ((isset($conference->field_host_organizations[$conference->language]) ? $conference->field_host_organizations[$conference->language] : array()) as $org)
@@ -3173,7 +3201,7 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			$form['field_meal_info']['#access'] = FALSE;
 			$form['field_registration_open']['#access'] = FALSE;
 			$form['field_fields']['#access'] = FALSE;
-			//$form['options']['#access'] = FALSE;
+			//$form['field_scheduled_times']['#access'] = FALSE;
 			unset($form['options']);
 		}
 	}
@@ -3399,14 +3427,30 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 	global $user;
 	$add_to_array = array();
 	//_bikebike_show_object($_GET['q']);
+	//_bikebike_show_object($router_item);
+	//_bikebike_show_object(drupal_is_front_page());
 	switch ($root_path)
 	{
+		//case '':
+		//	$node = _bikebike_get_current_conference();
 		case 'node/%':
 		case 'node/%/edit':
-			$node = $router_item['page_arguments'][0];
+			$node = drupal_is_front_page() ? _bikebike_get_current_conference() : $router_item['page_arguments'][0];
 			switch ($node->type)
 			{
 				case 'conference':
+					if (drupal_is_front_page())
+					{
+						$item = menu_get_item('node/'.$node->nid);
+						//$data['tabs'][0]['output'][0]['#link']['path'] = 'node/'.$node->nid;
+						//$data['tabs'][0]['output'][0]['#link']['active'] = 0;
+						$item['title'] = t('View');
+						$data['tabs'][0]['output'][0] = array(
+								'#theme' => 'menu_local_action',
+								'#link' => $item,
+						);
+						//_bikebike_show_object($data['tabs'][0]['output'][0]['#link']);
+					}
 					$add_to_array[_bikebike_is_conference_organizer($user, $node) ? t('Registration') : (_bikebike_get_registation($user->uid, $node->nid) ? t('My Registration') : t('Register'))] = 'conferences/'.$node->nid.'/registration';
 					$add_to_array[] = 'conferences/'.$node->nid.'/workshops';
 					$add_to_array[] = 'conferences/'.$node->nid.'/schedule';
@@ -3459,6 +3503,14 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 						$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/members';
 					}
 					//_bikebike_show_object($add_to_array);
+					break;
+				case 'page':
+					switch (drupal_get_path_alias())
+					{
+						case 'organizations':
+							drupal_add_js('jQuery(document).ready(function (){initializeMap("#block-views-org-map-block .view-content");});', 'inline');
+							break;
+					}
 					break;
 			}
 			break;
