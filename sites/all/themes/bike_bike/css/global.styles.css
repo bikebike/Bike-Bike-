@@ -2493,6 +2493,10 @@ div.messages {
 	text-align: center;
 }
 
+div.messages pre {
+	text-align: left;
+}
+
 /*div.messages:before {
     content: '';
     display: block;
@@ -2515,8 +2519,9 @@ div.warning:before {
 }*/
 
 div.messages ul {
-  margin-top: 0;
-  margin-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	text-align: left;
 }
 
 div.status {
@@ -2558,7 +2563,7 @@ tr.error*/ {
 
 #messages {
     position: relative;
-    top: -7px;
+    top: -6px;
     /*width: 100%;
     max-width: 980px;
     margin: 0 auto 30px auto;*/
@@ -4717,6 +4722,10 @@ textarea.text-full.form-textarea {
 	background: none;
 	background-color: #EEE;
 	position: relative;
+}
+
+.resizable-textarea > textarea:[style*="display: none"] + .grippie {
+	display: none;
 }
 
 .resizable-textarea .grippie:before {

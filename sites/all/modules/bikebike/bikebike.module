@@ -116,7 +116,7 @@ function bikebike_conference_registration_open($form, &$form_state)//$reg, $do_o
 	}
 	else
 	{
-		$reg->field_registration_open[$reg->language][0]['value'] = ($do_open ? 1 : 0);
+		$reg->field_registration_open['und'][0]['value'] = ($do_open ? 1 : 0);
 		node_save($reg);
 		drupal_set_message('Registration is now '.($do_open ? 'open.' : 'closed.'));
 		drupal_goto('conferences/'.$reg->nid.'/registration');
@@ -865,7 +865,7 @@ function bikebike_change_registration($form, &$form_state)//$reg, $confirm)
 	}
 	else
 	{
-		$reg->field_attending_conference[$reg->language][0]['value'] = ($confirm ? 1 : 0);
+		$reg->field_attending_conference['und'][0]['value'] = ($confirm ? 1 : 0);
 		node_save($reg);
 		drupal_set_message('Your registration has been '.($confirm ? 'confirmed.' : 'cancelled.'));
 		drupal_goto('node/'.$reg->nid);
@@ -1093,7 +1093,7 @@ function _bikebike_get_current_conference()
 
 function _bikebike_is_conference_organizer($user, $conference)
 {
-	foreach ((isset($conference->field_host_organizations[$conference->language]) ? $conference->field_host_organizations[$conference->language] : array()) as $org)
+	foreach ((isset($conference->field_host_organizations['und']) ? $conference->field_host_organizations['und'] : array()) as $org)
 	{
 		if (bikebike_node_access($org, 'update', $user) == NODE_ACCESS_ALLOW)
 		{
@@ -3161,10 +3161,15 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	else if ($form_id == 'organization_node_form')
 	{
 		global $user;
-		if (empty($form['field_administrators'][$form['field_administrators']['#language']]['#default_value']))
+		//_bikebike_show_object($form['field_administrators']['und']['#default_value']);
+		if (empty($form['field_administrators']['und']['#default_value']))//count($form['field_administrators']['und']) < 1 || ($form['field_administrators']['und'] < 2 && empty($form['field_administrators']['und']['target_id']['#default_value'])))//empty($form['field_administrators'][$form['field_administrators']['#language']]['#default_value']))
 		{
-			$form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] = array($user->uid);
+			$form['field_administrators']['und']['#default_value'][] = $user->uid;
+			//$form['field_administrators']['und']['target_id']['#default_value'] = $user->name.' ('.$user->uid.')';
+			//$form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] = array($user->uid);
 		}
+		//$form['field_administrators']['und']['target_id']['#default_value'] = "$user->name ($user->uid)";
+		//$form['field_administrators']['und']['target_id']['#default_value'] = $user->name.' ('.$user->uid.')';
 		/*$markup = '<div class="field-type-custom field-name-field-administrators-form form-wrapper" id="edit-field-administrators"><label>Members:</label><ul>';
 		foreach ($form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] as $uid)
 		{
@@ -3554,9 +3559,11 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			$node = $router_item['page_arguments'][2];
 			$add_to_array[] = 'node/'.$node->nid.'/view';
 			$add_to_array[] = 'node/'.$node->nid.'/edit';
-			$add_to_array[] = 'organizations/'.$node->nid.'/add-admin';
-			$add_to_array[] = 'organizations/'.$node->nid.'/remove-admin';
+			$add_to_array[] = 'organizations/'.$node->nid.'/add-member';
+			$add_to_array[] = 'organizations/'.$node->nid.'/remove-member';
 			$add_to_array[] = 'organizations/'.$node->nid.'/cancel-request';
+			$add_to_array[] = 'organizations/'.$node->nid.'/accept-invitation/'.$node->title;
+			$add_to_array[] = 'organizations/'.$node->nid.'/reject-invitation/'.$node->title;
 			if (node_access('update', $node) == NODE_ACCESS_ALLOW)
 			{
 				$notify = '';

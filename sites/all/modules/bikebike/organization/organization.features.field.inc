@@ -131,7 +131,7 @@ function organization_field_default_fields() {
       'entity_type' => 'field_collection_item',
       'field_name' => 'field_question',
       'label' => 'Question',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'better_formats' => array(
           'allowed_formats' => array(
@@ -222,7 +222,7 @@ function organization_field_default_fields() {
       'entity_type' => 'field_collection_item',
       'field_name' => 'field_reply',
       'label' => 'Answer',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
@@ -441,7 +441,7 @@ function organization_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'entityreference',
+        'module' => 'options',
         'settings' => array(
           'entityreference_live_preview' => array(
             'enabled' => 0,
@@ -455,7 +455,7 @@ function organization_field_default_fields() {
           'references_dialog_search_view' => '',
           'size' => '60',
         ),
-        'type' => 'entityreference_autocomplete',
+        'type' => 'options_select',
         'weight' => '10',
       ),
     ),

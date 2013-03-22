@@ -94,7 +94,7 @@ if (arg(2) == 'edit')
 		if ($node->type == 'organization')
 		{
 			$title = 'Update '.$node->title;
-			print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location[$node->language][0]['latitude'].", ".$node->field_location[$node->language][0]['longitude']."); } );</script>";
+			print "<script>jQuery(document).ready(function() { initializeOrgMap(".$node->field_location['und'][0]['latitude'].", ".$node->field_location['und'][0]['longitude']."); } );</script>";
 		}
 		else if ($node->type == 'conference')
 		{
@@ -217,13 +217,13 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 				<?php if (isset($node) && $node->type == 'organization'): ?>
 				<div id="org-map">
 					<script>
-						initializeOrgMap(<?php print $node->field_location[$node->language][0]['latitude'];?>, <?php print $node->field_location[$node->language][0]['longitude'];?>)
+						initializeOrgMap(<?php print $node->field_location['und'][0]['latitude'];?>, <?php print $node->field_location['und'][0]['longitude'];?>)
 					</script>
 				</div>
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php elseif (isset($conference)): ?>
 				<div id="conference-banner">
-					<?php print theme('image', array('style_name' => 0, 'path' => $conference->field_banner[$conference->language][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
+					<?php print theme('image', array('style_name' => 0, 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
 				</div>
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php endif; ?>
