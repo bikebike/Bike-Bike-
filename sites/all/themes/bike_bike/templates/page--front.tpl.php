@@ -88,7 +88,7 @@
  * @see adaptivetheme_process_page()
  */
 ?>
-<script>
+<!--script>
 	jQuery(document).ready
 	(
 		function ()
@@ -96,7 +96,7 @@
 			initializeMap('#block-views-org-map-block .view-content');
 		}
 	);
-</script>
+</script -->
 <div id="page" class="container <?php print $classes; ?>">
 
   <!-- region: Leaderboard -->
@@ -166,7 +166,16 @@
           <?php if ($title || $primary_local_tasks || $secondary_local_tasks || $action_links = render($action_links)): ?>
             <header<?php print $content_header_attributes; ?>>
 
-              <?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
+            	<div id="page-banner">
+            	<?php
+            		$conference = _bikebike_get_current_conference();
+            		//$field_items = field_get_items('node', $node, 'field_banner');
+            		//$img_path = image_style_url('image', $field_items[0]['uri']);
+            		//print theme('image', array('path' => path_to_theme() . '/images/picture.gif'))
+            		print l(theme('image', array('style_name' => 'image', 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('id' => 'banner-img'))), 'node/'.$conference->nid, array('html' => true));
+            	?>
+            	</div>
+            	<?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 
                   <?php if ($primary_local_tasks): ?>
@@ -187,10 +196,19 @@
             </header>
           <?php endif; ?>
 
+			<div id="page-title">
+		    	<h1>
+					<?php print $conference->title; ?>
+				</h1>
+			</div>
           <!-- region: Main Content -->
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
-              <?php print $content; ?>
+            	<section id="conference-info">
+            		<!-- h2><?php print $conference->title; ?></h2 -->
+					<?php print render(field_view_field('node', $conference, 'body', array('label' => 'hidden', /*'type' => 'text_summary_or_trimmed', 'settings' => array('trim_length' => 150)*/))); ?>
+				</section>
+            	<?php print $content; ?>
             </div>
           <?php endif; ?>
 

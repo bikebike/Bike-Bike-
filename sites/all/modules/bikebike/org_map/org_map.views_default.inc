@@ -40,13 +40,6 @@ function org_map_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  /* Footer: Global: Text area */
-  $handler->display->display_options['footer']['area']['id'] = 'area';
-  $handler->display->display_options['footer']['area']['table'] = 'views';
-  $handler->display->display_options['footer']['area']['field'] = 'area';
-  $handler->display->display_options['footer']['area']['empty'] = TRUE;
-  $handler->display->display_options['footer']['area']['content'] = '<p>Bike!Bike! is undefined metus gravida non ligula sodales sagittis arcu +1 nibh duis eget magna donec quisque pharetra porta. Urna DIY integer nec sapien leo pellentesque diam rutrum maecenas gravida farm-to-table sed leo non vulputate diam congue. Vulputate sagittis pellentesque organic odio vitae quisque at diam at orci leo quisque farm-to-table malesuada nulla risus. Ipsum integer tellus sem gravida porttitor Portland nulla lorem justo ligula auctor fusce justo duis. In vim vitae commodo proin rutrum quam et sem odio maecenas hoodie sed sit nec tempus et at. Gravida duis mauris hoodie sed quam et sed orci amet nec ultricies elementum farm-to-table enim massa cursus gravida. Porta porttitor enim rutrum sem noise-rock eget duis ut auctor non leo lorem in cursus artisan.</p>';
-  $handler->display->display_options['footer']['area']['format'] = 'full_html';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -161,6 +154,19 @@ function org_map_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $translatables['org_map'] = array(
+    t('Master'),
+    t('Org Map'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('null'),
+    t('{"title": "[title]", "coordinates": [[coordinates]], "link": "[path]", "logo": \'[field_logo]\', "address": "[street]", "city": "[city]", "province": "[province]", "country": "[country]"}'),
+    t('Block'),
+  );
   $export['org_map'] = $view;
 
   return $export;

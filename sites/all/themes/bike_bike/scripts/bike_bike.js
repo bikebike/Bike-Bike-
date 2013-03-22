@@ -542,7 +542,7 @@ jQuery(document).ready
 		jQuery('input.field-add-more-submit').mousedown(function() { completeAutocomplete(); });//'.field-widget-entityreference-autocomplete input.form-autocomplete[value!=""]'));
 		jQuery('input.field-add-more-submit').keydown(function() { completeAutocomplete(); });
 		//jQuery('.entityreference-live-preview').resize(function() { console.log('completeAutocomplete('); });
-		jQuery('body.front #primary-menu-bar ul.menu li a').each(
+		/*jQuery('body.front #primary-menu-bar ul.menu li a').each(
 			function ()
 			{
 				var a = jQuery(this);
@@ -552,7 +552,7 @@ jQuery(document).ready
 				//a.parent().find('.nav-icon').click(function() { jQuery(this).parent().find('a').click(); });
 				a.removeAttr('title');
 			}
-		);
+		);*/
 		jQuery('.field-widget-entityreference-autocomplete input.form-autocomplete').change(function () {completeAutocomplete(this); });
 		if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0)
 		{
@@ -647,7 +647,7 @@ function initializeMap(selector)
 	            	    "stylers": [
 	            	      { "visibility": "on" },
 	            	      { "hue": "#000000" },
-	            	      { "color": "#8A9BAB" }
+	            	      { "color": "#222222"}//8A9BAB" }
 	            	      //{ }
 	            	    ]
 	            	  },{
@@ -896,7 +896,7 @@ function initializeOrgMap(lat, long)
 	            	    "stylers": [
 	            	      { "visibility": "on" },
 	            	      { "hue": "#000000" },
-	            	      { "color": "#8A9BAB" }
+	            	      { "color": "#222222" }//8A9BAB" }
 	            	      //{ }
 	            	    ]
 	            	  },{

@@ -25,7 +25,7 @@ function organization_default_fe_block_settings() {
         'region' => 'content',
         'status' => '1',
         'theme' => 'bike_bike',
-        'weight' => '-12',
+        'weight' => '-26',
       ),
       'rubik' => array(
         'region' => '',

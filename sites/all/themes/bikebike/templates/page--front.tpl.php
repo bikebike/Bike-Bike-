@@ -93,7 +93,7 @@
 	(
 		function ()
 		{
-			initializeMap('#block-views-org-map-block .view-content');
+			//initializeMap('#block-views-org-map-block .view-content');
 		}
 	);
 </script>
@@ -165,7 +165,17 @@
 
           <?php if ($title || $primary_local_tasks || $secondary_local_tasks || $action_links = render($action_links)): ?>
             <header<?php print $content_header_attributes; ?>>
-
+            
+            	<?php
+            		$node = _bikebike_get_current_conference();
+            		$field_items = field_get_items('node', $node, 'field_banner');
+            		$img_path = image_style_url('image', $field_items[0]['uri']);
+            		//print theme('image', array('path' => path_to_theme() . '/images/picture.gif'))
+            	?>            	
+				<img src="<?php print $img_path; ?>" />
+				<?php print 'XXX'.$img_path; ?>
+				YYY
+            	
               <?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 

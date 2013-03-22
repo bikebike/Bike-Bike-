@@ -150,15 +150,6 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 	$conference = node_load(arg(1));
 }
 ?>
-<?php if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed') :?>
-	<?php if ($title): ?>
-    	<h1 id="page-title">
-			<?php print $title; ?>
-		</h1>
-	<?php endif; ?>
-	<?php print render($page['content']); ?>
-<?php else: ?>
-<!-- <?php /*print_r($node);*/ ?> -->
 <div id="page" class="container <?php print $classes; ?>">
 
   <!-- region: Leaderboard -->
@@ -236,14 +227,12 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 				</div>
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php endif; ?>
-			  <?php if ($title): ?>
+			  <?php /*if ($title): ?>
                 <h1 id="page-title">
                   <?php print $title; ?>
                 </h1>
-              <?php endif; ?>
+              <?php endif;*/ ?>
 
-            </header>
-          <?php endif; ?>
               <?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 
@@ -261,27 +250,37 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 
                 </div>
               <?php endif; ?>
+          </header>
+          <?php endif; ?>
           
 			<!-- Messages and Help -->
 			<?php print $messages; ?>
 			<?php print render($page['help']); ?>
 
-          <!-- region: Main Content -->
+			<?php if ($title): ?>
+				<div id="page-title">
+			    	<h1>
+						<?php print $title; ?>
+					</h1>
+				</div>
+          	<?php endif; ?>
+			
+			<!-- region: Main Content -->
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
-            	<?php if (arg(2) != 'edit' && isset($node) && $node->type == 'conference_registration'): ?>
+				<?php /*print render($content);$page['content']);*/ ?>
+            <?php /*if (arg(2) != 'edit' && isset($node) && $node->type == 'conference_registration'): ?>
             		<?php if ($node->field_attending_conference[$node->language][0]['value'] == 1): ?>
             		<a href="/conference-registration/<?php print $node->nid; ?>/cancel" class="important-button" title="Mark this registration as Attending: No (you can undo this)">Cancel my registration</a>
             		<?php elseif ($node->field_attending_conference[$node->language][0]['value'] == 0): ?>
             		<a href="/conference-registration/<?php print $node->nid; ?>/confirm" class="important-button" title="Mark this registration as Attending: Yes (you can undo this)">Confirm my registration</a>
             		<?php else: ?>
             		<a href="/conference-registration/<?php print $node->nid; ?>/confirm" class="important-button" title="Mark this registration as Attending: Yes (you can undo this)">Reverse my Cancellation</a>
-            		<?php endif; ?>
-            	<?php endif; ?>
+            		<?php endif; */?>
               <?php print $content; ?>
-            </div>
+             </div>
           <?php endif; ?>
-
+             
           <!-- Feed icons (RSS, Atom icons etc -->
           <?php print $feed_icons; ?>
 
@@ -312,4 +311,3 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
   <?php endif; ?>
 
 </div>
-<?php endif; ?>
