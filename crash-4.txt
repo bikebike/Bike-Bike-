@@ -1,16 +1,16 @@
-date/time         : 2013-03-22, 12:39:06, 993ms
+date/time         : 2013-03-22, 16:10:38, 326ms
 computer name     : NILBOG
 user name         : SYSTEM <admin>
 registered owner  : Windows User
 operating system  : Windows NT New x64 build 9200
 system language   : English
-system up time    : 4 days 3 hours
+system up time    : 4 days 7 hours
 program up time   : 20 seconds
 processors        : 8x Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz
-physical memory   : 9966/16351 MB (free/total)
-free disk space   : (C:) 48.12 GB
+physical memory   : 9920/16351 MB (free/total)
+free disk space   : (C:) 47.49 GB
 display mode      : 1024x768, 32 bit
-process id        : $12c8
+process id        : $1c84
 allocated memory  : 8.40 MB
 command line      : /usr/lib/sendmail -t
 executable        : sendmail.exe
@@ -22,7 +22,7 @@ exception number  : 1
 exception class   : EInOutError
 exception message : I/O error 105.
 
-main thread ($bdc):
+main thread ($1860):
 004b675c +18a8 sendmail.exe sendmail          922 +440 initialization
 777230be +0081 ntdll.dll                               RtlRaiseStatus
 77722f26 +000a ntdll.dll                               KiUserExceptionDispatcher
@@ -44,15 +44,15 @@ main thread ($bdc):
 004b5f14 +1060 sendmail.exe sendmail          808 +326 initialization
 75298541 +000c KERNEL32.DLL                            BaseThreadInitThunk
 
-thread $4ec:
+thread $1cd4:
 75298541 +c KERNEL32.DLL  BaseThreadInitThunk
 
 stack dump:
 0018f554  5c 67 4b 00 de fa ed 0e - 01 00 00 00 07 00 00 00  \gK.............
-0018f564  68 f5 18 00 5c 67 4b 00 - 68 c9 b8 00 5c 67 4b 00  h...\gK.h...\gK.
+0018f564  68 f5 18 00 5c 67 4b 00 - 68 c9 b4 00 5c 67 4b 00  h...\gK.h...\gK.
 0018f574  5c 67 4b 00 04 fe 18 00 - 84 ff 18 00 84 f5 18 00  \gK.............
-0018f584  00 00 00 00 64 30 40 00 - 00 00 00 00 50 cc b8 00  ....d0@.....P...
-0018f594  5c 67 4b 00 00 00 00 00 - 28 5e 43 00 50 cc b8 00  \gK.....(^C.P...
+0018f584  00 00 00 00 64 30 40 00 - 00 00 00 00 50 cc b4 00  ....d0@.....P...
+0018f594  5c 67 4b 00 00 00 00 00 - 28 5e 43 00 50 cc b4 00  \gK.....(^C.P...
 0018f5a4  bc f6 18 00 d0 f5 18 00 - dc f5 18 00 00 00 00 00  ................
 0018f5b4  00 00 00 00 00 00 00 00 - f1 30 72 77 bc f6 18 00  .........0rw....
 0018f5c4  04 fe 18 00 0c f7 18 00 - 34 f6 18 00 ec fd 18 00  ........4.......
@@ -60,14 +60,14 @@ stack dump:
 0018f5e4  bc f6 18 00 04 fe 18 00 - 0c f7 18 00 34 f6 18 00  ............4...
 0018f5f4  1c 67 4b 00 04 fe 18 00 - bc f6 18 00 00 00 00 00  .gK.............
 0018f604  2b 6f 74 77 bc f6 18 00 - 04 fe 18 00 0c f7 18 00  +otw............
-0018f614  34 f6 18 00 1c 67 4b 00 - 0c 02 00 00 ec 28 43 00  4....gK......(C.
+0018f614  34 f6 18 00 1c 67 4b 00 - 10 02 00 00 ec 28 43 00  4....gK......(C.
 0018f624  bc f6 18 00 01 00 00 00 - 00 c0 18 00 00 00 00 00  ................
-0018f634  48 00 00 00 00 00 19 00 - 00 00 00 00 04 fe 18 00  H...............
-0018f644  32 00 00 00 0c f7 18 00 - 7a 4f 7e 00 b8 02 65 00  2.......zO~...e.
-0018f654  00 00 65 00 3c 00 00 00 - 00 00 00 00 28 98 66 00  ..e.<.......(.f.
-0018f664  6d 08 50 c5 68 e7 36 02 - ba 45 65 00 00 00 65 00  m.P.h.6..Ee...e.
-0018f674  00 e6 36 02 00 00 00 00 - 8c f6 18 00 c0 c0 7c 77  ..6...........|w
-0018f684  78 27 65 00 60 02 65 00 - 09 00 00 00 24 f7 18 00  x'e.`.e.....$...
+0018f634  f0 ea 15 02 00 00 19 00 - 00 00 00 00 04 fe 18 00  ................
+0018f644  32 00 00 00 0c f7 18 00 - a5 9a 33 00 00 00 15 02  2.........3.....
+0018f654  e8 ea 15 02 00 00 00 00 - 8a 97 bd 0e a8 fa 73 47  ..............sG
+0018f664  d6 c6 5a f6 e8 ea 15 02 - 10 00 09 00 3c 00 00 00  ..Z.........<...
+0018f674  00 00 93 00 09 00 00 00 - 8c f6 18 00 c0 c0 7c 77  ..............|w
+0018f684  78 27 93 00 00 00 00 00 - 00 00 00 00 24 f7 18 00  x'..........$...
 
 disassembling:
 [...]

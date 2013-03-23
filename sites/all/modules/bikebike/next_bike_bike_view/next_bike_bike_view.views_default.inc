@@ -66,7 +66,17 @@ function next_bike_bike_view_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $translatables['next_bike_bike_'] = array(
+    t('Master'),
+    t('Next Bike!Bike!'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Block'),
+  );
   $export['next_bike_bike_'] = $view;
 
   return $export;

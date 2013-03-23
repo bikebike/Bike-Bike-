@@ -1,0 +1,13 @@
+name = User Settings
+core = 7.x
+package = Bike!Bike!
+php = 5.2.4
+dependencies[] = features
+dependencies[] = heartbeat
+dependencies[] = heartbeat_rules
+dependencies[] = heartbeat_ui
+dependencies[] = text
+dependencies[] = unique_field
+features[features_api][] = api:1
+features[field][] = user-user-field_about_me
+project path = sites/all/modules/bikebike

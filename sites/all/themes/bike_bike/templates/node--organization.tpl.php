@@ -140,6 +140,26 @@ hide($content['links']);
     <?php print render($content); ?>
   </div>
 
+  <?php
+	$view = views_get_view('conferences');
+	$view->set_display('org_block');
+	$view->dom_id = 'conferences';
+	/*print '<pre>';
+	print_r($view);
+	print '</pre>';*/
+	$output = $view->render();
+	if (true || $view->total_rows > 0)
+	{
+		print '<h2>'.format_plural($view->total_rows, 'Hosted Conference', 'Hosted Conferences').'</h2>';
+		print $output;
+	}
+	?>
+  <?php global $user; if (bikebike_node_access($node, 'update', $user) == NODE_ACCESS_ALLOW): ?>
+	<div class="button-container">
+	<?php print l('Host a conference', 'node/add/conference/'.$node->nid, array('attributes' => array('class' => array('important-button')))); ?>
+	</div>
+  <?php endif; ?>
+  
   <?php if ($links = render($content['links'])): ?>
     <nav<?php print $links_attributes; ?>><?php print $links; ?></nav>
   <?php endif; ?>

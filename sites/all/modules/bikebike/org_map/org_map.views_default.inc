@@ -80,8 +80,9 @@ function org_map_views_default_views() {
   $handler->display->display_options['fields']['field_logo']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_logo']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_logo']['settings'] = array(
-    'image_style' => 'square_thumbnail',
+    'image_style' => 'icon_meduim',
     'image_link' => '',
+    'field_formatter_class' => '',
   );
   /* Field: Location: Street */
   $handler->display->display_options['fields']['street']['id'] = 'street';
@@ -153,7 +154,6 @@ function org_map_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $translatables['org_map'] = array(
     t('Master'),
     t('Org Map'),

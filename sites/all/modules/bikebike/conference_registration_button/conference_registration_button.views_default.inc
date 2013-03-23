@@ -87,11 +87,9 @@ function conference_registration_button_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
 
   /* Display: Workshop Registration */
   $handler = $view->new_display('block', 'Workshop Registration', 'workshop_register');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
   /* No results behavior: Global: Unfiltered text */
   $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
@@ -109,6 +107,23 @@ function conference_registration_button_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="node/add/workshop/!2" class="important-button">Propose a Workshop...</a>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
+  $translatables['conference_registration_button'] = array(
+    t('Master'),
+    t('Conference Registration Button'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('<a href="node/add/conference-registration/!2" class="important-button">Register for this Conference...</a>'),
+    t('Registration Details...'),
+    t('All'),
+    t('Block'),
+    t('Workshop Registration'),
+    t('<p class="message">Once registered, you may propose a workshop of your own or volunteer to help others with theirs.</p>'),
+    t('<a href="node/add/workshop/!2" class="important-button">Propose a Workshop...</a>'),
+  );
   $export['conference_registration_button'] = $view;
 
   return $export;

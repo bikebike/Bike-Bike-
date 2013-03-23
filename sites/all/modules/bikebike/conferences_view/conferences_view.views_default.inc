@@ -39,13 +39,6 @@ function conferences_view_views_default_views() {
     ),
   );
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<a href="node/add/conference" class="important-button">Register a new conference</a>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Field: Content: Banner */
   $handler->display->display_options['fields']['field_banner']['id'] = 'field_banner';
   $handler->display->display_options['fields']['field_banner']['table'] = 'field_data_field_banner';
@@ -145,7 +138,89 @@ function conferences_view_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'org_block');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Banner */
+  $handler->display->display_options['fields']['field_banner']['id'] = 'field_banner';
+  $handler->display->display_options['fields']['field_banner']['table'] = 'field_data_field_banner';
+  $handler->display->display_options['fields']['field_banner']['field'] = 'field_banner';
+  $handler->display->display_options['fields']['field_banner']['label'] = '';
+  $handler->display->display_options['fields']['field_banner']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_banner']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_banner']['settings'] = array(
+    'image_style' => '',
+    'image_link' => 'content',
+    'field_formatter_class' => '',
+  );
+  /* Field: Content: Date */
+  $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
+  $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
+  $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
+  $handler->display->display_options['fields']['field_date']['label'] = '';
+  $handler->display->display_options['fields']['field_date']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_date']['settings'] = array(
+    'format_type' => 'long_date_only_',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_repeat_rule' => 'show',
+    'field_formatter_class' => '',
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_type'] = 'h3';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Content: Conference Type */
+  $handler->display->display_options['fields']['field_conference_type']['id'] = 'field_conference_type';
+  $handler->display->display_options['fields']['field_conference_type']['table'] = 'field_data_field_conference_type';
+  $handler->display->display_options['fields']['field_conference_type']['field'] = 'field_conference_type';
+  $handler->display->display_options['fields']['field_conference_type']['label'] = '';
+  $handler->display->display_options['fields']['field_conference_type']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_conference_type']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_conference_type']['alter']['text'] = '[field_conference_type] Conferences';
+  $handler->display->display_options['fields']['field_conference_type']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_conference_type']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_conference_type']['settings'] = array(
+    'field_formatter_class' => '',
+  );
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Host Organizations (field_host_organizations) */
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['id'] = 'field_host_organizations_target_id';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['table'] = 'field_data_field_host_organizations';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['field'] = 'field_host_organizations_target_id';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_host_organizations_target_id']['summary_options']['items_per_page'] = '25';
+  $translatables['conferences'] = array(
+    t('Master'),
+    t('Conferences'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Hosted By'),
+    t('[field_conference_type] Conferences'),
+    t('Block'),
+    t('All'),
+  );
   $export['conferences'] = $view;
 
   return $export;

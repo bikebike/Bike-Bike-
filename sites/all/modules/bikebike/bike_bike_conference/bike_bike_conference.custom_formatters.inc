@@ -28,7 +28,7 @@ foreach ($variables[\'#items\'] as $delta => $item) {
     \'#type\' => \'link\',
     \'#href\' => \'node/\'.$con->nid,
     \'#title\' => theme(\'image_style\', array(\'style_name\' => \'icon_meduim\', \'path\' => ($con->field_icon ? $con->field_icon[\'und\'][0][\'uri\'] : variable_get(\'user_picture_default\', \'\')), \'attributes\' => array(\'class\' => \'avatar\'))).\'<h3>\'.$con->title.\'</h3>\',
-    \'#attributes\' => array(\'class\' => \'org-profile\', \'title\' => $con->title),
+    \'#attributes\' => array(\'class\' => array(\'org-profile\'), \'title\' => $con->title),
     \'#options\' => array(
       \'html\' => TRUE,
     ),

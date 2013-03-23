@@ -1,6 +1,7 @@
 name = Organization List View
 core = 7.x
 package = Bike!Bike!
+php = 5.2.4
 dependencies[] = entity
 dependencies[] = entityreference_view_widget
 dependencies[] = views

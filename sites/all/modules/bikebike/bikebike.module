@@ -3,11 +3,6 @@
 require_once('field_field/field_field.module');
 require_once('bikebike.menu.inc');
 
-function bikebike_privatemsg_user()
-{
-	
-}
-
 function bikebike_ajax_form()
 {
 	module_load_include('inc', 'node', 'node.pages');
@@ -2977,7 +2972,7 @@ function bikebike_create_request($node, $message, $email = null, $is_invite = fa
 function bikebike_request_query($node, $user, $invite = false)
 {
 	$nid = is_object($node) ? $node->nid : $node;
-	$email = is_object($user) ? $user->mail : $user;
+	$email = $user && is_object($user) ? $user->mail : $user;
 	
 	$params = array('nid' => $nid, 'email' => $email, 'is_invite' => $invite ? 1 : 0);
 	if (!$email)
@@ -3024,11 +3019,21 @@ function bikebike_request_query($node, $user, $invite = false)
 
 function _bikebike_request_count($node)
 {
+	global $user;
+	if (!$user || !$user->uid)
+	{
+		return 0;
+	}
 	return bikebike_request_query($node, null)->rowCount();
 }
 
 function bikebike_create_request_exists($node, $user, $invite = false)
 {
+	global $user;
+	if (!$user || !$user->uid)
+	{
+		return FALSE;
+	}
 	return bikebike_request_query($node, $user, $invite)->rowCount() > 0;
 }
 
@@ -3199,6 +3204,8 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			$form['field_registration_open']['#access'] = FALSE;
 			$form['field_fields']['#access'] = FALSE;
 			unset($form['options']);
+			$form['#validate'][] = 'bikebike_validate_conference';
+			//_bikebike_show_object($form['#validate']);
 		}
 	}
 	else if ($form_id == 'workshop_node_form')
@@ -3229,11 +3236,13 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		//$form['actions']['#attributes'] = array('class' => 'button');
 		//$form['actions']['cancel']['#type'] = 'link';
 	}
-	/*else if ($form_id == 'bikebike_add_member')
+	else if ($form_id == 'comment_node_conference_form' || $form_id == 'comment_node_organization_form')
 	{
-  		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  		//_bikebike_show_object($form);
+  		$form['author']['#access'] = FALSE;//<a href="node/add/conference" class="important-button">Register a new conference</a>
+  		unset($form['comment_body']['und'][0]['#title']);
 	}
-	else if ($form_id == 'form_field_node_form')
+	/*else if ($form_id == 'form_field_node_form')
 	{
 		//_bikebike_show_object($form['nid']);
 		/// TODO: scream
@@ -3248,6 +3257,50 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 		$form['field_scheduled_time']['#access'] = FALSE;
 		$form['field_lid']['#access'] = FALSE;
 	}
+}
+
+function bikebike_validate_conference($form, &$form_state)
+{
+	global $user;
+	foreach ($form['field_host_organizations']['und']['#value'] as $value)
+	{
+		$organization = node_load($value);
+		if (_bikebike_is_organization_member($user, $organization))
+		{
+			return;
+		}
+	}
+	form_set_error('field_host_organizations', t('You must be a memeber of at least one of the host organizations'));
+}
+
+function _bikebike_user_nodes($user)
+{
+	$fields = array('administrators', 'coordinators');
+	$query = null;
+	$uid = is_object($user) ? $user->uid : $user;
+	foreach ($fields as $field)
+	{
+		if (!$query)
+		{
+			$query = '';
+		}
+		else
+		{
+			$query .= ' UNION ';
+		}
+		$query .= "(SELECT entity_id AS nid FROM field_data_field_{$field} as {$field} WHERE {$field}.field_{$field}_target_id = :uid)";
+	}
+	$r = db_query($query, array(':uid' => $uid));
+	
+	$nids = array();
+	
+	foreach ($r->fetchAll() as $row)
+	{
+		$nid = $row->nid;
+		$nids[] = $nid;
+	}
+	$nodes = node_load_multiple($nids);
+	return $nodes;
 }
 
 function bikebike_field_attach_view_alter(&$output, $context)
@@ -3489,7 +3542,7 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/remove-coordinator';
 					$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/cancel-request';
 					global $user;
-					if ($invite = bikebike_get_invitation($node, $user->mail))
+					if ($user && $user->uid && $invite = bikebike_get_invitation($node, $user->mail))
 					{
 						$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/accept-invitation/'.$invite->title;
 						$add_to_array[] = 'conferences/'.$conference.'/workshops/'.$node->nid.'/reject-invitation/'.$invite->title;
@@ -3618,6 +3671,7 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'organizations-cancel-request' => 'node-delete',
 			'conferences-workshops-cancel-request' => 'node-delete',
 			'conferences-workshops-remove-coordinator' => 'node-delete',
+			'organizations-reject-invitation' => 'node-delete',
 			'conferences-reject-invitation' => 'node-delete',
 			'conferences-workshops-reject-invitation' => 'node-delete',
 			'organizations-add-member' => 'node-add',

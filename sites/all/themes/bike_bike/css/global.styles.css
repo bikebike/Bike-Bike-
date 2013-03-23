@@ -575,14 +575,18 @@ body.page-user.page-user- #main-content-header {
 	width: 100%;
 	margin: 0 auto;
 	font-size: 50px;
+	line-height: 50px;
+	padding: 10px 0;
+	overflow: auto;
 }
 #page-title h1 img {
 	vertical-align: top;
-	/*padding-top: 5px;*/
 	border: 3px solid #FFF;
 	line-height: 0;
 	box-shadow: 0px 2px 2px #DDD;
 	border-radius: 30px;
+	float: left;
+	margin-right: 10px;
 }
 
 #page-title h1 a {
@@ -2917,51 +2921,57 @@ body.front #block-views-next-bike-bike-block .field-content img {
 	display: none;
 }
 */
-#content section .infoWindow {
+.infoWindow {
 	width: 300px;
 	height: 110px;
 }
 
-#content section .infoWindow p {
+.infoWindow p {
 	padding: 0;
 	margin: 0;
 }
 
-#content section .infoWindow img {
+.infoWindow img {
 	width: 75px;
 	float: left;
 	margin-right: 10px;
 	box-shadow: 0px 0px 5px #AAA;
 	margin-left: 2px;
 	background-color: #F7F7F7;
+	margin-bottom: 10px;
 }
-#content section .infoWindow h3 {
+.infoWindow h3 a {
 	/*background-color: #CCC;*/
 	text-align: center;
 	vertical-align: middle;
-	line-height: 20px;
+	line-height: 28px;
 	padding: 0px 0px 0px 0px;
 	/*margin: 0px 15px 10px 0px;*/
-	margin: 0px 0px 10px 0px;
-	border-bottom: 1px dashed #CCC;
+	margin: 0px 10px 10px 0px;
+	font-size: 24px;
+	display: block;
+	color: #222;
+	background-color: #EEE;
+	/*border-bottom: 1px dashed #CCC;*/
 }
 
-#content section .infoWindow h3 a {
-	color: #555;
+.infoWindow h3 a {
+	/*color: #555;*/
 }
 
-#content section .infoWindow h3:hover {
+.infoWindow h3:hover {
 	/*background-color: #EEE;
 	border-color: transparent;*/
-	border-bottom: 1px solid #CCC;
+	/*border-bottom: 1px solid #CCC;*/
 }
-#content section .infoWindow h3 a:hover {
+#header .infoWindow h3 a:hover {
 	/*color: #FFF;*/
-	color: #222;
+	/*color: #222;*/
+	background-color: #EEE;
 	text-decoration: none;
 }
 
-#content section .infoWindow ul {
+.infoWindow ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -3302,7 +3312,7 @@ body.page--organizations .view-organization-list .view-content > .view-grouping 
 	position: relative;
 	background-color: #F7F7F7;
 	margin: 0px 0px 0px 5px;
-	border-bottom: 1px solid #DDD;
+	/*border-bottom: 1px solid #DDD;*/
 }
 
 body.page--organizations #content .view-organization-list .view-content > .view-grouping > .view-grouping-content > .item-list > ul li.views-row-last,
@@ -4335,7 +4345,7 @@ form .field-multiple-table th.field-label {
 	margin-right: 10px;
 }
 
-#comments h2.comment-title,
+#comments h2.comment-title.comment-form,
 #comments .comment-form {
 	width: 100%;
 	max-width: 600px;
@@ -4464,7 +4474,7 @@ input.upload-button*/ {
 	position: absolute;
 }
 
-#content section .infoWindow h3 a {
+.infoWindow h3 a {
 	border: 0;
 }
 
@@ -5347,7 +5357,7 @@ body #main-content #content form#bikebike-registration-options-page > div > fiel
 	cursor: move;
 	cursor: url(https://mail.google.com/mail/images/2/openhand.cur) 8 8, move;
 	z-index: 100;
-	width: 178px !important;
+	width: 198px !important;
 	height: 24px;
 	line-height: 25px;
 	vertical-align: middle;
@@ -5373,11 +5383,15 @@ ul.times .time-slot > .schedulable.scheduled-item {
 	background-color: transparent;
 	text-align: left;
 	background-image: none;
-	max-height: 25px;
+	max-height: 24px;
 	overflow: hidden;
 	white-space: nowrap;
-	max-width: 178px;
+	max-width: 198px;
 	text-overflow: ellipsis;
+}
+
+.schedulable legend {
+	height: 0;
 }
 
 html.js fieldset.collapsible .schedulable .fieldset-legend {
@@ -5438,7 +5452,7 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 	border-top: 1px solid #DDD;
 	text-align: center;
 	position: relative;
-	top: 0px;
+	top: 17px;
 	height: 35px;
 	line-height: 35px;
 }
@@ -5483,6 +5497,13 @@ html.js fieldset.collapsible .schedulable .fieldset-legend {
 	text-align: center;
 	padding: 0;
 	background-image: none;
+	top: 13px;
+	position: relative;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper.ui-draggable > legend {
+	padding: 0;
+	border: 0;
 }
 
 #edit-schedule > .fieldset-wrapper > .form-wrapper ul.times {
@@ -5548,11 +5569,18 @@ body #main-content #content form > div fieldset.form-wrapper.schedulable > legen
 }
 
 body #main-content #content form#bikebike-scheduler-page > div fieldset.form-wrapper.schedulable > legend > span {
-	padding: 0;
+	/*padding: 0;*/
+	position: relative;
+	top: -1px;
+	padding: 0 5px;
+}
+
+body #main-content #content form#bikebike-scheduler-page > div #edit-schedule fieldset.form-wrapper.schedulable > legend > span {
+	top: 0;
 }
 
 body #main-content #content form > div fieldset.form-wrapper.schedulable {
-	padding: 0 10px;
+	padding: 0;/* 10px;*/
 }
 
 ul.times .time-slot > .schedulable {
@@ -5839,6 +5867,12 @@ body #main-content #content form#bikebike-scheduler-page > div > p {
 	text-align: left;
 }
 
+body #main-content #content form#bikebike-scheduler-page > div > p {
+	width: 100%;
+	margin: 0 auto 30px auto;
+	max-width: 980px;
+}
+
 /*body #main-content #content form#bikebike-scheduler-page > div > p {
 	width: 100%;
 	max-width: 980px;
@@ -5988,7 +6022,7 @@ body.page-conferences-workshops #content .view-workshops .views-field-field-coor
     position: absolute;
     left: 40px;
     right: 0px;
-    top: -1px;
+    top: 0px;
     background-color: #F7F7F7;
     padding: 0px 10px;
 	border: 1px solid #DDD;
@@ -6068,10 +6102,11 @@ body.not-front .field-type-location a.tabledrag-handle .handle {
 	background-color: #DB8;
 }
 
-.scheduled-item .field-name-body {
+#content .scheduled-item .field-name-body p {
 	font-size: 13px;
 	line-height: 16px;
 	margin-top: 5px;
+	padding-left: 0;
 }
 
 #ajax-form {
@@ -6324,12 +6359,16 @@ html.js fieldset.collapsed {
     font-size: 20px;
     line-height: 24px;
     margin-bottom: 15px;
+	background-color: #EEE;
+	padding: 5px;
+	overflow: auto;
 }
 #content .views-field.views-field-field-icon a {
     border: 0;
 }
-.user-profile .view-organization-list .views-row-even {
-    background-color: #F7F7F7;
+.user-profile .view-organization-list .views-field-field-icon img {
+    border: 5px solid #FFF;
+	box-shadow: 0px 2px 4px #AAA;
 }
 .user-profile .view-organization-list,
 .user-profile .view-organization-list .views-row {
@@ -6350,4 +6389,50 @@ html.js fieldset.collapsed {
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper {
 	padding-top: 0px; 
+}
+
+#comment-body-add-more-wrapper textarea {
+    margin-top: 20px;
+}
+
+body.node-type-organization #content .view-id-conferences .views-row {
+    position: relative;
+}
+
+body.node-type-organization #content .view-id-conferences .views-row .views-field-field-banner a {
+    border: 0;
+    display: block;
+    line-height: 0;
+}
+body.node-type-organization #content .view-id-conferences .views-row .views-field-field-date {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: #FFF;
+    z-index: 10;
+    padding: 2px 10px;
+}
+
+body.node-type-organization #content .view-id-conferences .views-row .views-field-title {
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.25);
+    left: 0;
+    right: 0;
+}
+
+body.node-type-organization #content .view-id-conferences .views-row .views-field-title a {
+    color: #FFF;
+    font-size: 20px;
+    padding: 5px;
+}
+
+body.node-type-conference .field-name-field-host-organizations .field-item {
+    float: left;
+}
+
+#content .field-name-body .mceIcon > div > * {
+	margin: 0;
+	padding: 0;
 }

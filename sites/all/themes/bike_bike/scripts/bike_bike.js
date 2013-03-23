@@ -298,7 +298,7 @@ var dumbGlobal;
 			    	(
 						{
 							handle: '.fieldset-legend',
-							snap: 'body #main-content #content form > div > fieldset#edit-schedule.form-wrapper'
+							snap: 'body #main-content #content form > div > fieldset#edit-schedule.form-wrapper, #edit-events, #edit-workshops'
 						}
 			    	);
 			    	
@@ -880,6 +880,7 @@ function showNextMarker(map, places, delay, selector, infoWindow)
 					);
 				}
 				
+				delay = delay * 0.85;
 				showNextMarker(map, places, delay, selector, infoWindow);
 			},
 			delay

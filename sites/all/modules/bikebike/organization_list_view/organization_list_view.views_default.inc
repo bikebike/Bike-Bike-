@@ -83,7 +83,6 @@ function organization_list_view_views_default_views() {
   $handler->display->display_options['filters']['title']['table'] = 'node';
   $handler->display->display_options['filters']['title']['field'] = 'title';
   $handler->display->display_options['filters']['title']['operator'] = 'contains';
-  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
   $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
   $handler->display->display_options['filters']['title']['expose']['label'] = 'Filter';
   $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
@@ -109,7 +108,6 @@ function organization_list_view_views_default_views() {
   /* Display: Entity Reference View Widget */
   $handler = $view->new_display('entityreference_view_widget', 'Entity Reference View Widget', 'entityreference_view_widget_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['query'] = FALSE;
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
@@ -127,14 +125,7 @@ function organization_list_view_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<a href="node/add/organization" class="important-button">Register a new organization</a>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Location: Country */
   $handler->display->display_options['fields']['country']['id'] = 'country';
@@ -177,6 +168,125 @@ function organization_list_view_views_default_views() {
   $handler->display->display_options['fields']['city']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['city']['alter']['text'] = '([city])';
   $handler->display->display_options['fields']['city']['element_label_colon'] = FALSE;
+
+  /* Display: User Orgs */
+  $handler = $view->new_display('block', 'User Orgs', 'user_block');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['row_class'] = 'clearfix';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Icon */
+  $handler->display->display_options['fields']['field_icon']['id'] = 'field_icon';
+  $handler->display->display_options['fields']['field_icon']['table'] = 'field_data_field_icon';
+  $handler->display->display_options['fields']['field_icon']['field'] = 'field_icon';
+  $handler->display->display_options['fields']['field_icon']['label'] = '';
+  $handler->display->display_options['fields']['field_icon']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_icon']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_icon']['settings'] = array(
+    'image_style' => 'icon_meduim',
+    'image_link' => 'content',
+    'field_formatter_class' => '',
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_type'] = 'h3';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Location: Country */
+  $handler->display->display_options['fields']['country']['id'] = 'country';
+  $handler->display->display_options['fields']['country']['table'] = 'location';
+  $handler->display->display_options['fields']['country']['field'] = 'country';
+  $handler->display->display_options['fields']['country']['label'] = '';
+  $handler->display->display_options['fields']['country']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['country']['element_label_colon'] = FALSE;
+  /* Field: Location: Province */
+  $handler->display->display_options['fields']['province']['id'] = 'province';
+  $handler->display->display_options['fields']['province']['table'] = 'location';
+  $handler->display->display_options['fields']['province']['field'] = 'province';
+  $handler->display->display_options['fields']['province']['label'] = '';
+  $handler->display->display_options['fields']['province']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['province']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['province']['alter']['text'] = '[province], ';
+  $handler->display->display_options['fields']['province']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['province']['hide_empty'] = TRUE;
+  /* Field: Location: City */
+  $handler->display->display_options['fields']['city']['id'] = 'city';
+  $handler->display->display_options['fields']['city']['table'] = 'location';
+  $handler->display->display_options['fields']['city']['field'] = 'city';
+  $handler->display->display_options['fields']['city']['label'] = '';
+  $handler->display->display_options['fields']['city']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['city']['alter']['text'] = '[city], [province][country]';
+  $handler->display->display_options['fields']['city']['element_label_colon'] = FALSE;
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Title */
+  $handler->display->display_options['sorts']['title']['id'] = 'title';
+  $handler->display->display_options['sorts']['title']['table'] = 'node';
+  $handler->display->display_options['sorts']['title']['field'] = 'title';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Members (field_administrators) */
+  $handler->display->display_options['arguments']['field_administrators_target_id']['id'] = 'field_administrators_target_id';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['table'] = 'field_data_field_administrators';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['field'] = 'field_administrators_target_id';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['default_argument_type'] = 'user';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['default_argument_options']['user'] = FALSE;
+  $handler->display->display_options['arguments']['field_administrators_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_administrators_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'organization' => 'organization',
+  );
+  $translatables['organization_list'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Filter'),
+    t('Entity Reference View Widget'),
+    t('Block'),
+    t('([city])'),
+    t('User Orgs'),
+    t('[province], '),
+    t('[city], [province][country]'),
+    t('All'),
+  );
   $export['organization_list'] = $view;
 
   return $export;

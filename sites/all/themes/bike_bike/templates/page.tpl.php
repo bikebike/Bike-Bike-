@@ -181,8 +181,8 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 
           </hgroup><!-- /end #name-and-slogan -->
         <?php endif; ?>
-        <?php $privatemsg_unread_count = privatemsg_unread_count(); print l(($privatemsg_unread_count > 0 ? '<span>'.$privatemsg_unread_count.'</span>' : ''), 'messages', array('html' => true, 'attributes' => array('id' => 'user-messages', 'title' => t('Messages'), 'class' => ($privatemsg_unread_count > 0 ? array('new') : array())))); ?>
-      </div><!-- /end #branding -->
+        <?php global $user; if ($user && $user->uid) { $privatemsg_unread_count = privatemsg_unread_count(); print l(($privatemsg_unread_count > 0 ? '<span>'.$privatemsg_unread_count.'</span>' : ''), 'messages', array('html' => true, 'attributes' => array('id' => 'user-messages', 'title' => t('Messages'), 'class' => ($privatemsg_unread_count > 0 ? array('new') : array())))); } ?>
+    </div><!-- /end #branding -->
     <?php endif; ?>
 
     <!-- region: Header -->

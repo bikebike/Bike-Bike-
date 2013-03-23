@@ -135,11 +135,9 @@ function workshop_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'proposed');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'schedule');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'list';
   $handler->display->display_options['style_options']['grouping'] = array(
@@ -224,7 +222,6 @@ function workshop_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'calendar_style';
   $handler->display->display_options['style_options']['calendar_type'] = 'week';
