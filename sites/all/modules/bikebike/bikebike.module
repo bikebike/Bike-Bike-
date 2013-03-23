@@ -898,7 +898,7 @@ function bikebike_permission()
 
 function bikebike_git_pull()
 {
-	drupal_set_message('> git pull origin master <pre style="margin-left: 15px;">'.shell_exec('git fetch --all').shell_exec('git pull --hard origin/master').'</pre>');
+	drupal_set_message('> git pull origin master <pre style="margin-left: 15px;">'./*shell_exec('git fetch --all').*/shell_exec('git pull --hard origin/master').'</pre>');
 	
 	module_load_include('module', 'backup_migrate');
 	module_load_include('inc', 'backup_migrate', 'includes/destinations');

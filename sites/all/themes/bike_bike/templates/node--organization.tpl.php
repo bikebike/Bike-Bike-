@@ -148,7 +148,7 @@ hide($content['links']);
 	print_r($view);
 	print '</pre>';*/
 	$output = $view->render();
-	if (true || $view->total_rows > 0)
+	if ($view->total_rows > 0)
 	{
 		print '<h2>'.format_plural($view->total_rows, 'Hosted Conference', 'Hosted Conferences').'</h2>';
 		print $output;
