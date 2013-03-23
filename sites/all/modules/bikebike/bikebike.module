@@ -3,6 +3,11 @@
 require_once('field_field/field_field.module');
 require_once('bikebike.menu.inc');
 
+function bikebike_privatemsg_user()
+{
+	
+}
+
 function bikebike_ajax_form()
 {
 	module_load_include('inc', 'node', 'node.pages');
@@ -3161,23 +3166,10 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 	else if ($form_id == 'organization_node_form')
 	{
 		global $user;
-		//_bikebike_show_object($form['field_administrators']['und']['#default_value']);
 		if (empty($form['field_administrators']['und']['#default_value']))//count($form['field_administrators']['und']) < 1 || ($form['field_administrators']['und'] < 2 && empty($form['field_administrators']['und']['target_id']['#default_value'])))//empty($form['field_administrators'][$form['field_administrators']['#language']]['#default_value']))
 		{
 			$form['field_administrators']['und']['#default_value'][] = $user->uid;
-			//$form['field_administrators']['und']['target_id']['#default_value'] = $user->name.' ('.$user->uid.')';
-			//$form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] = array($user->uid);
 		}
-		//$form['field_administrators']['und']['target_id']['#default_value'] = "$user->name ($user->uid)";
-		//$form['field_administrators']['und']['target_id']['#default_value'] = $user->name.' ('.$user->uid.')';
-		/*$markup = '<div class="field-type-custom field-name-field-administrators-form form-wrapper" id="edit-field-administrators"><label>Members:</label><ul>';
-		foreach ($form['field_administrators'][$form['field_administrators']['#language']]['#default_value'] as $uid)
-		{
-			$u = user_load($uid);
-			$markup .= '<li>'.drupal_render(user_view($u, 'entityreference_view_widget')).'</li>';
-		}
-		$markup .= '</ul></div>';
-		$form['field_administrators_view'] = array($form['field_administrators']['#language'] => array('#markup' => $markup), '#weight' => $form['field_administrators']['#weight']);//*/
 		if (!in_array('administrator', array_values($user->roles)))
 		{
 			$form['field_administrators']['#access'] = FALSE;
@@ -3206,7 +3198,6 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			$form['field_meal_info']['#access'] = FALSE;
 			$form['field_registration_open']['#access'] = FALSE;
 			$form['field_fields']['#access'] = FALSE;
-			//$form['field_scheduled_times']['#access'] = FALSE;
 			unset($form['options']);
 		}
 	}
@@ -3231,18 +3222,25 @@ function bikebike_form_alter(&$form, $form_state, $form_id)
 			$form['field_conference']['#access'] = FALSE;
 		}
 	}
-	else if ($form_id == 'bikebike_add_member')
+	else if ($form_id == 'privatemsg_new')
+	{
+		//_bikebike_show_object($form['actions']);
+		$form['body']['#format'] = 'filtered_html';
+		//$form['actions']['#attributes'] = array('class' => 'button');
+		//$form['actions']['cancel']['#type'] = 'link';
+	}
+	/*else if ($form_id == 'bikebike_add_member')
 	{
   		//honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
 	}
-	/*else if ($form_id == 'form_field_node_form')
+	else if ($form_id == 'form_field_node_form')
 	{
 		//_bikebike_show_object($form['nid']);
 		/// TODO: scream
 		$form['actions']['submit']['#submit'][] = 'bikebike_registration_field_update_submit';
 	}*/
 		
-	 //else { drupal_set_message($form_id); }
+	//else { drupal_set_message($form_id); }
 	//drupal_set_message('<pre>'.print_r($form['field_email_address'], true).'</pre>');
 	
 	if ($form_id == 'workshop_node_form' || $form_id == 'event_node_form')
@@ -3438,6 +3436,9 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 	{
 		//case '':
 		//	$node = _bikebike_get_current_conference();
+		case 'user/%':
+			$add_to_array[] = 'messages/new/'.$router_item['page_arguments'][0]->uid;
+			break;
 		case 'node/%':
 		case 'node/%/edit':
 			$node = drupal_is_front_page() ? _bikebike_get_current_conference() : $router_item['page_arguments'][0];
@@ -3629,7 +3630,8 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'organizations-members' => 'members',
 			'conferences-workshops-members' => 'members',
 			'conferences-registration-close' => 'close',
-			'conferences-registration-open' => 'open'
+			'conferences-registration-open' => 'open',
+			'messages-new' => 'message'
 		);
 		$overlay_links = array
 		(
@@ -3671,6 +3673,9 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 				case 'conferences/%/schedule/events/edit/%':
 				case 'user/%':
 				case 'user/%/edit':
+				case 'messages':
+				case 'messages/sent':
+				case 'messages/%':
 					$id = str_replace('/', '-', preg_replace('/\/(%)|(\d+)/', '', $tab['#link']['path']));
 					$file = path_to_theme().'/images/tab-'.(isset($icon_alises[$id]) ? $icon_alises[$id] : $id).'.png';
 					$image = '';

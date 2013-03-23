@@ -53,15 +53,33 @@ function bike_bike_process_html(&$vars) {
 /**
  * Override or insert variables for the page templates.
  */
+
+function bike_bike_preprocess_user_profile(&$vars)
+{
+	//_bikebike_show_object($vars);
+	//if ($vars['view_mode'] == 'mini_teaser')
+	//{
+	$vars['theme_hook_suggestions'][] = 'user_profile__' . $vars['elements']['#view_mode'];
+	//}
+}
+
 /* -- Delete this line if you want to use these functions*/
 function bike_bike_preprocess_page(&$vars)
 {
 	drupal_add_js('https://maps.googleapis.com/maps/api/js?key=AIzaSyDitM1lyVWkrumteDvSkje6GiIKYyHlAXM&sensor=false');
-	if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed')
+	/*if (isset($_GET['response_type']) && $_GET['response_type'] == 'embed')
 	{
 		$variables['theme_hook_suggestions'][] = 'page__embed';
 		$variables['template_file'] = 'page--embed';
-	}
+	}*/
+	/*_bikebike_show_object($vars);
+	$menu = menu_get_item($_GET['q']);
+	if ($menu['path'] == 'user/%')
+	{
+		//_bikebike_show_object($vars['theme_hook_suggestions']);
+		$vars['profile_page'] = true;
+	}*/
+	//_bikebike_show_object($menu['path']);
 	/*if (!empty($vars['node']))
 	{
 		$variables['theme_hook_suggestions'][] = 'page--node--' . $vars['node']->type;

@@ -1,5 +1,7 @@
 <?php
 
+module_load_include('inc', 'privatemsg', 'privatemsg.pages');
+
 function bikebike_menu_alter(&$items)
 {
 	/*$items['entityreference/autocomplete/single/%/%/%'] = array(
@@ -15,6 +17,7 @@ function bikebike_menu_alter(&$items)
 	$items['node/add/workshop/%']['title'] = t('Propose a Workshop');
 	$items['node/add/event/%']['access callback'] = 'bikebike_add_event_access';
 	$items['node/add/event/%']['access arguments'] = array('create', 'event', 3);
+	$items['messages/list']['access callback'] = FALSE;
 	return $items;
 }
 
@@ -403,6 +406,30 @@ function bikebike_menu()
 					//'access arguments' => array('view', 1),
 					'type' => MENU_CALLBACK,
 			),
+			'messages/new/%' => array(
+			    'title'            => 'Message',
+			    'page callback'    => 'drupal_get_form',
+			    'page arguments'   => array('privatemsg_new', 2, NULL, NULL),
+			    //'file'             => 'privatemsg.pages.inc',
+			    'access callback'  => 'privatemsg_user_access',
+			    'access arguments' => array('write privatemsg'),
+			    //'type'             => MENU_LOCAL_ACTION,
+			    'weight'           => -3,
+			    'menu_name'        => 'user-menu',
+				'type' => MENU_VISIBLE_IN_BREADCRUMB,
+				'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+			  )
+			/*
+			'users/%user/message/new' => array
+			(
+					//'title' => t('Workshops'),
+					'page callback' => 'bikebike_privatemsg_user',
+					//'description' => 'Work out your conference schedule',
+					'page arguments' => array(1),
+					'access callback' => 'privatemsg_user_access',
+					'access arguments' => array('write privatemsg'),
+					'type' => MENU_CALLBACK,
+			),*/
 	);
 	return $items;
 }

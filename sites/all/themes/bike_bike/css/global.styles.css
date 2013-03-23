@@ -235,7 +235,7 @@ var {
  */
 #page {
 	background-color: #F7F7F7;
-	box-shadow: 0px 0px 10px #000;
+	/*box-shadow: 0px 0px 10px #000;*/
 	position: relative;
 }
 #page .container {}
@@ -248,7 +248,11 @@ var {
 	width: 100%;
 	z-index: 10;
 	background-color: #222;
+	/*background-image: url(../images/background-inverted.png);*/
 	color: #EEE;
+	box-shadow: 0px 4px 2px -2px #AAA;
+	z-index: 11;
+	position: relative;
 }
 
 #header a {
@@ -274,12 +278,19 @@ var {
 #main-content {
 	margin: 0;
 	background-color: #FFF;
+	/*background-image: url(../images/background.png);*/
 }
 
 #main-content > header {
 	box-shadow: 0px 4px 2px -2px #AAA;
 	z-index: 11;
 	position: relative;
+	/*padding-bottom: 10px;*/
+	background-color: #222;
+}
+
+#main-content > header > :last-child {
+	margin-bottom: 10px;
 }
 
 /*
@@ -550,6 +561,7 @@ body.page-user.page-user- #main-content-header {
  */
 #page-title {
 	background-color: #EEE;
+	/*background-image: url(../images/background.png);*/
 	padding: 5px 10px;
 	margin: 0;
 	-webkit-margin-before: 0;
@@ -563,6 +575,18 @@ body.page-user.page-user- #main-content-header {
 	width: 100%;
 	margin: 0 auto;
 	font-size: 50px;
+}
+#page-title h1 img {
+	vertical-align: top;
+	/*padding-top: 5px;*/
+	border: 3px solid #FFF;
+	line-height: 0;
+	box-shadow: 0px 2px 2px #DDD;
+	border-radius: 30px;
+}
+
+#page-title h1 a {
+	color: #222;
 }
 /*body.page-node-add #main-content-header #page-title,
 body.page-user #main-content-header #page-title,
@@ -1554,6 +1578,7 @@ ul.primary li {
 	/*float: left;*/
 	margin: 0;/* 1px -1px*/;
 	vertical-align: bottom;
+	width: 156px;
 	/*display: table-cell;*/
 }
 
@@ -1572,12 +1597,13 @@ ul.primary li a {
 	box-shadow: none;
 	text-align: center;
 	/*display: table-cell;*/
-	width: 100px;
+	width: 130px;
 	margin: 0;
 	height: 100px;
 	/*line-height: 100px;*/
 	vertical-align: bottom;
 	position: relative;
+	border-bottom: 3px solid transparent;
 	
 	-webkit-transition: all .25s ease;
 	-moz-transition: all .25s ease;
@@ -1592,7 +1618,7 @@ ul.primary li a .tab-title {
 	right: 0px;
 	top: 70px;
 	display: table;
-	width: 130px;
+	width: 160px;
 	height: 40px;
 }
 
@@ -1612,16 +1638,20 @@ ul.primary li.active {
 ul.primary li a.active,
 ul.primary li a.active:hover,
 ul.primary li a.active:focus {
-	background-color: #333;
+	/*background-color: #333;
+	background-color: rgba(51, 51, 51, 0.5);*/
 	/*background-color: transparent;*/
 	border: 0;
+	border-bottom: 3px solid #888;
 }
 
 ul.primary li a:hover,
 ul.primary li a:focus {
 	/*background-color: #F7F7F7;*/
 	/*margin-top: 1px;*/
-	background-color: #444;
+	/*background-color: #444; 
+	background-color: rgba(68, 68, 68, 0.5);*/
+	border-bottom: 3px solid #CCC; 
 	/*background-color: #F7F7F7;*/
 }
 
@@ -2128,13 +2158,15 @@ article.node .field-name-field-poster {
 	display: block;
 }*/
 
-#content section > h2 {
+#content section > h2,
+#content .field-name-body h2 {
 	font-size: 32px;
 	border-bottom: 2px solid #888;
 	margin-bottom: 10px;
 }
 
-#content section p {
+#content section p,
+#content .field-name-body p {
 	font-size: 16px;
 	padding-left: 20px;
 	color: #555;
@@ -2356,7 +2388,8 @@ fieldset {
 /*
  * Buttons used by contrib modules like Media
  */
-a.button {
+a.button,
+a#edit-cancel {
   /*-webkit-appearance: button;
   -moz-appearance: button;
   appearance: button;*/
@@ -2491,6 +2524,7 @@ div.messages {
     box-shadow: 0px 2px 4px #AAA;
 	position: relative;
 	text-align: center;
+	margin: 0;
 }
 
 div.messages pre {
@@ -2563,7 +2597,7 @@ tr.error*/ {
 
 #messages {
     position: relative;
-    top: -6px;
+    /*top: -6px;*/
     /*width: 100%;
     max-width: 980px;
     margin: 0 auto 30px auto;*/
@@ -3033,14 +3067,14 @@ fieldset.field-group-fieldset {
 
 body.node-type-conference article.node .group-content {
 	width: 100%;
-	background-color: #FFF;
+	/*background-color: #FFF;*/
 	margin: 0;
 	padding: 0;
 }
 
 .group-attachments {
 	color: #FFF;
-	background-color: #8A9BAB;
+	/*background-color: #8A9BAB;*/
 	padding: 20px 0;
 	margin: 0;
 }
@@ -3321,6 +3355,7 @@ body.page--organizations .view-organization-list .view-content > .view-grouping 
 #block-system-main-menu ul > li a {
     color: #AAA;
     font-size: 18px;
+	padding: 5px;
 }
 #block-system-main-menu .block-inner {
     margin: 0 200px;  box-sizing: border-box;
@@ -3413,7 +3448,8 @@ input[type="button"],
 input[type="submit"],
 .field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label,
 #content a.button,
-#content .button > a {
+#content .button > a,
+#content a#edit-cancel {
 	font-family: 'SansSerif';
 	background-color: #F7F7F7;
 	padding: 8px 10px;
@@ -3444,6 +3480,7 @@ input[type="submit"]:hover,
 #main-content input[type="submit"],
 #content .login-forgot a,
 #content a.button,
+#content a#edit-cancel,
 #content .button > a,
 .field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label {
 	background-color: #8A9BAB;
@@ -3458,7 +3495,8 @@ input[type="submit"]:hover,
 
 #content .login-forgot a,
 #content input.negative,
-.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label {
+.field-type-entityreference-form.field-name-field-fields-form .widget-left td > article > .node-content label,
+#content a#edit-cancel {
 	background-color: #AB8A9B;
 }
 
@@ -3696,6 +3734,13 @@ body #main-content #content #block-system-main > form > fieldset.form-wrapper > 
 	font-family: 'SansSerif';
 	font-size: 14px;
 	/*border-top: 1px dashed #CCC;*/
+	display: block;
+	background-color: #f7F7F7;
+	padding: 5px;
+	margin: 0;
+	box-sizing: border-box;
+	border: 1px solid #DDD;
+	border-bottom: 0;
 }
 
 body.create-edit-page #main-content #content form > div > fieldset.form-wrapper > legend {
@@ -4872,14 +4917,14 @@ body #main-content #content #block-system-main > fieldset.form-wrapper > div fie
 	width: 100%;
 	font-family: 'SansSerif';
 	font-size: 18px;
-	position: relative;
+	/*position: relative;
 	top: 0px;
-	height: 1px;
+	height: 1px;*/
 	/*border-top: 1px dashed #CCC;*/
 }
 
 body #main-content #content form > div > fieldset.form-wrapper.collapsible > legend {
-	top: 20px;
+	/*top: 20px;*/
 }
 
 /*body #main-content #content form > div > fieldset.form-wrapper:before {
@@ -5055,6 +5100,9 @@ body.page-organizations-requests .fieldset-wrapper > p {
 #block-menu-menu-log-out ul li ul li a#user-logout-menu-item {
 	background-image: url(../images/log-out.png);
 }
+#block-menu-menu-log-out ul li ul li a#user-messages-menu-item {
+	background-image: url(../images/input-edit-mail.png);
+}
 
 .field-type-entityreference-form.field-name-field-fields-form .widget-right .node-content {
 	float: left;
@@ -5141,20 +5189,20 @@ input[type="checkbox"] + label {
 	margin-left: 10px;
 }
 
-input[type="checkbox"] + label:before {
+input[type="checkbox"]:after {
     content: '';
     display: block;
     height: 18px;
     width: 22px;
-    position: absolute;
-    left: -24px;
+    position: relative;
+    left: 0px;
     top: -4px;
 	background-repeat: no-repeat;
 	background-position: left top;
 	background-image: url(../images/checkbox-unchecked.png);
 }
 
-input[type="checkbox"]:checked + label:before {
+input[type="checkbox"]:checked:after {
 	background-image: url(../images/checkbox-checked.png);
 }
 
@@ -5169,7 +5217,7 @@ input[type="checkbox"] + label:focus {
 }
 
 input[type="checkbox"] {
-    opacity: 0;
+    /*opacity: 0;*/
 }
 
 /*#bikebike-registration-page > div > div.form-type-select {
@@ -5802,7 +5850,8 @@ body #main-content #content form > div > fieldset#edit-schedule.form-wrapper:bef
 }
 
 #tasks {
-	background-color: #222;
+	background-color: #FFF;
+	/*background-image: url(../images/background-inverted.png);*/
 	padding: 0px;
 	margin: 0;
 	font-family: 'SansSerif', sans-serif;
@@ -6178,4 +6227,127 @@ body.page-conferences-schedule #content {
 body.page-conferences-schedule.page-conferences-schedule-locations #content,
 body.page-conferences-schedule.page-conferences-schedule-events #content {
 	max-width: 980px;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper > legend {
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    position: relative;
+    top: 6px;
+    box-sizing: border-box;
+    padding: 5px 0;
+}
+body #main-content #content form > div > fieldset.form-wrapper > .fieldset-wrapper {
+    border: 1px solid #DDD;
+    padding: 0;
+    margin: 0;
+    padding-top: 10px;
+}
+body #main-content #content form > div > fieldset.form-wrapper > legend a {
+    border: 0;
+	display: block;
+	margin: 0;
+	padding: 0;
+	line-height: 18px;
+	position: absolute;
+	left: 35px;
+	right: 0;
+	top: 10px;
+	bottom: 0;
+}
+html.js fieldset.collapsible .fieldset-legend {
+    padding-left: 35px;
+    background-image: url(../images/collapse.png);
+}
+
+html.js fieldset.collapsed .fieldset-legend {
+    background-image: url(../images/expand.png);
+}
+
+html.js fieldset.collapsed {
+    margin-bottom: 30px;
+}
+
+#content th > a:link,
+#content th > a:visited,
+#content th > a:hover {
+    border: 0;
+	font-weight: bold;
+}
+
+#user-messages {
+	float: right;
+	color: #EEE;
+	margin-right: 60px;
+	padding: 5px 0;
+	background-image: url(../images/user-messages.png);
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	width: 35px;
+	height: 20px;
+	margin-top: 5px;
+	position: relative;
+}
+
+#user-messages.new {
+	background-image: url(../images/user-messages-new.png);
+}
+
+#user-messages > span {
+    background-color: #EEE;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    vertical-align: middle;
+    border-radius: 15px;
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: 'Serif', serif;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#header a#user-messages:hover {
+	background-color: #000;
+}
+
+.user-profile .view-organization-list .views-field.views-field-field-icon {
+    float: left;
+    margin-right: 10px;
+}
+.user-profile .view-organization-list h3 {
+    text-align: left;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+#content .views-field.views-field-field-icon a {
+    border: 0;
+}
+.user-profile .view-organization-list .views-row-even {
+    background-color: #F7F7F7;
+}
+.user-profile .view-organization-list,
+.user-profile .view-organization-list .views-row {
+    padding: 10px;
+    margin: 0;
+}
+.user-profile .view-organization-list {
+    border: 1px solid #DDD;
+    margin-left: 30px;
+}
+.user-profile .view-organization-list > .view-content > .item-list > ul {
+	margin: 0;
+}
+
+/*.user-profile .view-organization-list .views-row-odd.views-row-last {
+	padding-bottom: 0;
+}*/
+
+body.create-edit-page #main-content #content form > div fieldset.form-wrapper {
+	padding-top: 0px; 
 }

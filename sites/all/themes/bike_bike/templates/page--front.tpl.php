@@ -128,7 +128,8 @@
 
           </hgroup><!-- /end #name-and-slogan -->
         <?php endif; ?>
-
+        <?php $privatemsg_unread_count = privatemsg_unread_count(); print l(($privatemsg_unread_count > 0 ? '<span>'.$privatemsg_unread_count.'</span>' : ''), 'messages', array('html' => true, 'attributes' => array('id' => 'user-messages', 'title' => t('Messages'), 'class' => ($privatemsg_unread_count > 0 ? array('new') : array())))); ?>
+        
       </div><!-- /end #branding -->
     <?php endif; ?>
 
@@ -175,6 +176,14 @@
             		print l(theme('image', array('style_name' => 'image', 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('id' => 'banner-img'))), 'node/'.$conference->nid, array('html' => true));
             	?>
             	</div>
+            </header>
+          <?php endif; ?>
+
+			<div id="page-title">
+		    	<h1>
+					<?php print l($conference->title, 'node/'.$conference->nid); ?>
+				</h1>
+			</div>
             	<?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 
@@ -193,15 +202,7 @@
                 </div>
               <?php endif; ?>
 
-            </header>
-          <?php endif; ?>
-
-			<div id="page-title">
-		    	<h1>
-					<?php print $conference->title; ?>
-				</h1>
-			</div>
-          <!-- region: Main Content -->
+			<!-- region: Main Content -->
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
             	<section id="conference-info">

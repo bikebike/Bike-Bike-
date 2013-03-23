@@ -896,7 +896,7 @@ function initializeOrgMap(lat, long)
 	            	    "stylers": [
 	            	      { "visibility": "on" },
 	            	      { "hue": "#000000" },
-	            	      { "color": "#222222" }//8A9BAB" }
+	            	      { "color": "#8A9BAB" }
 	            	      //{ }
 	            	    ]
 	            	  },{

@@ -181,7 +181,7 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 
           </hgroup><!-- /end #name-and-slogan -->
         <?php endif; ?>
-
+        <?php $privatemsg_unread_count = privatemsg_unread_count(); print l(($privatemsg_unread_count > 0 ? '<span>'.$privatemsg_unread_count.'</span>' : ''), 'messages', array('html' => true, 'attributes' => array('id' => 'user-messages', 'title' => t('Messages'), 'class' => ($privatemsg_unread_count > 0 ? array('new') : array())))); ?>
       </div><!-- /end #branding -->
     <?php endif; ?>
 
@@ -233,6 +233,28 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
                 </h1>
               <?php endif;*/ ?>
 
+          </header>
+          <?php endif; ?>
+          
+			<!-- Messages and Help -->
+			<?php print $messages; ?>
+			<?php print render($page['help']); ?>
+
+			<?php if ($title): ?>
+				<div id="page-title">
+			    	<h1>
+			    		<?php if (isset($node) && $node && $node->type == 'organization'): ?>
+			    			<?php print theme('image_style', array('style_name' => 'icon_meduim', 'path' => ($node->field_icon ? $node->field_icon['und'][0]['uri'] : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar'))); ?>
+			    		<?php elseif (arg(0) == 'user' || arg(0) == 'users'): ?>
+			    		<?php 
+			    			$u = user_load(arg(1));
+			    			print theme('image_style', array('style_name' => 'icon_meduim', 'path' => ($u->picture ? $u->picture->uri : variable_get('user_picture_default', '')), 'attributes' => array('class' => 'avatar')));
+			    		?>
+			    		<?php endif; ?>
+						<?php print $title; ?>
+					</h1>
+				</div>
+          	<?php endif; ?>
               <?php if ($primary_local_tasks || $secondary_local_tasks || $action_links): ?>
                 <div id="tasks">
 
@@ -244,27 +266,13 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
                     <ul class="tabs secondary clearfix"><?php print render($secondary_local_tasks); ?></ul>
                   <?php endif; ?>
 
-                  <?php if ($action_links = render($action_links)): ?>
+                  <?php /*if ($action_links = render($action_links)): ?>
                     <ul class="action-links clearfix"><?php print $action_links; ?></ul>
-                  <?php endif; ?>
+                  <?php endif;*/ ?>
 
                 </div>
               <?php endif; ?>
-          </header>
-          <?php endif; ?>
-          
-			<!-- Messages and Help -->
-			<?php print $messages; ?>
-			<?php print render($page['help']); ?>
-
-			<?php if ($title): ?>
-				<div id="page-title">
-			    	<h1>
-						<?php print $title; ?>
-					</h1>
-				</div>
-          	<?php endif; ?>
-			
+          	
 			<!-- region: Main Content -->
           <?php if ($content = render($page['content'])): ?>
             <div id="content" class="region">
