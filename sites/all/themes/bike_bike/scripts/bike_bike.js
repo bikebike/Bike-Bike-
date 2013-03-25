@@ -264,6 +264,8 @@ var dumbGlobal;
 	    	{
 		    	completeAutocomplete();
 		    	
+		    	$('textarea').autosize();
+		    	
 		    	$('#content .field-widget-options-select .ui-multiselect li > strong').each
 		    	(
 		    		function ()

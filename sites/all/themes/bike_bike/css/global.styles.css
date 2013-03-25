@@ -3754,11 +3754,11 @@ body #main-content #content #block-system-main > form > fieldset.form-wrapper > 
 }
 
 body.create-edit-page #main-content #content form > div > fieldset.form-wrapper > legend {
-	background-color: #FFF;
+	/*background-color: #FFF;*/
 }
 
 body.create-edit-page #main-content #content form > div fieldset.form-wrapper + fieldset.form-wrapper > legend {
-	border: 0;
+	/*border: 0;*/
 }
 
 /*body.create-edit-page #main-content #content form > div > fieldset.form-wrapper > legend:before,*/
@@ -3898,7 +3898,7 @@ body #main-content #content form / *> div >* / fieldset.form-wrapper.collapsible
 }*/
 
 #content a.important-button,
-#content .important-button > a{
+#content .important-button > a {
 	background-color: #FFF19A;
 	border: 2px #333 solid;
 	color: #666;
@@ -3906,6 +3906,11 @@ body #main-content #content form / *> div >* / fieldset.form-wrapper.collapsible
 	font-size: 21px;
 	margin: 10px 0;
 	display: inline-block;
+	margin-right: 10px;
+}
+
+#content a.important-button.less-important {
+    background-color: #DDD;
 }
 
 #content a.important-button:hover,
@@ -6290,13 +6295,28 @@ body #main-content #content form > div > fieldset.form-wrapper > legend a {
 	top: 10px;
 	bottom: 0;
 }
+
 html.js fieldset.collapsible .fieldset-legend {
-    padding-left: 35px;
-    background-image: url(../images/collapse.png);
+    background-image: none;
 }
 
-html.js fieldset.collapsed .fieldset-legend {
+html.js fieldset.collapsible > legend {
+    /*padding-left: 35px;*/
+    background-image: url(../images/collapse.png);
+	background-repeat: no-repeat;
+	background-position: 5px;
+}
+
+html.js fieldset.collapsed > legend {
     background-image: url(../images/expand.png);
+}
+
+body #main-content #content form > div > fieldset.form-wrapper.collapsible > legend a {
+	top: 7px;
+}
+
+body #main-content #content form > div > fieldset.form-wrapper.collapsed > legend {
+	border-bottom: 1px solid #DDD;
 }
 
 html.js fieldset.collapsed {
@@ -6435,4 +6455,23 @@ body.node-type-conference .field-name-field-host-organizations .field-item {
 #content .field-name-body .mceIcon > div > * {
 	margin: 0;
 	padding: 0;
+}
+
+body #main-content #content #ajax-form form > div > fieldset.form-wrapper > .fieldset-wrapper {
+	border: 0;
+	padding: 0;
+}
+
+#main-content input[type="submit"]#edit-cancel {
+	background-color: #AB8A9B;
+}
+
+.privatemsg-author-avatar {
+	width: 100px;
+}
+
+.privatemsg-message-column {
+	float: none;
+	overflow: auto;
+	width: auto;
 }

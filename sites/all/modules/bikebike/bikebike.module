@@ -58,13 +58,24 @@ function bikebike_organization_cancel_request_access($node)
 function bikebike_organization_add_member_access($node)
 {
 	global $user;
+	if (!$user || !$user->uid)
+	{
+		return FALSE;
+	}
+	if ($node->type == 'workshop' && !_bikebike_get_registation($user->uid, $node->nid))
+	{
+		return FALSE;
+	}
 	return !bikebike_organization_cancel_request_access($node) && !bikebike_organization_accept_invitation_access($node) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW;
 }
 
 function bikebike_organization_accept_invitation_access($node)
 {
 	global $user;
-	//_bikebike_show_object(bikebike_create_request_exists($node, $user, true) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW);
+	if ($node->type == 'workshop' && !_bikebike_get_registation($user->uid, $node->nid))
+	{
+		return FALSE;
+	}
 	return bikebike_create_request_exists($node, $user, true) && bikebike_node_access($node, 'update', $user) != NODE_ACCESS_ALLOW;
 }
 
@@ -94,7 +105,7 @@ function _bikebike_is_schedule_published($node)
 function bikebike_conference_registration_access($node)
 {
 	global $user;
-	return _bikebike_is_registration_open($node) || _bikebike_is_conference_organizer($user, $node);
+	return  $user && $user->uid && (_bikebike_is_registration_open($node) || _bikebike_is_conference_organizer($user, $node));
 }
 
 function bikebike_conference_schedule_access($node)
@@ -3685,7 +3696,8 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 			'conferences-workshops-members' => 'members',
 			'conferences-registration-close' => 'close',
 			'conferences-registration-open' => 'open',
-			'messages-new' => 'message'
+			'messages-new' => 'message',
+			'messages-view' => 'message'
 		);
 		$overlay_links = array
 		(
@@ -3729,6 +3741,7 @@ function bikebike_menu_local_tasks_alter(&$data, $router_item, $root_path)
 				case 'user/%/edit':
 				case 'messages':
 				case 'messages/sent':
+				case 'messages/view/%':
 				case 'messages/%':
 					$id = str_replace('/', '-', preg_replace('/\/(%)|(\d+)/', '', $tab['#link']['path']));
 					$file = path_to_theme().'/images/tab-'.(isset($icon_alises[$id]) ? $icon_alises[$id] : $id).'.png';

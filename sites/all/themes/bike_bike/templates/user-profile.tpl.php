@@ -11,10 +11,27 @@
 	$view->set_display('user_block');
 	$view->dom_id = 'organizations';
 	$output = $view->render();
-	print '<h2>'.format_plural($view->total_rows, 'Organization', 'Organizations').'</h2>';
-	print $output;
+	
+	if ($view->total_rows)
+	{
+		print '<h2>'.format_plural($view->total_rows, 'Organization', 'Organizations').'</h2>';
+		print $output;
+		if ($user->uid == $elements['#account']->uid)
+		{
+			print '<div class="button-container">'.l('Register a new organization', 'node/add/organization', array('attributes' => array('class' => array('important-button')))).'</div>';
+		}
+	}
+	else if ($user->uid == $elements['#account']->uid)
+	{
+		print '<h2>'.format_plural($view->total_rows, 'Organization', 'Organizations').'</h2>';
+		print t('You are not currently a member of any organizations. Find your organization and request membership. Only if you are sure your organization does not yet exist; register a new organization on this site.');
+		print '<div class="button-container">'.
+				l('Find your organization', 'organizations', array('attributes' => array('class' => array('important-button')))).
+				l('Register a new organization', 'node/add/organization', array('attributes' => array('class' => array('important-button', 'less-important')))).
+			'</div>';
+	}
   ?>
   <?php global $user; if ($user->uid == $elements['#account']->uid): ?>
-	<div class="button-container"><?php print l('Register a new organization', 'node/add/organization', array('attributes' => array('class' => array('important-button')))); ?></div>
+	
 <?php endif; ?>
 </div>

@@ -223,7 +223,8 @@ else if (arg(0) == 'conferences' && is_numeric(arg(1)))
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php elseif (isset($conference)): ?>
 				<div id="conference-banner">
-					<?php print theme('image', array('style_name' => 0, 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('class' => 'banner'))); ?>
+            		<?php print l(theme('image', array('style_name' => 'image', 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('id' => 'banner-img'))), 'node/'.$conference->nid, array('html' => true)); ?>
+					<?php /*print theme('image', array('style_name' => 0, 'path' => $conference->field_banner['und'][0]['uri'], 'attributes' => array('class' => 'banner')));*/ ?>
 				</div>
 				<?php /*print theme('image_style', array('style_name' => 'square_thumbnail', 'path' => $node->field_icon[$node->language][0]['uri'], 'attributes' => array('class' => 'logo')));*/ ?>
 				<?php endif; ?>
